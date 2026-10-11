@@ -1,0 +1,40 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/api/v1/telemetry/beacon", "destination": "/api/telemetry/beacon" },
+    { "source": "/api/v1/telemetry/events", "destination": "/api/telemetry/events" },
+    { "source": "/api/v1/health", "destination": "/api/health" },
+    { "source": "/dashboard", "destination": "/api/dashboard" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type,Authorization" }
+      ]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    },
+    {
+      "source": "/llms-full.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    },
+    {
+      "source": "/schema.jsonld",
+      "headers": [
+        { "key": "Content-Type", "value": "application/ld+json; charset=utf-8" }
+      ]
+    }
+  ]
+}

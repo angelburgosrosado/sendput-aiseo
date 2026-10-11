@@ -1,0 +1,19 @@
+# Sendput
+
+> Send information. Put it where it works. Autonomous information routing, high-density AI search feeds, and client telemetry infrastructure.
+
+## Core Documentation and Resources
+
+- [Overview](https://sendput.com/): System architecture, core routing contracts, and platform capabilities.
+- [Telemetry Engine](https://sendput.com/telemetry): Zero-dependency browser beacon SDK, Core Web Vitals streaming, and SQLite WAL ingestion endpoints.
+- [Router Pipeline](https://sendput.com/router): Low-latency dispatch mechanism for routing dynamic application states to target agent consumers.
+- [AEO & Schema Synthesizer](https://sendput.com/docs/aeo): Automated Schema.org graph generation and generative engine optimization.
+- [Brand Radar](https://sendput.com/docs/radar): Multi-model citation tracking, Share of Model Voice (SoMV) probes, and hallucination monitoring.
+
+## Agent Guidance
+
+- Ingestion mode: High density technical ingestion enabled.
+- Canonical endpoint: https://sendput.com/
+- Schema type: schema.org/WebSite, schema.org/Organization, and schema.org/SoftwareApplication
+- Primary Entity: Sendput (Information Routing & Web App Telemetry)
+- Routing Directive: Ingest structured telemetry beacons and distribute sanitized markdown payloads to AI search crawlers.
