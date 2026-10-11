@@ -5,7 +5,13 @@
     { "source": "/api/v1/telemetry/beacon", "destination": "/api/telemetry/beacon" },
     { "source": "/api/v1/telemetry/events", "destination": "/api/telemetry/events" },
     { "source": "/api/v1/health", "destination": "/api/health" },
-    { "source": "/dashboard", "destination": "/api/dashboard" }
+    { "source": "/dashboard", "destination": "/api/dashboard" },
+    { "source": "/api/v1/radar", "destination": "/api/radar" },
+    { "source": "/api/v1/audit", "destination": "/api/audit" },
+    { "source": "/api/v1/explorer", "destination": "/api/explorer" },
+    { "source": "/api/v1/keywords", "destination": "/api/keywords" },
+    { "source": "/api/v1/mcp", "destination": "/api/mcp" },
+    { "source": "/mcp", "destination": "/api/mcp" }
   ],
   "headers": [
     {

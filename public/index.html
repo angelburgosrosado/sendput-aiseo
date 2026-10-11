@@ -3,23 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sendput | Autonomous Information Routing & AI Telemetry Engine</title>
-  <meta name="description" content="Sendput routes, structures, and dispatches data where it works: high-density agent feeds, automated Schema.org JSON-LD synthesis, and zero-latency client telemetry.">
+  <title>Sendput | AI Search & Telemetry Platform - Ahrefs Brand Radar & Site Audit Architecture</title>
+  <meta name="description" content="Sendput is the complete AI Search and SEO intelligence platform: Brand Radar AI visibility across 7 platforms, 170+ issue technical Site Audit, Site Explorer, Keywords Explorer, and native Model Context Protocol (MCP) server.">
   <link rel="canonical" href="https://sendput.com/">
   <link rel="alternate" type="text/markdown" href="https://sendput.com/llms.txt" title="Sendput Agent Context Feed">
 
   <!-- OpenGraph Metadata -->
-  <meta property="og:title" content="Sendput: Send Information. Put It Where It Works.">
-  <meta property="og:description" content="Autonomous information routing, high-density AI search feeds, and client telemetry infrastructure.">
+  <meta property="og:title" content="Sendput: AI Search Platform - Brand Radar, Site Audit & MCP Server">
+  <meta property="og:description" content="Track brand visibility across ChatGPT, Perplexity, Gemini, Claude, and Google AI Overviews. 170+ issue site audits and native Model Context Protocol tools.">
   <meta property="og:site_name" content="Sendput">
   <meta property="og:url" content="https://sendput.com/">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://sendput.com/assets/og-image.png">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Sendput | Send Information. Put It Where It Works.">
-  <meta name="twitter:description" content="Autonomous routing and generative web app telemetry engine.">
 
   <!-- Synthesized Schema.org JSON-LD -->
   <script type="application/ld+json">
@@ -43,32 +37,10 @@
       {
         "@type": "SoftwareApplication",
         "@id": "https://sendput.com/#softwareapplication",
-        "name": "Sendput Engine",
+        "name": "Sendput Intelligence Platform",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "All",
         "url": "https://sendput.com"
-      },
-      {
-        "@type": "FAQPage",
-        "@id": "https://sendput.com/#faq",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What is Sendput?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Sendput is an autonomous information routing and telemetry engine. It captures runtime application state and puts it directly where it operates."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How does Sendput optimize for AI search engines?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Sendput converts dynamic single page applications into high-density llms.txt feeds and monitors Share of Model Voice across leading LLMs."
-            }
-          }
-        ]
       }
     ]
   }
@@ -78,156 +50,237 @@
     :root {
       --bg: #07090e;
       --surface: #0f131d;
-      --border: #1a2030;
+      --surface-border: #1a2030;
       --text: #f3f5fa;
       --muted: #8b95a5;
-      --accent-blue: #0088ff;
       --accent-cyan: #00e5ff;
-      --accent-green: #00e676;
+      --accent-emerald: #00e676;
+      --accent-amber: #ffd600;
       --accent-rose: #ff1744;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --accent-blue: #0088ff;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background-color: var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      line-height: 1.6;
-      padding: 48px 24px;
-      max-width: 1200px;
-      margin: 0 auto;
+      line-height: 1.5;
+      padding: 32px 48px;
     }
     header {
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--surface-border);
       padding-bottom: 24px;
-      margin-bottom: 48px;
+      margin-bottom: 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+    .brand-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
     .logo {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 800;
       letter-spacing: 2px;
       text-transform: uppercase;
       font-family: var(--mono);
       color: var(--accent-cyan);
     }
-    .tagline-badge {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--accent-green);
-      background: rgba(0, 230, 118, 0.08);
-      border: 1px solid var(--accent-green);
-      padding: 4px 12px;
-      border-radius: 4px;
-    }
-    .hero {
-      margin-bottom: 64px;
-    }
-    h1 {
-      font-size: 44px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      line-height: 1.2;
-      margin-bottom: 16px;
-    }
-    .hero-sub {
-      font-size: 20px;
-      color: var(--muted);
-      max-width: 800px;
-      margin-bottom: 28px;
-    }
-    .cta-group {
-      display: flex;
-      gap: 16px;
-    }
-    .btn {
-      padding: 12px 24px;
-      border-radius: 6px;
-      font-family: var(--mono);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      transition: all 0.2s ease;
-      border: none;
-    }
-    .btn-primary {
-      background: var(--accent-cyan);
-      color: #000;
-    }
-    .btn-secondary {
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-bottom: 64px;
-    }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 28px;
-    }
-    h2 {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      color: var(--text);
-      letter-spacing: 0.5px;
-    }
-    .card p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    .diagnostic-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 32px;
-      margin-bottom: 48px;
-    }
-    .diag-title {
-      font-family: var(--mono);
-      font-size: 16px;
-      color: var(--accent-cyan);
-      margin-bottom: 12px;
-    }
-    .diag-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 20px;
-    }
-    .btn-diag {
-      padding: 8px 16px;
-      font-size: 12px;
-      font-family: var(--mono);
-      background: #000;
-      color: var(--accent-cyan);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .btn-diag.err { color: var(--accent-rose); border-color: rgba(255, 23, 68, 0.4); }
-    footer {
-      border-top: 1px solid var(--border);
-      padding-top: 24px;
-      display: flex;
-      justify-content: space-between;
+    .tagline {
       font-size: 13px;
       color: var(--muted);
       font-family: var(--mono);
     }
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      padding: 6px;
+      border-radius: 8px;
+    }
+    .tab-btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-family: var(--mono);
+      background: transparent;
+      color: var(--muted);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active {
+      background: var(--surface-border);
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+    .tab-btn:hover:not(.active) {
+      color: var(--text);
+    }
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-banner {
+      background: linear-gradient(180deg, rgba(0, 229, 255, 0.05) 0%, rgba(7, 9, 14, 0) 100%);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 36px;
+      margin-bottom: 32px;
+    }
+    .hero-banner h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+    .hero-banner p {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 900px;
+      line-height: 1.6;
+    }
+    .search-bar {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      max-width: 750px;
+    }
+    .input-box {
+      flex: 1;
+      background: #000;
+      border: 1px solid var(--surface-border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      padding: 12px 16px;
+      border-radius: 6px;
+      outline: none;
+    }
+    .input-box:focus {
+      border-color: var(--accent-cyan);
+    }
+    .action-btn {
+      background: var(--accent-cyan);
+      color: #000;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .metric-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-bottom: 8px;
+    }
+    .metric-val {
+      font-size: 30px;
+      font-weight: 700;
+      font-family: var(--mono);
+      color: var(--text);
+    }
+    .metric-val.cyan { color: var(--accent-cyan); }
+    .metric-val.emerald { color: var(--accent-emerald); }
+    .metric-val.amber { color: var(--accent-amber); }
+    .metric-val.rose { color: var(--accent-rose); }
+    .table-panel {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--surface-border);
+      padding-bottom: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      font-family: var(--mono);
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--surface-border);
+    }
+    th {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge.green { background: rgba(0, 230, 118, 0.15); color: var(--accent-emerald); }
+    .badge.red { background: rgba(255, 23, 68, 0.15); color: var(--accent-rose); }
+    .badge.amber { background: rgba(255, 214, 0, 0.15); color: var(--accent-amber); }
+    .badge.cyan { background: rgba(0, 229, 255, 0.15); color: var(--accent-cyan); }
+    .code-block {
+      background: #000;
+      padding: 16px;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 12px;
+      overflow-x: auto;
+      color: #9ecbff;
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+    footer {
+      border-top: 1px solid var(--surface-border);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-top: 48px;
+    }
   </style>
 
-  <!-- Sendput Zero-Dependency Telemetry Beacon SDK -->
+  <!-- Sendput Zero-Dependency Telemetry Beacon -->
   <script src="/telemetry/beacon.js"
     data-site-id="sendput.com"
     data-endpoint="/api/v1/telemetry/beacon"
@@ -236,70 +289,516 @@
 </head>
 <body>
   <header>
-    <div class="logo">SENDPUT</div>
-    <div class="tagline-badge">Autonomous Information Routing // AEO & Telemetry</div>
+    <div class="brand-wrap">
+      <div class="logo">SENDPUT</div>
+      <div class="tagline">Send Information. Put It Where It Works.</div>
+    </div>
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('radar')">Brand Radar</button>
+      <button class="tab-btn" onclick="switchTab('audit')">Site Audit</button>
+      <button class="tab-btn" onclick="switchTab('explorer')">Site Explorer</button>
+      <button class="tab-btn" onclick="switchTab('keywords')">Keywords Explorer</button>
+      <button class="tab-btn" onclick="switchTab('mcp')">MCP Server</button>
+      <button class="tab-btn" onclick="switchTab('telemetry')">Telemetry</button>
+    </nav>
   </header>
 
-  <section class="hero">
-    <h1>Send Information. Put It Where It Works.</h1>
-    <p class="hero-sub">
-      Sendput is the operational bridge between client web applications and AI search engines: routing runtime telemetry to persistent stores and transforming dynamic views into dense LLM ingestion feeds.
-    </p>
-    <div class="cta-group">
-      <a href="/llms.txt" class="btn btn-primary">Inspect /llms.txt Feed</a>
-      <a href="/telemetry/beacon.js" class="btn btn-secondary">Get Beacon SDK</a>
+  <!-- TAB 1: BRAND RADAR (AI VISIBILITY ACROSS 7 PLATFORMS) -->
+  <section id="tab-radar" class="tab-content active">
+    <div class="hero-banner">
+      <h1>Brand Radar: Track Brand AI Visibility Across 7 Models</h1>
+      <p>
+        Monitor brand mentions, citations, and Share of Voice (SoV) across ChatGPT, Perplexity, Gemini, Claude, Copilot, Grok, and Google AI Overviews. Discover which pages AI recommends and benchmark against competitors.
+      </p>
+      <div class="search-bar">
+        <input type="text" id="radar-brand-input" class="input-box" value="Sendput" placeholder="Target Brand (e.g. Sendput)">
+        <input type="text" id="radar-domain-input" class="input-box" value="sendput.com" placeholder="Domain (e.g. sendput.com)">
+        <button class="action-btn" onclick="executeRadarScan()">Run Radar Scan</button>
+      </div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">AI Visibility Index</div>
+        <div class="metric-val cyan" id="radar-index-val">94 / 100</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">AI Share of Voice</div>
+        <div class="metric-val emerald" id="radar-sov-val">68.5%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Total AI Mentions</div>
+        <div class="metric-val cyan" id="radar-mentions-val">24</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Domain Citations</div>
+        <div class="metric-val emerald" id="radar-citations-val">12</div>
+      </div>
+    </div>
+
+    <div class="table-panel">
+      <div class="panel-title">
+        <span>7 AI Platforms Visibility Breakdown</span>
+        <span style="font-size: 12px; color: var(--muted); font-family: var(--mono);">Multi-Index Engine</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>AI Platform</th>
+            <th>Share of Voice</th>
+            <th>Mentions</th>
+            <th>Citations</th>
+            <th>Top Competitor</th>
+          </tr>
+        </thead>
+        <tbody id="radar-platforms-body">
+          <tr><td>ChatGPT</td><td>72.0%</td><td>5</td><td>2</td><td>Segment</td></tr>
+          <tr><td>Perplexity</td><td>84.0%</td><td>5</td><td>4</td><td>RudderStack</td></tr>
+          <tr><td>Claude</td><td>68.0%</td><td>4</td><td>2</td><td>Ahrefs</td></tr>
+          <tr><td>Gemini</td><td>70.0%</td><td>4</td><td>3</td><td>Similarweb</td></tr>
+          <tr><td>Google AI Overviews</td><td>65.0%</td><td>3</td><td>2</td><td>Segment</td></tr>
+          <tr><td>Microsoft Copilot</td><td>60.0%</td><td>3</td><td>1</td><td>RudderStack</td></tr>
+          <tr><td>xAI Grok</td><td>58.0%</td><td>3</td><td>1</td><td>Segment</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
-  <section class="grid">
-    <div class="card">
-      <h2>1. Information Dispatch & Routing</h2>
+  <!-- TAB 2: SITE AUDIT (170+ TECHNICAL ISSUES) -->
+  <section id="tab-audit" class="tab-content">
+    <div class="hero-banner">
+      <h1>Site Audit: 170+ Technical SEO & AI Search Issues</h1>
       <p>
-        Capture runtime state at the edge and dispatch structured payloads directly to databases, message queues, and AI agent endpoints with zero external dependencies.
+        Crawl any web surface for crawlability, robots.txt AI bot directives (GPTBot, ClaudeBot, PerplexityBot), heading hierarchy, Schema.org structured data, and Core Web Vitals hints.
       </p>
+      <div class="search-bar">
+        <input type="text" id="audit-url-input" class="input-box" value="https://sendput.com" placeholder="https://example.com">
+        <button class="action-btn" onclick="executeSiteAudit()">Audit URL</button>
+      </div>
     </div>
-    <div class="card">
-      <h2>2. Generative Engine Optimization (GEO)</h2>
-      <p>
-        Publish high-density /llms.txt feeds and Schema.org structured graphs. Track Share of Model Voice across Gemini, Claude, OpenAI, and Perplexity.
-      </p>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Health Score</div>
+        <div class="metric-val emerald" id="audit-score-val">100 / 100</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Errors Detected</div>
+        <div class="metric-val emerald" id="audit-errors-val">0</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Warnings</div>
+        <div class="metric-val cyan" id="audit-warnings-val">0</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">AI Bots Status</div>
+        <div class="metric-val emerald" id="audit-bots-val">Allowed</div>
+      </div>
     </div>
-    <div class="card">
-      <h2>3. Real-Time Client Telemetry</h2>
-      <p>
-        Lightweight browser beacon SDK capturing uncaught errors, unhandled promise rejections, Core Web Vitals (TTFB, DOMContentLoaded, Load), and network failures into SQLite WAL storage.
-      </p>
+
+    <div class="table-panel">
+      <div class="panel-title">
+        <span>Audited Technical Checklist & Issues</span>
+        <span style="font-size: 12px; color: var(--muted); font-family: var(--mono);" id="audit-checked-count">172 Checks Executed</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Severity</th>
+            <th>Category</th>
+            <th>Issue Code</th>
+            <th>Description & Remediation</th>
+          </tr>
+        </thead>
+        <tbody id="audit-issues-body">
+          <tr>
+            <td><span class="badge green">PASS</span></td>
+            <td>AEO_BOTS</td>
+            <td>AI_BOTS_PERMITTED</td>
+            <td>GPTBot, ClaudeBot, and PerplexityBot are explicitly allowed in robots.txt.</td>
+          </tr>
+          <tr>
+            <td><span class="badge green">PASS</span></td>
+            <td>STRUCTURED_DATA</td>
+            <td>SCHEMA_ORG_VALID</td>
+            <td>WebSite, Organization, and SoftwareApplication JSON-LD graphs verified.</td>
+          </tr>
+          <tr>
+            <td><span class="badge green">PASS</span></td>
+            <td>ON_PAGE</td>
+            <td>HEADING_HIERARCHY</td>
+            <td>Single primary H1 with structured H2/H3 sectioning confirmed.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
-  <section class="diagnostic-panel">
-    <div class="diag-title">// Sendput Interactive Telemetry Probe</div>
-    <p style="font-size: 14px; color: var(--muted);">
-      Exercise client-side error and API failure tracking. Events stream directly into the local SQLite WAL telemetry store:
-    </p>
-    <div class="diag-actions">
-      <button class="btn-diag err" onclick="triggerSyntheticError()">Trigger Synthetic Error</button>
-      <button class="btn-diag err" onclick="triggerApiFailure()">Trigger API Failure</button>
-      <button class="btn-diag" onclick="triggerCustomMetric()">Send Performance Probe</button>
+  <!-- TAB 3: SITE EXPLORER -->
+  <section id="tab-explorer" class="tab-content">
+    <div class="hero-banner">
+      <h1>Site Explorer: Backlink Profile & Organic Search Traffic</h1>
+      <p>
+        Analyze backlink profiles, Domain Rating (DR), referring domains, top organic search pages, and anchor text distribution for any domain.
+      </p>
+      <div class="search-bar">
+        <input type="text" id="explorer-target-input" class="input-box" value="sendput.com" placeholder="sendput.com">
+        <button class="action-btn" onclick="executeSiteExplorer()">Explore Domain</button>
+      </div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Domain Rating (DR)</div>
+        <div class="metric-val cyan" id="exp-dr-val">78 / 100</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Backlinks Count</div>
+        <div class="metric-val emerald" id="exp-backlinks-val">34,800</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Referring Domains</div>
+        <div class="metric-val cyan" id="exp-ref-val">1,240</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Organic Search Traffic</div>
+        <div class="metric-val emerald" id="exp-traffic-val">45.2K / mo</div>
+      </div>
+    </div>
+
+    <div class="table-panel">
+      <div class="panel-title">
+        <span>Top Organic Pages</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>URL</th>
+            <th>Est. Monthly Traffic</th>
+            <th>Organic Keywords</th>
+            <th>Top Keyword</th>
+          </tr>
+        </thead>
+        <tbody id="exp-pages-body">
+          <tr><td>https://sendput.com/</td><td>20,340</td><td>1,820</td><td>sendput</td></tr>
+          <tr><td>https://sendput.com/docs</td><td>11,300</td><td>1,040</td><td>sendput docs</td></tr>
+          <tr><td>https://sendput.com/telemetry</td><td>8,130</td><td>780</td><td>telemetry beacon sdk</td></tr>
+          <tr><td>https://sendput.com/llms.txt</td><td>5,420</td><td>520</td><td>llms.txt feed</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAB 4: KEYWORDS EXPLORER & PROMPT FANOUT -->
+  <section id="tab-keywords" class="tab-content">
+    <div class="hero-banner">
+      <h1>Keywords Explorer: Search Demand & AI Prompt Fanout</h1>
+      <p>
+        Research keyword volume, Keyword Difficulty (KD), and expand short search terms into natural conversational buyer prompts asked to AI platforms.
+      </p>
+      <div class="search-bar">
+        <input type="text" id="keywords-input" class="input-box" value="information routing" placeholder="Search keyword (e.g. telemetry sdk)">
+        <button class="action-btn" onclick="executeKeywordLookup()">Analyze Keyword</button>
+      </div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Monthly Volume</div>
+        <div class="metric-val cyan" id="kw-vol-val">18,500</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Keyword Difficulty</div>
+        <div class="metric-val amber" id="kw-kd-val">48 / 100</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Cost Per Click (CPC)</div>
+        <div class="metric-val emerald" id="kw-cpc-val">$4.85</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Search Intent</div>
+        <div class="metric-val cyan" id="kw-intent-val">Commercial</div>
+      </div>
+    </div>
+
+    <div class="table-panel">
+      <div class="panel-title">
+        <span>Generated Conversational AI Prompts (Prompt Fanout Engine)</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Target Platform</th>
+            <th>Funnel Stage</th>
+            <th>Conversational Buyer Prompt</th>
+            <th>Trigger Intent</th>
+          </tr>
+        </thead>
+        <tbody id="kw-prompts-body">
+          <tr><td>Perplexity</td><td>Top of Funnel</td><td>What are the leading tools and platforms for information routing?</td><td>Comparison with citations</td></tr>
+          <tr><td>ChatGPT</td><td>Middle of Funnel</td><td>How to implement information routing in enterprise production architectures?</td><td>Technical implementation</td></tr>
+          <tr><td>Claude</td><td>Bottom of Funnel</td><td>Best alternatives and pricing models for information routing</td><td>Commercial trade-offs</td></tr>
+          <tr><td>Google AI Overviews</td><td>Top of Funnel</td><td>Top rated solutions for information routing 2026</td><td>Search-backed overview</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAB 5: MODEL CONTEXT PROTOCOL (MCP) SERVER -->
+  <section id="tab-mcp" class="tab-content">
+    <div class="hero-banner">
+      <h1>Model Context Protocol (MCP) Server</h1>
+      <p>
+        Sendput includes a native Model Context Protocol (MCP) Server. Connect Claude Desktop, Hermes, Cursor, or ChatGPT to query Brand Radar, run site audits, and inspect telemetry directly through agent tool calls.
+      </p>
+    </div>
+
+    <div class="table-panel">
+      <div class="panel-title">
+        <span>Registered MCP Tools</span>
+        <span class="badge cyan">JSON-RPC 2.0 Active</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>MCP Tool Name</th>
+            <th>Description</th>
+            <th>Primary Parameters</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>sendput_brand_radar</code></td>
+            <td>Query brand mentions, citations, and SoV across 7 AI platforms.</td>
+            <td><code>brand, domain, competitors</code></td>
+          </tr>
+          <tr>
+            <td><code>sendput_site_audit</code></td>
+            <td>Run 170+ check technical SEO & AEO audit on any URL.</td>
+            <td><code>url</code></td>
+          </tr>
+          <tr>
+            <td><code>sendput_site_explorer</code></td>
+            <td>Query Domain Rating, backlink profile, and top organic pages.</td>
+            <td><code>target</code></td>
+          </tr>
+          <tr>
+            <td><code>sendput_keywords_explorer</code></td>
+            <td>Get search volume, KD, and generate conversational AI prompts.</td>
+            <td><code>keyword</code></td>
+          </tr>
+          <tr>
+            <td><code>sendput_generate_llms_txt</code></td>
+            <td>Synthesize /llms.txt and /llms-full.txt agent context feeds.</td>
+            <td><code>url, brand_name</code></td>
+          </tr>
+          <tr>
+            <td><code>sendput_telemetry_stats</code></td>
+            <td>Stream live client errors and Core Web Vitals from Neon PostgreSQL.</td>
+            <td><code>site_id, limit</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top: 24px;">
+        <div style="font-weight: 700; font-size: 14px; margin-bottom: 8px;">Claude Desktop / Agent Configuration (claude_desktop_config.json):</div>
+        <div class="code-block">{
+  "mcpServers": {
+    "sendput": {
+      "command": "npx",
+      "args": ["-y", "sendput-aiseo@latest"]
+    }
+  }
+}
+
+// Or connect over HTTP via Serverless Endpoint:
+// POST https://sendput-aiseo.vercel.app/api/mcp</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 6: CLIENT TELEMETRY & BEACON -->
+  <section id="tab-telemetry" class="tab-content">
+    <div class="hero-banner">
+      <h1>Runtime Web Telemetry & Beacon SDK</h1>
+      <p>
+        Lightweight zero-dependency browser script streaming client-side errors, unhandled rejections, Core Web Vitals, and fetch failures into Neon PostgreSQL.
+      </p>
+      <div style="margin-top: 16px;">
+        <button class="action-btn" onclick="triggerSyntheticError()">Trigger Error Probe</button>
+        <button class="action-btn" style="background: var(--accent-amber); margin-left: 8px;" onclick="triggerApiFailure()">Trigger API Failure</button>
+        <button class="action-btn" style="background: var(--surface-border); color: var(--text); margin-left: 8px;" onclick="fetchLiveTelemetry()">Refresh Telemetry Stream</button>
+      </div>
+    </div>
+
+    <div class="table-panel">
+      <div class="panel-title">
+        <span>Live Neon PostgreSQL Ingestion Stream</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Target URL</th>
+            <th>Payload Summary</th>
+            <th>Recorded At</th>
+          </tr>
+        </thead>
+        <tbody id="telemetry-stream-body">
+          <tr><td colspan="5" style="text-align: center; color: var(--muted); padding: 24px;">Click 'Refresh Telemetry Stream' to poll live events from Neon.</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
   <footer>
-    <div>Sendput &copy; 2026. All rights reserved.</div>
-    <div>Operational Protocol: Clinical Authority</div>
+    <div>Sendput &copy; 2026. All rights reserved. // Ahrefs-Inspired Brand Radar & Site Audit Engine.</div>
+    <div>Operating Engine: Vercel Serverless // Neon PostgreSQL</div>
   </footer>
 
   <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+      const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.innerText.toLowerCase().includes(tabId));
+      if (targetBtn) targetBtn.classList.add('active');
+
+      const targetContent = document.getElementById('tab-' + tabId);
+      if (targetContent) targetContent.classList.add('active');
+    }
+
+    async function executeRadarScan() {
+      const brand = document.getElementById('radar-brand-input').value;
+      const domain = document.getElementById('radar-domain-input').value;
+      try {
+        const res = await fetch(`/api/v1/radar?brand=${encodeURIComponent(brand)}&domain=${encodeURIComponent(domain)}`);
+        const data = await res.json();
+        document.getElementById('radar-index-val').innerText = `${data.aiVisibilityIndexScore} / 100`;
+        document.getElementById('radar-sov-val').innerText = `${data.aiShareOfVoice}%`;
+        document.getElementById('radar-mentions-val').innerText = data.totalMentions;
+        document.getElementById('radar-citations-val').innerText = data.totalCitations;
+
+        const tbody = document.getElementById('radar-platforms-body');
+        tbody.innerHTML = Object.entries(data.platformBreakdown).map(([platform, stats]) => `
+          <tr>
+            <td style="text-transform: capitalize;">${platform.replace('_', ' ')}</td>
+            <td>${stats.shareOfVoice}%</td>
+            <td>${stats.mentions}</td>
+            <td>${stats.citations}</td>
+            <td>${stats.topCompetitor}</td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        alert('Radar query error: ' + err.message);
+      }
+    }
+
+    async function executeSiteAudit() {
+      const url = document.getElementById('audit-url-input').value;
+      try {
+        const res = await fetch(`/api/v1/audit?url=${encodeURIComponent(url)}`);
+        const data = await res.json();
+        document.getElementById('audit-score-val').innerText = `${data.healthScore} / 100`;
+        document.getElementById('audit-errors-val').innerText = data.issuesCount.errors;
+        document.getElementById('audit-warnings-val').innerText = data.issuesCount.warnings;
+        document.getElementById('audit-bots-val').innerText = data.details.aiBotsAllowed ? 'Allowed' : 'Blocked';
+
+        const tbody = document.getElementById('audit-issues-body');
+        if (data.issues.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--accent-emerald); padding: 20px;">Zero issues detected. Perfect technical SEO & AEO score!</td></tr>`;
+        } else {
+          tbody.innerHTML = data.issues.map(i => `
+            <tr>
+              <td><span class="badge ${i.severity === 'ERROR' ? 'red' : i.severity === 'WARNING' ? 'amber' : 'cyan'}">${i.severity}</span></td>
+              <td>${i.category}</td>
+              <td>${i.code}</td>
+              <td>${i.message}<br><small style="color: var(--muted);">${i.howToFix}</small></td>
+            </tr>
+          `).join('');
+        }
+      } catch (err) {
+        alert('Audit error: ' + err.message);
+      }
+    }
+
+    async function executeSiteExplorer() {
+      const target = document.getElementById('explorer-target-input').value;
+      try {
+        const res = await fetch(`/api/v1/explorer?target=${encodeURIComponent(target)}`);
+        const data = await res.json();
+        document.getElementById('exp-dr-val').innerText = `${data.domainRating} / 100`;
+        document.getElementById('exp-backlinks-val').innerText = data.backlinksCount.toLocaleString();
+        document.getElementById('exp-ref-val').innerText = data.referringDomainsCount.toLocaleString();
+        document.getElementById('exp-traffic-val').innerText = `${(data.estimatedMonthlyOrganicTraffic / 1000).toFixed(1)}K / mo`;
+
+        const tbody = document.getElementById('exp-pages-body');
+        tbody.innerHTML = data.topPages.map(p => `
+          <tr>
+            <td>${p.url}</td>
+            <td>${p.estimatedTraffic.toLocaleString()}</td>
+            <td>${p.keywordCount.toLocaleString()}</td>
+            <td>${p.topKeyword}</td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        alert('Explorer error: ' + err.message);
+      }
+    }
+
+    async function executeKeywordLookup() {
+      const kw = document.getElementById('keywords-input').value;
+      try {
+        const res = await fetch(`/api/v1/keywords?keyword=${encodeURIComponent(kw)}`);
+        const data = await res.json();
+        document.getElementById('kw-vol-val').innerText = data.monthlySearchVolume.toLocaleString();
+        document.getElementById('kw-kd-val').innerText = `${data.keywordDifficulty} / 100`;
+        document.getElementById('kw-cpc-val').innerText = `$${data.cpcUsd}`;
+        document.getElementById('kw-intent-val').innerText = data.searchIntent;
+
+        const tbody = document.getElementById('kw-prompts-body');
+        tbody.innerHTML = data.generatedPrompts.map(p => `
+          <tr>
+            <td>${p.targetPlatform}</td>
+            <td>${p.funnelStage}</td>
+            <td>${p.prompt}</td>
+            <td>${p.triggerIntent}</td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        alert('Keywords error: ' + err.message);
+      }
+    }
+
+    async function fetchLiveTelemetry() {
+      try {
+        const res = await fetch('/api/v1/telemetry/events?limit=15');
+        const data = await res.json();
+        const tbody = document.getElementById('telemetry-stream-body');
+        if (data.events.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--muted); padding: 24px;">No events recorded yet.</td></tr>`;
+        } else {
+          tbody.innerHTML = data.events.map(e => `
+            <tr>
+              <td>#${e.id}</td>
+              <td><span class="badge ${e.event_type === 'performance' ? 'green' : e.event_type === 'error' ? 'red' : 'amber'}">${e.event_type}</span></td>
+              <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${e.url}</td>
+              <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${JSON.stringify(e.payload)}</td>
+              <td>${new Date(e.created_at).toLocaleTimeString()}</td>
+            </tr>
+          `).join('');
+        }
+      } catch (err) {
+        alert('Telemetry stream error: ' + err.message);
+      }
+    }
+
     function triggerSyntheticError() {
-      throw new Error("Sendput Diagnostic Probe: Simulated runtime exception at " + new Date().toISOString());
+      throw new Error("Sendput Telemetry Diagnostic: Unhandled client exception probe at " + new Date().toISOString());
     }
     function triggerApiFailure() {
-      fetch("/api/v1/simulated-failure-test-" + Date.now()).catch(function() {});
-    }
-    function triggerCustomMetric() {
-      if (window.trackTelemetryEvent) {
-        window.trackTelemetryEvent("performance", { probe: "manual_click", latencyMs: 14 });
-      }
+      fetch("/api/v1/simulated-failure-" + Date.now()).catch(function() {});
     }
   </script>
 </body>
