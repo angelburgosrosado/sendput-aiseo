@@ -1,0 +1,640 @@
+// ==============================================================================
+// SignalForge - Enterprise Search & AI Discovery Intelligence
+// Prisma Schema Definition
+// ==============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ------------------------------------------------------------------------------
+// Enums
+// ------------------------------------------------------------------------------
+
+enum MembershipRole {
+  OWNER
+  ADMIN
+  ANALYST
+  VIEWER
+}
+
+enum ProjectStatus {
+  ACTIVE
+  PAUSED
+  ARCHIVED
+}
+
+enum VerificationStatus {
+  VERIFIED
+  PENDING
+  FAILED
+}
+
+enum SearchEngine {
+  GOOGLE
+  BING
+  CHATGPT_SEARCH
+  PERPLEXITY
+  CLAUDE
+  GEMINI
+  COPILOT
+}
+
+enum DeviceType {
+  DESKTOP
+  MOBILE
+  TABLET
+}
+
+enum SearchIntent {
+  INFORMATIONAL
+  COMMERCIAL
+  TRANSACTIONAL
+  NAVIGATIONAL
+}
+
+enum AuditSeverity {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+  NOTICE
+}
+
+enum AuditStatus {
+  QUEUED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+enum ContentStatus {
+  PLANNED
+  IN_PROGRESS
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum AIEngine {
+  CHATGPT
+  PERPLEXITY
+  CLAUDE
+  GEMINI
+  COPILOT
+}
+
+enum CitationMentionType {
+  PRIMARY_RECOMMENDATION
+  DIRECT_CITATION
+  SECONDARY_REFERENCE
+  NOT_MENTIONED
+  COMPETITOR_ONLY
+}
+
+enum IntegrationProvider {
+  GOOGLE_SEARCH_CONSOLE
+  GOOGLE_ANALYTICS_4
+  GOOGLE_BUSINESS_PROFILE
+  BING_WEBMASTER
+  DATAFORSEO
+  SERPAPI
+  LICENSED_CRAWLER
+}
+
+enum ConnectionStatus {
+  CONNECTED
+  DISCONNECTED
+  ERROR
+  RATE_LIMITED
+}
+
+enum ReportType {
+  EXECUTIVE_SUMMARY
+  KEYWORD_MOVEMENT
+  TECHNICAL_HEALTH
+  AI_VISIBILITY_INDEX
+  COMPETITOR_BENCHMARK
+  LOCAL_PRESENCE
+}
+
+// ------------------------------------------------------------------------------
+// User, Organization & Access Control
+// ------------------------------------------------------------------------------
+
+model User {
+  id            String       @id @default(cuid())
+  email         String       @unique
+  name          String?
+  avatarUrl     String?
+  jobTitle      String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  memberships   Membership[]
+  auditLogs     AuditLog[]
+}
+
+model Organization {
+  id                    String                 @id @default(cuid())
+  name                  String
+  slug                  String                 @unique
+  subscriptionPlanId    String?
+  subscriptionTier      String                 @default("ENTERPRISE")
+  logoUrl               String?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+
+  plan                  SubscriptionPlan?      @relation(fields: [subscriptionPlanId], references: [id])
+  memberships           Membership[]
+  projects              Project[]
+  integrations          IntegrationConnection[]
+  usageEvents           UsageEvent[]
+  auditLogs             AuditLog[]
+}
+
+model Membership {
+  id             String         @id @default(cuid())
+  userId         String
+  organizationId String
+  role           MembershipRole @default(VIEWER)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+}
+
+// ------------------------------------------------------------------------------
+// Projects, Properties & Competitors
+// ------------------------------------------------------------------------------
+
+model Project {
+  id               String               @id @default(cuid())
+  organizationId   String
+  name             String
+  domain           String
+  description      String?
+  targetCountry    String               @default("US")
+  targetLanguage   String               @default("en")
+  status           ProjectStatus        @default(ACTIVE)
+  sfaiScore        Float                @default(68.5) // SignalForge Authority Index (0-100)
+  discoveryVelocity Float               @default(14.2) // DVS momentum percentage
+  healthQuotient   Float                @default(92.0) // Technical Health Quotient (0-100)
+  aiCitationShare  Float                @default(24.8) // AI Citation Share (0-100%)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  organization     Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  properties       WebsiteProperty[]
+  competitors      Competitor[]
+  keywords         Keyword[]
+  collections      KeywordCollection[]
+  referringDomains ReferringDomain[]
+  backlinks        BacklinkRecord[]
+  auditRuns        SiteAuditRun[]
+  contentBriefs    ContentBrief[]
+  aiQueries        AIQuery[]
+  localLocations   LocalLocation[]
+  reports          Report[]
+  scheduledReports ScheduledReport[]
+
+  @@index([organizationId])
+  @@index([domain])
+}
+
+model WebsiteProperty {
+  id               String             @id @default(cuid())
+  projectId        String
+  url              String
+  verificationType String             @default("DNS_TXT")
+  status           VerificationStatus @default(VERIFIED)
+  verifiedAt       DateTime?          @default(now())
+  createdAt        DateTime           @default(now())
+
+  project          Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model Competitor {
+  id             String   @id @default(cuid())
+  projectId      String
+  name           String
+  domain         String
+  sfaiScore      Float    @default(65.0)
+  commonKeywords Int      @default(0)
+  overlapShare   Float    @default(0.0) // percentage
+  organicBreadth Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+// ------------------------------------------------------------------------------
+// Keywords, Tracking & SERP Snapshots
+// ------------------------------------------------------------------------------
+
+model KeywordCollection {
+  id          String    @id @default(cuid())
+  projectId   String
+  name        String
+  description String?
+  colorTag    String?   @default("#14B8A6")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  keywords    Keyword[]
+
+  @@index([projectId])
+}
+
+model Keyword {
+  id              String              @id @default(cuid())
+  projectId       String
+  collectionId    String?
+  term            String
+  searchVolume    Int                 @default(0)
+  difficultyScore Float               @default(0) // 0-100
+  cpc             Float               @default(0.0)
+  intent          SearchIntent        @default(INFORMATIONAL)
+  currentPosition Int?
+  previousPosition Int?
+  bestPosition    Int?
+  serpFeatures    String              @default("[]") // JSON string: ["featured_snippet", "ai_overview", "people_also_ask"]
+  tags            String              @default("[]") // JSON array of tag strings
+  isSynthetic     Boolean             @default(true) // Explicit label for simulated or modeled metrics
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  project         Project             @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  collection      KeywordCollection?  @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  observations    KeywordObservation[]
+
+  @@index([projectId])
+  @@index([collectionId])
+  @@index([term])
+}
+
+model KeywordObservation {
+  id               String                 @id @default(cuid())
+  keywordId        String
+  date             DateTime
+  position         Int
+  url              String?
+  searchEngine     SearchEngine           @default(GOOGLE)
+  device           DeviceType             @default(DESKTOP)
+  hasAiOverview    Boolean                @default(false)
+  hasSnippet       Boolean                @default(false)
+  createdAt        DateTime               @default(now())
+
+  keyword          Keyword                @relation(fields: [keywordId], references: [id], onDelete: Cascade)
+  snapshots        SearchResultSnapshot[]
+
+  @@index([keywordId])
+  @@index([date])
+}
+
+model SearchResultSnapshot {
+  id                   String             @id @default(cuid())
+  keywordObservationId String
+  position             Int
+  domain               String
+  title                String
+  url                  String
+  snippet              String?
+  isClientDomain       Boolean            @default(false)
+  features             String             @default("[]") // JSON array
+
+  observation          KeywordObservation @relation(fields: [keywordObservationId], references: [id], onDelete: Cascade)
+
+  @@index([keywordObservationId])
+}
+
+// ------------------------------------------------------------------------------
+// Link Graph, Backlinks & Referring Domains
+// ------------------------------------------------------------------------------
+
+model ReferringDomain {
+  id               String           @id @default(cuid())
+  projectId        String
+  domain           String
+  domainAuthority  Float            @default(50.0) // SFAI representation
+  backlinksCount   Int              @default(1)
+  isDoFollow       Boolean          @default(true)
+  firstSeen        DateTime         @default(now())
+  lastSeen         DateTime         @default(now())
+
+  project          Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  backlinks        BacklinkRecord[]
+
+  @@index([projectId])
+  @@index([domain])
+}
+
+model BacklinkRecord {
+  id                String          @id @default(cuid())
+  projectId         String
+  referringDomainId String?
+  sourceUrl         String
+  targetUrl         String
+  anchorText        String?
+  isDoFollow        Boolean         @default(true)
+  httpStatus        Int             @default(200)
+  firstSeen         DateTime        @default(now())
+  lastSeen          DateTime        @default(now())
+
+  project           Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  referringDomain   ReferringDomain? @relation(fields: [referringDomainId], references: [id], onDelete: SetNull)
+
+  @@index([projectId])
+  @@index([referringDomainId])
+}
+
+// ------------------------------------------------------------------------------
+// Technical Audits & Crawl Pages
+// ------------------------------------------------------------------------------
+
+model SiteAuditRun {
+  id             String           @id @default(cuid())
+  projectId      String
+  crawlDate      DateTime         @default(now())
+  status         AuditStatus      @default(COMPLETED)
+  pagesCrawled   Int              @default(0)
+  healthScore    Float            @default(90.0) // 0-100 THQ
+  criticalCount  Int              @default(0)
+  highCount      Int              @default(0)
+  mediumCount    Int              @default(0)
+  lowCount       Int              @default(0)
+  durationSec    Int              @default(45)
+
+  project        Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  issues         SiteAuditIssue[]
+  crawlPages     CrawlPage[]
+
+  @@index([projectId])
+}
+
+model SiteAuditIssue {
+  id             String        @id @default(cuid())
+  siteAuditRunId String
+  pageUrl        String
+  issueType      String        // e.g. "MISSING_H1", "BROKEN_LINK", "SLOW_LCP", "DUPLICATE_CANONICAL"
+  severity       AuditSeverity @default(MEDIUM)
+  message        String
+  recommendation String
+  status         String        @default("OPEN")
+  createdAt      DateTime      @default(now())
+
+  auditRun       SiteAuditRun  @relation(fields: [siteAuditRunId], references: [id], onDelete: Cascade)
+
+  @@index([siteAuditRunId])
+  @@index([severity])
+}
+
+model CrawlPage {
+  id             String       @id @default(cuid())
+  siteAuditRunId String
+  url            String
+  statusCode     Int          @default(200)
+  title          String?
+  h1             String?
+  wordCount      Int          @default(0)
+  loadTimeMs     Int          @default(300)
+  metaRobots     String?      @default("index,follow")
+  canonicalUrl   String?
+  hasSsl         Boolean      @default(true)
+  depthLevel     Int          @default(1)
+
+  auditRun       SiteAuditRun @relation(fields: [siteAuditRunId], references: [id], onDelete: Cascade)
+
+  @@index([siteAuditRunId])
+  @@index([url])
+}
+
+// ------------------------------------------------------------------------------
+// Content Intelligence & Briefs
+// ------------------------------------------------------------------------------
+
+model ContentBrief {
+  id             String         @id @default(cuid())
+  projectId      String
+  title          String
+  targetKeyword  String
+  targetAudience String?
+  status         ContentStatus  @default(PLANNED)
+  qualityScore   Float          @default(82.0) // 0-100 content coverage score
+  wordCountGoal  Int            @default(1800)
+  briefOutline   String         @default("[]") // JSON structure
+  competitorUrls String         @default("[]") // JSON string array
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  project        Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assets         ContentAsset[]
+
+  @@index([projectId])
+}
+
+model ContentAsset {
+  id               String       @id @default(cuid())
+  contentBriefId   String
+  title            String
+  bodyText         String
+  status           ContentStatus @default(IN_PROGRESS)
+  wordCount        Int          @default(0)
+  readabilityScore Float        @default(75.0)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  brief            ContentBrief @relation(fields: [contentBriefId], references: [id], onDelete: Cascade)
+
+  @@index([contentBriefId])
+}
+
+// ------------------------------------------------------------------------------
+// AI-Search & Answer Engine Visibility Monitoring
+// ------------------------------------------------------------------------------
+
+model AIQuery {
+  id            String                    @id @default(cuid())
+  projectId     String
+  queryPrompt   String
+  category      String                    @default("PRODUCT_EVALUATION")
+  engine        AIEngine                  @default(PERPLEXITY)
+  frequencyDays Int                       @default(7)
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+
+  project       Project                   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  observations  AIVisibilityObservation[]
+
+  @@index([projectId])
+}
+
+model AIVisibilityObservation {
+  id             String              @id @default(cuid())
+  aiQueryId      String
+  date           DateTime            @default(now())
+  engine         AIEngine            @default(PERPLEXITY)
+  mentionType    CitationMentionType @default(DIRECT_CITATION)
+  citationRank   Int?                @default(1)
+  isClientCited  Boolean             @default(true)
+  citedSourceUrl String?
+  sentimentScore Float               @default(0.85) // -1.0 to +1.0
+  snippetContext String?
+  isSynthetic    Boolean             @default(true)
+
+  aiQuery        AIQuery             @relation(fields: [aiQueryId], references: [id], onDelete: Cascade)
+
+  @@index([aiQueryId])
+  @@index([date])
+}
+
+// ------------------------------------------------------------------------------
+// Local Presence & Listing Monitoring
+// ------------------------------------------------------------------------------
+
+model LocalLocation {
+  id           String               @id @default(cuid())
+  projectId    String
+  businessName String
+  address      String
+  city         String
+  state        String
+  postalCode   String
+  phone        String
+  latitude     Float?
+  longitude    Float?
+  gbpListingId String?
+  createdAt    DateTime             @default(now())
+
+  project      Project              @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  listings     LocalListingStatus[]
+
+  @@index([projectId])
+}
+
+model LocalListingStatus {
+  id              String        @id @default(cuid())
+  localLocationId String
+  platform        String        // e.g. "Google Maps", "Apple Maps", "Bing Places", "Yelp"
+  status          String        @default("SYNCED")
+  rating          Float         @default(4.8)
+  reviewsCount    Int           @default(42)
+  napConsistency  Float         @default(98.0) // Name-Address-Phone accuracy %
+  lastChecked     DateTime      @default(now())
+
+  location        LocalLocation @relation(fields: [localLocationId], references: [id], onDelete: Cascade)
+
+  @@index([localLocationId])
+}
+
+// ------------------------------------------------------------------------------
+// Reports & Automation
+// ------------------------------------------------------------------------------
+
+model Report {
+  id          String     @id @default(cuid())
+  projectId   String
+  title       String
+  type        ReportType @default(EXECUTIVE_SUMMARY)
+  dateRange   String     @default("LAST_30_DAYS")
+  configJson  String     @default("{}")
+  generatedAt DateTime   @default(now())
+
+  project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model ScheduledReport {
+  id         String     @id @default(cuid())
+  projectId  String
+  title      String
+  frequency  String     @default("WEEKLY") // "DAILY", "WEEKLY", "MONTHLY"
+  recipients String     @default("[]") // JSON string array of emails
+  type       ReportType @default(EXECUTIVE_SUMMARY)
+  lastRunAt  DateTime?
+  nextRunAt  DateTime?
+
+  project    Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+// ------------------------------------------------------------------------------
+// Integrations, Subscriptions, Usage & Auditing
+// ------------------------------------------------------------------------------
+
+model IntegrationConnection {
+  id                String              @id @default(cuid())
+  organizationId    String
+  provider          IntegrationProvider
+  status            ConnectionStatus    @default(CONNECTED)
+  accountIdentifier String?
+  credentialsMasked String?
+  lastSyncAt        DateTime?           @default(now())
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  organization      Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, provider])
+  @@index([organizationId])
+}
+
+model SubscriptionPlan {
+  id            String         @id @default(cuid())
+  name          String
+  tier          String         @unique // "STARTER", "GROWTH", "ENTERPRISE"
+  maxProjects   Int            @default(10)
+  maxKeywords   Int            @default(1000)
+  maxCrawlPages Int            @default(5000)
+  maxAIQueries  Int            @default(200)
+  priceMonthly  Int            @default(199)
+  createdAt     DateTime       @default(now())
+
+  organizations Organization[]
+}
+
+model UsageEvent {
+  id             String       @id @default(cuid())
+  organizationId String
+  eventType      String       // "KEYWORD_CHECK", "SERP_SCRAPE_UNIT", "AI_PROMPT_CHECK", "CRAWL_PAGE"
+  unitsUsed      Int          @default(1)
+  timestamp      DateTime     @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([timestamp])
+}
+
+model AuditLog {
+  id             String       @id @default(cuid())
+  organizationId String
+  userId         String?
+  action         String
+  targetResource String
+  metadata       String?      @default("{}") // JSON string
+  ipAddress      String?
+  createdAt      DateTime     @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([createdAt])
+}
