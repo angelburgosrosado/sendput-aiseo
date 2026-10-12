@@ -1,1 +1,67 @@
-node_modules
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Next.js build output
+.next/
+out/
+build/
+dist/
+
+# Environment files (never commit secrets)
+.env
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# Diagnostic / Coverage / Testing output
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Prisma
+# Keep schema.prisma and migrations, ignore sqlite local db if ever used
+*.db
+*.db-journal
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and Editor directories
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.sublime-workspace
+*.swp
+*.swo
+
+# Temporary folders
+.temp/
+.tmp/
+scratch/
