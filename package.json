@@ -12,7 +12,8 @@
     "test:e2e": "playwright test",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
-    "prisma:seed": "bun run prisma/seed.ts"
+    "prisma:seed": "bun run prisma/seed.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

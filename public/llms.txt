@@ -1,0 +1,28 @@
+# Sendput
+
+> Send information. Put it where it works. The complete AI Search (AEO), Brand Radar, and SEO Intelligence Platform featuring native Model Context Protocol (MCP) server integration.
+
+## Core Documentation and Features
+
+- [Brand Radar](https://sendput.com/): Track brand mentions, citations, and Share of Voice (SoV) across 7 AI platforms (ChatGPT, Perplexity, Gemini, Claude, Copilot, Grok, and Google AI Overviews).
+- [Site Audit](https://sendput.com/): Crawl and inspect websites for 170+ technical and on-page SEO issues, including explicit AI bot blocking rules (GPTBot, ClaudeBot, PerplexityBot) and Schema.org structured data.
+- [Site Explorer](https://sendput.com/): Analyze Domain Rating (DR), backlink profiles, referring domains, and organic search traffic.
+- [Keywords Explorer](https://sendput.com/): Research monthly search volume, keyword difficulty, and expand short keywords into conversational buyer prompts via Prompt Fanout.
+- [Model Context Protocol (MCP) Server](https://sendput.com/mcp): Native JSON-RPC 2.0 MCP server for AI agents to query Brand Radar, run audits, and inspect telemetry.
+- [Client Telemetry SDK](https://sendput.com/telemetry/beacon.js): Zero-dependency browser beacon streaming errors, Core Web Vitals, and fetch failures into Neon PostgreSQL.
+
+## Native Model Context Protocol (MCP) Tools
+
+1. `sendput_brand_radar`: Query AI brand mentions, SoV, and citations across 7 AI models.
+2. `sendput_site_audit`: Deep technical SEO and AEO audit of any target URL.
+3. `sendput_site_explorer`: Analyze backlinks, domain rating, and organic search traffic.
+4. `sendput_keywords_explorer`: Keyword search volume, KD, CPC, and conversational AI prompt fanout.
+5. `sendput_generate_llms_txt`: Synthesize /llms.txt and /llms-full.txt feeds for any web surface.
+6. `sendput_telemetry_stats`: Stream live client errors and Core Web Vitals from Neon PostgreSQL.
+
+## Agent Connection Directives
+
+- Remote MCP Endpoint: POST https://sendput-aiseo.vercel.app/api/mcp
+- Ingestion mode: High density technical token stream enabled.
+- Canonical endpoint: https://sendput.com/
+- Schema type: schema.org/WebSite, schema.org/Organization, and schema.org/SoftwareApplication

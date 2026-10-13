@@ -1,0 +1,46 @@
+# Sendput Complete Context Feed
+
+Canonical URL: https://sendput.com/
+Platform Class: Autonomous Information Routing & Generative Web Telemetry
+Motto: Send information. Put it where it works.
+
+## Executive Summary
+
+Sendput is a specialized telemetry and generative engine optimization (GEO/AEO) architecture engineered to solve modern web observability and AI search visibility. The name Sendput represents the operational lifecycle of digital data: capturing information at runtime, routing it across execution boundaries, and putting it directly where it produces computational value.
+
+## Architectural Pillars
+
+### 1. Zero-Dependency Client Telemetry Beacon
+- Single lightweight JavaScript SDK (beacon.js) under 5KB uncompressed.
+- Native capture of window.onerror and unhandledrejection events with full stack traces.
+- Real-time Core Web Vitals profiling: TTFB, DOMContentLoaded, Load, and First Contentful Paint (FCP).
+- Transparent monkey-patching of window.fetch to isolate degraded 4xx/5xx responses and connection drops.
+- Asynchronous dispatch via navigator.sendBeacon with automatic fallback to keepalive HTTP POST.
+
+### 2. High-Throughput SQLite WAL Ingestion Daemon
+- Zero-external-dependency Node.js HTTP server.
+- High-concurrency persistence using SQLite with Write-Ahead Logging (PRAGMA journal_mode = WAL).
+- Multi-tenant site partitioning indexing events, crawl audits, synthesized schemas, and model probe logs.
+- Dedicated monitoring console serving real-time event tables, error counts, and latency statistics.
+
+### 3. Generative Engine Optimization (GEO) & AEO Engine
+- Automated transformation of dynamic Single Page Applications (SPAs) into machine-readable /llms.txt and /llms-full.txt feeds.
+- Schema.org structured data synthesis dynamically extracting WebSite, Organization, SoftwareApplication, and FAQPage graphs.
+- Multi-model brand citation tracking running targeted queries across Gemini, Claude, OpenAI, and Perplexity.
+- Quantitative scoring: Share of Model Voice (SoMV), Domain Citation Frequency, average citation rank, competitor visibility, and hallucination alerts.
+
+## Technical Specifications & Integration
+
+### Beacon Injection
+```html
+<script src="https://sendput.com/telemetry/beacon.js"
+  data-site-id="sendput.com"
+  data-endpoint="/api/v1/telemetry/beacon"
+  async>
+</script>
+```
+
+### Agent Ingestion Header
+```html
+<link rel="alternate" type="text/markdown" href="https://sendput.com/llms.txt" title="Sendput Agent Feed">
+```

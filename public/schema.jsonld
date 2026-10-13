@@ -1,0 +1,79 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://sendput.com/#website",
+      "url": "https://sendput.com",
+      "name": "Sendput",
+      "description": "Sendput routes, structures, and dispatches data where it works: high-density agent feeds, automated schema distribution, and zero-latency client telemetry.",
+      "inLanguage": "en-US",
+      "potentialAction": [
+        {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://sendput.com/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://sendput.com/#organization",
+      "name": "Sendput",
+      "url": "https://sendput.com",
+      "description": "Autonomous Information Routing and Generative Web Telemetry Platform.",
+      "logo": "https://sendput.com/assets/logo.png",
+      "sameAs": [
+        "https://github.com/sendput",
+        "https://x.com/sendput"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://sendput.com/#softwareapplication",
+      "name": "Sendput Telemetry and AEO Platform",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "url": "https://sendput.com",
+      "description": "Enterprise platform for routing client telemetry, synthesizing Schema.org JSON-LD, generating llms.txt context feeds, and tracking generative model citations.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://sendput.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Sendput?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sendput is an autonomous information routing and telemetry engine. It embodies the principle of sending information and putting it where it works across client apps, AI agents, and persistent databases."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Sendput optimize web applications for AI search engines?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sendput crawls web surfaces, generates high-density /llms.txt feeds, synthesizes valid Schema.org graphs, and continuously monitors brand visibility and citation rank across Gemini, Claude, OpenAI, and Perplexity."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the Sendput client telemetry beacon operate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sendput provides a zero-dependency JavaScript beacon that captures runtime errors, unhandled promise rejections, Core Web Vitals (TTFB, DOMContentLoaded, Load, FCP), and network fetch degradations, streaming events directly into SQLite with WAL mode."
+          }
+        }
+      ]
+    }
+  ]
+}
