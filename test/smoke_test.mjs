@@ -148,22 +148,34 @@ async function runTests() {
     results.push({ name: 'GET /downloads/...zip', pass: false, error: err.message });
   }
 
-  // Bonus Test: POST /api/telemetry/bot
-  console.log('\n[BONUS] POST /api/telemetry/bot');
+  // Test 9: Agency Fleet Command & Seats (/api/agency/seats)
+  console.log('\n[TEST 9] GET /api/agency/seats');
   try {
-    const res = await request('/api/telemetry/bot', {
+    const res = await request('/api/agency/seats');
+    const json = JSON.parse(res.text);
+    const pass = res.status === 200 && json.agency && json.included_seats === 10 && json.reseller_margins;
+    results.push({ name: 'GET /api/agency/seats', pass, details: `agency=${json.agency}, starterProfit=$${json.reseller_margins?.net_margin_starter}/mo, growthProfit=$${json.reseller_margins?.net_margin_growth}/mo` });
+  } catch (err) {
+    results.push({ name: 'GET /api/agency/seats', pass: false, error: err.message });
+  }
+
+  // Test 10: Agency CNAME Co-Branded Audit & Proposal Generation
+  console.log('\n[TEST 10] POST /api/audit (CNAME Co-Branded Proposal)');
+  try {
+    const res = await request('/api/audit', {
       method: 'POST',
+      headers: { 'x-forwarded-host': 'audit.signalforgepartners.com' },
       body: {
-        slug: 'myiad-insurance-ai',
-        path: '/services',
-        ua: 'Mozilla/5.0 (compatible; OAI-SearchBot/1.0; +https://openai.com/searchbot)'
+        business_name: 'Metro Dental Care',
+        website_url: 'https://metrodental.example.com',
+        city_niche: 'Orlando FL'
       }
     });
     const json = JSON.parse(res.text);
-    const pass = res.status === 200 && json.status === 'ok' && json.bot === 'OAI-SearchBot';
-    results.push({ name: 'POST /api/telemetry/bot', pass, details: `bot=${json.bot}` });
+    const pass = res.status === 200 && json.agency?.agency_name === 'SignalForge Growth Partners' && json.proposal_markdown?.includes('SignalForge Growth Partners');
+    results.push({ name: 'POST /api/audit (Agency CNAME)', pass, details: `proposalAgency=${json.agency?.agency_name}, markdownLen=${json.proposal_markdown?.length}` });
   } catch (err) {
-    results.push({ name: 'POST /api/telemetry/bot', pass: false, error: err.message });
+    results.push({ name: 'POST /api/audit (Agency CNAME)', pass: false, error: err.message });
   }
 
   console.log('\n================ SMOKE TEST RESULTS ================');

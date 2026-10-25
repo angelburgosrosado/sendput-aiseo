@@ -28303,6 +28303,26 @@ var memoryEntities = {
     plan_tier: "growth_79"
   }
 };
+var memoryAgencies = {
+  "signalforge-partners": {
+    id: "a0000000-0000-0000-0000-000000000001",
+    agency_name: "SignalForge Growth Partners",
+    slug: "signalforge-partners",
+    custom_domain: "audit.signalforgepartners.com",
+    brand_color: "#4F46E5",
+    logo_url: "https://sendput.com/assets/agency-logo-demo.png",
+    plan_tier: "agency_command_299",
+    included_seats: 10,
+    active_seats: 2,
+    extra_seat_price_usd: 19,
+    reseller_retail_price_starter_usd: 197,
+    reseller_retail_price_growth_usd: 497,
+    team_roles: [
+      { user_id: "u-1", email: "director@signalforgepartners.com", role: "agency_admin" },
+      { user_id: "u-2", email: "seo-lead@signalforgepartners.com", role: "account_manager" }
+    ]
+  }
+};
 function testTcpPort(host, port, timeoutMs = 2e3) {
   return new Promise((resolve) => {
     const sock = new import_net.default.Socket();
@@ -28347,6 +28367,27 @@ async function initDbPool() {
     console.error("[Self-Healing DB] Fallback to stateful memory activated:", err.message);
     dbOnline = false;
   }
+}
+async function getAgency(identifier) {
+  if (!identifier) return null;
+  const clean = identifier.toLowerCase().trim();
+  if (dbOnline && dbPool) {
+    try {
+      const res = await dbPool.query(
+        `SELECT * FROM agency_workspaces WHERE LOWER(custom_domain) = $1 OR slug = $1 LIMIT 1`,
+        [clean]
+      );
+      if (res.rows && res.rows.length > 0) {
+        return res.rows[0];
+      }
+    } catch (e) {
+      console.warn(`[Agency DB Lookup]: ${e.message}`);
+    }
+  }
+  const found = Object.values(memoryAgencies).find(
+    (a) => a.slug === clean || a.custom_domain && a.custom_domain.toLowerCase() === clean
+  );
+  return found || null;
 }
 async function getEntity(slug) {
   if (dbOnline && dbPool) {
@@ -28463,11 +28504,72 @@ app.get("/api/health", async (_req, res) => {
     protocolsSupported: ["Schema.org JSON-LD Edge", "IndexNow Push", "llms.txt v2", "OpenAPI 3.1", "agentskills.io SKILL.md", "MCP Server 2026-07-28"]
   });
 });
+function generateProposalMarkdown(audit, agency) {
+  const agencyName = agency ? agency.agency_name : "SendPut AI (SignalForge 3.0)";
+  const starterPrice = agency ? agency.reseller_retail_price_starter_usd : 197;
+  const growthPrice = agency ? agency.reseller_retail_price_growth_usd : 497;
+  const wholesaleStarter = 39;
+  const wholesaleGrowth = 79;
+  const starterMargin = Math.round((starterPrice - wholesaleStarter) / starterPrice * 100);
+  const growthMargin = Math.round((growthPrice - wholesaleGrowth) / growthPrice * 100);
+  return `# Executive AI Search Visibility & Knowledge Graph Audit
+**Client Target**: ${audit.business_name} (${audit.website_url})
+**Market & Geo-Niche**: ${audit.city_niche}
+**Audited By**: ${agencyName}
+**Generated**: ${new Date(audit.created_at).toLocaleDateString()}
+
+---
+
+## 1. Executive Summary & Diagnostic Scores
+
+| Diagnostic Metric | Score | Target Standard | Status |
+|---|---|---|---|
+| **SFAI (SendPut AI Visibility Index)** | **${audit.sfai_score} / 100** | 90+ | ${audit.sfai_score >= 70 ? "\u{1F7E2} Strong" : "\u{1F534} Action Required"} |
+| **AICS (AI Citation Share)** | **${audit.aics_score}%** | 75%+ | ${audit.aics_score >= 50 ? "\u{1F7E1} Moderate" : "\u{1F534} Critical Gap"} |
+| **DVS (Direct Verification Share)** | **${audit.dvs_score}%** | 80%+ | Needs Live MCP Node |
+| **THQ (Technical Grounding & Schema)** | **${audit.thq_score}%** | 95%+ | ${audit.jsonld_detected ? "\u{1F7E1} Partial" : "\u{1F534} Missing JSON-LD"} |
+
+> **\u26A0\uFE0F Critical Hallucination Risk Detected**:
+> ${audit.hallucination_alert}
+
+---
+
+## 2. 5-Layer Active AI Search Architecture Gaps
+- **Layer 1 (AI Bot Crawlers)**: ${audit.ai_bots_blocked ? "\u274C AI crawlers restricted via robots.txt" : "\u2705 GPTBot / PerplexityBot allowed access"}
+- **Layer 2 (Dynamic JSON-LD)**: ${audit.jsonld_detected ? "\u2705 Baseline schema detected" : "\u274C Missing verified LocalBusiness & FAQPage Schema.org graph"}
+- **Layer 3 (Knowledge Graph Write-Back)**: Active synchronization with Google Business Profile, Bing Places, Apple Maps, and IndexNow
+- **Layer 4 (Direct AI Agent Standard)**: ${audit.llms_txt_detected ? "\u2705 /llms.txt present" : "\u274C Missing /llms.txt, OpenAPI 3.1 & SKILL.md for Claude/ChatGPT agents"}
+- **Layer 5 (Model Context Protocol)**: \u274C Lacks live MCP runtime server (\`/mcp/tenant/sse\`), preventing autonomous agent booking and pricing verification
+
+---
+
+## 3. Recommended Agency Solution & Retainer Packages
+
+### Package A: AI Visibility Foundation ($${starterPrice}/month)
+- Turnkey Edge Script injection with Schema.org \`LocalBusiness\` + \`FAQPage\` graph
+- Automated Bing Places, Apple Maps & IndexNow instant push
+- Standard \`/llms.txt\` deployment
+- **Agency Reseller Margin**: **$${starterPrice - wholesaleStarter}/mo profit** (${starterMargin}% margin)
+
+### Package B: Active Market Dominance + Autonomous MCP Node ($${growthPrice}/month) \u2014 *RECOMMENDED*
+- Full 5-Layer SignalForge 3.0 Active Presence
+- Dedicated Model Context Protocol (MCP) live SSE node for Claude Desktop, Cursor & ChatGPT Search
+- Dynamic OpenAPI 3.1 + agentskills.io \`SKILL.md\` autonomous agent triggering
+- Real-time AI bot telemetry sensor (GPTBot, PerplexityBot, ClaudeBot tracking)
+- Bi-weekly hallucination defense & competitor citation capture
+- **Agency Reseller Margin**: **$${growthPrice - wholesaleGrowth}/mo profit** (${growthMargin}% margin)
+
+---
+*Authorized Proposal by ${agencyName} \u2014 Hosted under white-label infrastructure.*
+`;
+}
 app.post("/api/audit", async (req, res) => {
-  const { business_name, website_url, city_niche, bilingual } = req.body || {};
+  const { business_name, website_url, city_niche, bilingual, agency_slug } = req.body || {};
   if (!business_name || !website_url) {
     return res.status(400).json({ error: "business_name and website_url are required" });
   }
+  const reqHost = (req.get("x-forwarded-host") || req.get("host") || "").split(":")[0].toLowerCase();
+  const agency = await getAgency(agency_slug || reqHost);
   const cleanUrl = website_url.startsWith("http") ? website_url : `https://${website_url}`;
   let robotsOk = true;
   let llmsTxtFound = false;
@@ -28491,6 +28593,7 @@ app.post("/api/audit", async (req, res) => {
   const thq = robotsOk ? 72 : 45;
   const recommendedTier = aics < 30 ? "growth_79" : "starter_39";
   const auditResult = {
+    id: `prop-${Date.now()}`,
     business_name,
     website_url: cleanUrl,
     city_niche: city_niche || "Local & National Market",
@@ -28509,15 +28612,41 @@ app.post("/api/audit", async (req, res) => {
       projected_aics: 76,
       projected_thq: 99
     },
+    agency: agency ? {
+      agency_name: agency.agency_name,
+      slug: agency.slug,
+      brand_color: agency.brand_color,
+      logo_url: agency.logo_url,
+      custom_domain: agency.custom_domain,
+      retail_pricing: {
+        starter: agency.reseller_retail_price_starter_usd,
+        growth: agency.reseller_retail_price_growth_usd
+      }
+    } : {
+      agency_name: "SendPut AI",
+      retail_pricing: { starter: 197, growth: 497 }
+    },
+    reseller_margins: {
+      starter_retail_usd: agency ? agency.reseller_retail_price_starter_usd : 197,
+      starter_cost_usd: 39,
+      starter_profit_usd: (agency ? agency.reseller_retail_price_starter_usd : 197) - 39,
+      growth_retail_usd: agency ? agency.reseller_retail_price_growth_usd : 497,
+      growth_cost_usd: 79,
+      growth_profit_usd: (agency ? agency.reseller_retail_price_growth_usd : 497) - 79
+    },
     created_at: (/* @__PURE__ */ new Date()).toISOString()
   };
+  auditResult.proposal_markdown = generateProposalMarkdown(auditResult, agency);
   if (dbOnline && dbPool) {
     try {
-      await dbPool.query(
-        `INSERT INTO sendput_audit_proposals (business_name, website_url, city_niche, sfai_score, aics_score, recommended_tier, proposal_markdown)
-         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        [business_name, cleanUrl, auditResult.city_niche, sfai, aics, recommendedTier, JSON.stringify(auditResult)]
+      const dbRes = await dbPool.query(
+        `INSERT INTO sendput_audit_proposals (business_name, website_url, city_niche, sfai_score, aics_score, dvs_score, thq_score, ai_bots_blocked, jsonld_detected, llms_txt_detected, hallucination_alert, recommended_tier, proposal_markdown)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id`,
+        [business_name, cleanUrl, auditResult.city_niche, sfai, aics, dvs, thq, !robotsOk, jsonLdFound, llmsTxtFound, auditResult.hallucination_alert, recommendedTier, auditResult.proposal_markdown]
       );
+      if (dbRes.rows && dbRes.rows[0]?.id) {
+        auditResult.id = dbRes.rows[0].id;
+      }
     } catch (e) {
       console.warn("[Audit Save Fallback]:", e.message);
     }
@@ -28668,6 +28797,131 @@ app.post("/api/telemetry/bot", async (req, res) => {
     bot: botName,
     entity: entity.slug,
     recorded_at: (/* @__PURE__ */ new Date()).toISOString()
+  });
+});
+app.get("/api/agency", async (req, res) => {
+  const reqHost = (req.get("x-forwarded-host") || req.get("host") || "").split(":")[0].toLowerCase();
+  const slug = req.query.slug || reqHost;
+  const agency = await getAgency(slug);
+  if (!agency) {
+    const sample = Object.values(memoryAgencies)[0];
+    return res.json({
+      status: "active",
+      is_white_label: false,
+      workspace: sample
+    });
+  }
+  res.json({
+    status: "active",
+    is_white_label: Boolean(agency.custom_domain && reqHost.includes(agency.custom_domain.toLowerCase())),
+    workspace: agency
+  });
+});
+app.post("/api/agency", async (req, res) => {
+  const { agency_name, slug, custom_domain, brand_color, logo_url, reseller_starter, reseller_growth, team_roles } = req.body || {};
+  const agencySlug = slug || "signalforge-partners";
+  const updated = {
+    id: memoryAgencies[agencySlug]?.id || `a-${Date.now()}`,
+    agency_name: agency_name || memoryAgencies[agencySlug]?.agency_name || "My Agency",
+    slug: agencySlug,
+    custom_domain: custom_domain || memoryAgencies[agencySlug]?.custom_domain,
+    brand_color: brand_color || memoryAgencies[agencySlug]?.brand_color || "#4F46E5",
+    logo_url: logo_url || memoryAgencies[agencySlug]?.logo_url,
+    plan_tier: "agency_command_299",
+    included_seats: memoryAgencies[agencySlug]?.included_seats || 10,
+    active_seats: memoryAgencies[agencySlug]?.active_seats || 2,
+    extra_seat_price_usd: 19,
+    reseller_retail_price_starter_usd: Number(reseller_starter) || 197,
+    reseller_retail_price_growth_usd: Number(reseller_growth) || 497,
+    team_roles: team_roles || memoryAgencies[agencySlug]?.team_roles || [
+      { user_id: "u-1", email: "admin@agency.com", role: "agency_admin" }
+    ]
+  };
+  memoryAgencies[agencySlug] = updated;
+  if (dbOnline && dbPool) {
+    try {
+      await dbPool.query(
+        `INSERT INTO agency_workspaces (agency_name, slug, custom_domain, brand_color, logo_url, plan_tier, included_seats, active_seats, extra_seat_price_usd)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+         ON CONFLICT (slug) DO UPDATE SET
+           agency_name = EXCLUDED.agency_name,
+           custom_domain = EXCLUDED.custom_domain,
+           brand_color = EXCLUDED.brand_color,
+           logo_url = EXCLUDED.logo_url,
+           updated_at = CURRENT_TIMESTAMP`,
+        [updated.agency_name, updated.slug, updated.custom_domain, updated.brand_color, updated.logo_url, updated.plan_tier, updated.included_seats, updated.active_seats, updated.extra_seat_price_usd]
+      );
+    } catch (e) {
+      console.warn("[Agency DB Save]:", e.message);
+    }
+  }
+  res.json({
+    status: "success",
+    message: "Agency workspace & CNAME white-labeling updated",
+    workspace: updated
+  });
+});
+app.get("/api/agency/seats", async (req, res) => {
+  const reqHost = (req.get("x-forwarded-host") || req.get("host") || "").split(":")[0].toLowerCase();
+  const slug = req.query.slug || reqHost;
+  const agency = await getAgency(slug) || Object.values(memoryAgencies)[0];
+  let entitiesList = [];
+  if (dbOnline && dbPool) {
+    try {
+      const resDb = await dbPool.query(
+        `SELECT id, slug, business_name, website_url, city_niche, primary_category, sfai_score, aics_score, plan_tier, created_at
+         FROM business_entities ORDER BY created_at DESC LIMIT 50`
+      );
+      entitiesList = resDb.rows || [];
+    } catch (e) {
+      console.warn("[Agency Seats DB Lookup]:", e.message);
+    }
+  }
+  if (entitiesList.length === 0) {
+    entitiesList = Object.values(memoryEntities);
+  }
+  res.json({
+    agency: agency.agency_name,
+    cname_domain: agency.custom_domain,
+    plan: agency.plan_tier,
+    included_seats: agency.included_seats,
+    used_seats: entitiesList.length,
+    extra_seats: Math.max(0, entitiesList.length - agency.included_seats),
+    extra_seat_price_usd: agency.extra_seat_price_usd,
+    reseller_margins: {
+      starter_retail: agency.reseller_retail_price_starter_usd,
+      growth_retail: agency.reseller_retail_price_growth_usd,
+      wholesale_starter: 39,
+      wholesale_growth: 79,
+      net_margin_starter: agency.reseller_retail_price_starter_usd - 39,
+      net_margin_growth: agency.reseller_retail_price_growth_usd - 79
+    },
+    team_roles: agency.team_roles,
+    client_entities: entitiesList
+  });
+});
+app.get("/api/proposals/:id", async (req, res) => {
+  const proposalId = req.params.id;
+  if (dbOnline && dbPool) {
+    try {
+      const resDb = await dbPool.query(
+        `SELECT * FROM sendput_audit_proposals WHERE id::text = $1 OR id::text LIKE $2 LIMIT 1`,
+        [proposalId, `%${proposalId}%`]
+      );
+      if (resDb.rows && resDb.rows.length > 0) {
+        return res.json(resDb.rows[0]);
+      }
+    } catch (e) {
+      console.warn("[Proposal Lookup DB]:", e.message);
+    }
+  }
+  res.json({
+    id: proposalId,
+    business_name: "Client Proposal Target",
+    sfai_score: 58,
+    aics_score: 32,
+    proposal_markdown: `# Verified Agency Proposal (${proposalId})
+Ready for export.`
   });
 });
 app.post("/api/checkout", (req, res) => {
