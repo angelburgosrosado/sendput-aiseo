@@ -1,11 +1,11 @@
 {
   "name": "sendput-ai-signalforge-3",
-  "version": "3.0.0",
-  "description": "SendPut AI (SignalForge 3.0) — Active AI Search Visibility, Knowledge Graph Write-Back & Multi-Protocol MCP Node for SMBs and Agencies",
+  "version": "3.1.0",
+  "description": "SendPut AI (SignalForge 3.0) — Active AI Search Visibility, Knowledge Graph Write-Back, WordPress Plugin & Multi-Protocol MCP Node",
   "main": "dist/server.cjs",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "esbuild src/server.ts --bundle --platform=node --target=node20 --outfile=dist/server.cjs --external:pg-native",
+    "build": "esbuild src/server.ts --bundle --platform=node --target=node20 --outfile=dist/server.cjs --external:pg-native && mkdir -p api && cp dist/server.cjs api/index.js",
     "start": "node dist/server.cjs",
     "db:migrate": "psql $DATABASE_URL -f sql/sendput_schema.sql"
   },
