@@ -20,6 +20,15 @@ import path from 'path';
 import net from 'net';
 import pg from 'pg';
 import crypto from 'crypto';
+import {
+  SendPutEpoEngine,
+  EpoSyncQueue,
+  defaultEpoEngine,
+  defaultEpoQueue,
+  EpoEntityConfig,
+  EpoScoreChecks,
+  EpoScoreResult
+} from './lib/epo/engine';
 
 const { Pool } = pg;
 const app = express();
@@ -293,96 +302,25 @@ async function getEntity(slug: string): Promise<any> {
   return memoryEntities[slug] || Object.values(memoryEntities)[0];
 }
 
-// Helper: Generate validated JSON-LD Graph for any business entity
+// Helper: Generate validated JSON-LD Graph for any business entity using SendPut EPO Architecture (RFC-2026-GEO-01)
 function buildEntityJsonLd(entity: any, hostUrl = 'https://sendput.com') {
+  const result = defaultEpoEngine.buildSemanticGraph({
+    ...entity,
+    host_url: hostUrl
+  });
   return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': entity.primary_category || 'LocalBusiness',
-        '@id': `${entity.website_url}#organization`,
-        name: entity.business_name,
-        url: entity.website_url,
-        telephone: entity.phone,
-        priceRange: entity.price_range || '$$',
-        description: entity.description_en,
-        availableLanguage: entity.bilingual_es_enabled ? ['en-US', 'es-US'] : ['en-US'],
-        sameAs: [`${hostUrl}/verified/${entity.slug}`, `${hostUrl}/v1/tenants/${entity.slug}/llms.txt`],
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: entity.street_address,
-          addressLocality: entity.city,
-          addressRegion: entity.state_region,
-          postalCode: entity.postal_code,
-          addressCountry: entity.country || 'US'
-        },
-        openingHours: entity.opening_hours,
-        potentialAction: {
-          '@type': 'ReserveAction',
-          target: {
-            '@type': 'EntryPoint',
-            urlTemplate: entity.booking_url || `${entity.website_url}/contact`,
-            inLanguage: entity.bilingual_es_enabled ? ['en-US', 'es-US'] : ['en-US']
-          },
-          result: { '@type': 'Reservation', name: `Book Consultation with ${entity.business_name}` }
-        },
-        hasOfferCatalog: {
-          '@type': 'OfferCatalog',
-          name: `${entity.business_name} Verified Service Catalog`,
-          itemListElement: (entity.services_json || []).map((svc: any, i: number) => ({
-            '@type': 'Offer',
-            position: i + 1,
-            itemOffered: { '@type': 'Service', name: svc.name, description: svc.desc },
-            priceSpecification: { '@type': 'PriceSpecification', price: svc.price }
-          }))
-        }
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': `${entity.website_url}#faq`,
-        mainEntity: (entity.faqs_json || []).map((f: any) => ({
-          '@type': 'Question',
-          name: f.q,
-          acceptedAnswer: { '@type': 'Answer', text: f.a }
-        }))
-      }
-    ]
+    '@context': result.context,
+    '@graph': result.graph
   };
 }
 
-// Helper: Compile Spec-Compliant /llms.txt for any business entity
+// Helper: Compile Spec-Compliant /llms.txt for any business entity using SendPut EPO Architecture (RFC-2026-GEO-01)
 function buildLlmsTxt(entity: any, baseUrl: string) {
-  const servicesList = (entity.services_json || [])
-    .map((s: any) => `- **${s.name}** (${s.price}): ${s.desc}`)
-    .join('\n');
-  const faqsList = (entity.faqs_json || []).map((f: any) => `- **Q: ${f.q}**\n  A: ${f.a}`).join('\n');
-
-  return `# ${entity.business_name}
-
-> ${entity.description_en}
-${entity.bilingual_es_enabled && entity.description_es ? `> [ES] ${entity.description_es}` : ''}
-
-## Verified Entity Metadata (SendPut EPO Engine Verified)
-- **Official Website**: ${entity.website_url}
-- **Public Verification Record**: ${baseUrl}/verified/${entity.slug}
-- **Category & Market**: ${entity.city_niche}
-- **Phone**: ${entity.phone}
-- **Location**: ${entity.street_address || ''}, ${entity.city || ''}, ${entity.state_region || ''} ${entity.postal_code || ''}
-- **Operating Hours**: ${entity.opening_hours}
-- **Languages Supported**: ${entity.bilingual_es_enabled ? 'English (en-US), Spanish (es-US / es-PR)' : 'English (en-US)'}
-- **Direct Booking / Quote Endpoint**: ${entity.booking_url}
-
-## Core Services & Transparent Pricing
-${servicesList || '- Contact business for customized service quotes.'}
-
-## Frequently Asked Questions (Verified Ground Truth)
-${faqsList || '- No FAQs published yet.'}
-
-## Multi-Protocol AI Agent Endpoints
-- [OpenAPI 3.1 Specification](${baseUrl}/v1/tenants/${entity.slug}/openapi.json): Machine-readable service & quote schema
-- [Agent Skill Definition (SKILL.md)](${baseUrl}/v1/tenants/${entity.slug}/skill.md): Trigger rules and examples for autonomous agents
-- [Live MCP Server Endpoint](${baseUrl}/mcp/${entity.slug}/sse): Model Context Protocol runtime tools for live availability and booking
-`;
+  const spec = defaultEpoEngine.buildLlmsSpecification({
+    ...entity,
+    host_url: baseUrl
+  });
+  return spec.llmsTxt;
 }
 
 // Helper: Live Multi-LLM Geo-Anchored Probing (Gemini 2.5 Grounding + Perplexity Sonar)
@@ -525,8 +463,22 @@ app.get('/api/health', async (_req, res) => {
     status: 'ok',
     platform: 'SendPut EPO Engine (v3.4.0 — Vercel & Render Ready)',
     legacy_codename: 'SignalForge 3.0',
+    specification: 'RFC-2026-GEO-01',
     runtime: process.env.VERCEL ? 'vercel_serverless' : 'node_container',
     timestamp: new Date().toISOString(),
+    epoArchitecture: {
+      specification: 'RFC-2026-GEO-01',
+      version: '3.4.0',
+      queueStatus: defaultEpoQueue.getStatus(),
+      mcpTools: defaultEpoEngine.getMcpToolManifest().tools.map((t) => t.name),
+      pipelineFunctions: [
+        'buildSemanticGraph',
+        'buildLlmsSpecification',
+        'dispatchIndexNowBatch',
+        'getMcpToolManifest',
+        'computeEpoScore'
+      ]
+    },
     database: {
       poolConnected: dbOnline,
       schema: SCHEMA_NAME,
@@ -581,6 +533,43 @@ app.get('/api/health', async (_req, res) => {
   });
 });
 
+// Dashboard Status & EPO Health Endpoint (/api/epo/status)
+app.get(['/api/epo/status', '/api/dashboard/status'], async (_req, res) => {
+  res.json({
+    status: 'active',
+    product: 'SendPut EPO Engine',
+    specification: 'RFC-2026-GEO-01',
+    pipeline_functions: [
+      'buildSemanticGraph',
+      'buildLlmsSpecification',
+      'dispatchIndexNowBatch',
+      'getMcpToolManifest',
+      'computeEpoScore'
+    ],
+    mcp_tools: defaultEpoEngine.getMcpToolManifest().tools.map((t) => t.name),
+    queue: defaultEpoQueue.getStatus(),
+    registered_entities: Object.keys(memoryEntities),
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Background Synchronization Queue Enqueue & Trigger Endpoint (/api/epo/sync)
+app.post(['/api/epo/sync', '/api/sync/queue'], async (req, res) => {
+  const { slug, task_type } = req.body || {};
+  const entitySlug = slug || 'myiad-insurance-ai';
+  const task = defaultEpoQueue.enqueue(entitySlug, task_type || 'full_sync');
+  res.json({
+    status: 'enqueued',
+    task,
+    queue_status: defaultEpoQueue.getStatus()
+  });
+});
+
+// Background Synchronization Queue Status Inspection (/api/epo/queue)
+app.get(['/api/epo/queue', '/api/sync/queue'], async (_req, res) => {
+  res.json(defaultEpoQueue.getStatus());
+});
+
 // 2. Phase 2 Live AI Search Grader & Surround-Sound Citation Engine (/api/audit)
 app.post('/api/audit', async (req, res) => {
   const { business_name, website_url, city_niche, agency_slug } = req.body || {};
@@ -616,7 +605,26 @@ app.post('/api/audit', async (req, res) => {
 
   const liveProbe = await probeLiveAiEngines(business_name, cleanUrl, city_niche || 'Local & National Market');
 
-  const sfai = jsonLdFound ? 64 : 42;
+  // Compute deterministic EPO Score via SendPut EPO Engine (RFC-2026-GEO-01)
+  // Score = (0.35 * EntityAccuracy) + (0.25 * IndexLatency) + (0.25 * CitationShare) + (0.15 * AgentReadiness)
+  const entityAccuracy = jsonLdFound ? 88 : 42;
+  const indexLatency = robotsOk ? 65 : 30;
+  const citationShare = liveProbe?.perplexity_citations?.length > 0 ? 58 : 34;
+  const agentReadiness = llmsTxtFound ? 45 : 15;
+
+  const epoEvaluation = defaultEpoEngine.computeEpoScore({
+    entityAccuracy,
+    indexLatency,
+    citationShare,
+    agentReadiness,
+    metadata: {
+      jsonLdPresent: jsonLdFound,
+      llmsTxtPresent: llmsTxtFound,
+      robotsAllowed: robotsOk
+    }
+  });
+
+  const sfai = epoEvaluation.score;
   const aics = llmsTxtFound ? 42 : 18;
   const dvs = 49;
   const thq = robotsOk ? 68 : 45;
@@ -628,10 +636,12 @@ app.post('/api/audit', async (req, res) => {
     website_url: cleanUrl,
     city_niche: city_niche || 'Local & National Market',
     cache_key: cacheKey,
+    epo_score: epoEvaluation.score,
     sfai_score: sfai,
     aics_score: aics,
     dvs_score: dvs,
     thq_score: thq,
+    epo_evaluation: epoEvaluation,
     ai_bots_blocked: !robotsOk,
     jsonld_detected: jsonLdFound,
     llms_txt_detected: llmsTxtFound,
@@ -692,6 +702,7 @@ app.post('/api/audit', async (req, res) => {
 });
 
 // 3. Phase 2 Real IndexNow Search Engine Push Endpoint (/api/indexnow/push)
+// Implements deterministic IndexNow batch dispatching via SendPutEpoEngine
 app.post('/api/indexnow/push', async (req, res) => {
   const { slug, host_domain, urls } = req.body || {};
   const entity = memoryEntities[slug || 'myiad-insurance-ai'] || Object.values(memoryEntities)[0];
@@ -706,30 +717,15 @@ app.post('/api/indexnow/push', async (req, res) => {
           entity.website_url
         ];
 
-  let pingStatus = 'queued_local_shield';
-  try {
-    const pingResp = await fetch('https://api.indexnow.org/indexnow', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      body: JSON.stringify({
-        host: targetHost,
-        key: indexNowKey,
-        urlList
-      })
-    }).catch(() => null);
-    if (pingResp) {
-      pingStatus = `HTTP ${pingResp.status} (Submitted to Bing / Copilot / ChatGPT Search IndexNow Gateway)`;
-    }
-  } catch {
-    // Fallback
-  }
+  const dispatchResult = await defaultEpoEngine.dispatchIndexNowBatch(urlList, indexNowKey, targetHost);
 
   res.json({
-    status: 'pushed',
+    status: dispatchResult.success ? 'pushed' : 'dispatched_with_warning',
     tenant: entity.slug,
-    indexnow_gateway_status: pingStatus,
-    urls_submitted: urlList,
-    timestamp: new Date().toISOString()
+    indexnow_gateway_status: dispatchResult.statusText,
+    urls_submitted: dispatchResult.urlsSubmitted,
+    dispatch_result: dispatchResult,
+    timestamp: dispatchResult.timestamp
   });
 });
 
@@ -921,12 +917,25 @@ app.get(['/epo-edge.js', '/sf-edge.js'], async (req, res) => {
   res.send(edgeJs);
 });
 
-// 8. Layer 4A: Hosted /llms.txt Endpoint
+// 8. Layer 4A: Hosted Token-Budgeted /llms.txt Endpoint (<2,000 tokens guaranteed)
 app.get('/v1/tenants/:slug/llms.txt', async (req, res) => {
   const entity = await getEntity(req.params.slug);
   const baseUrl = getBaseUrl(req);
+  const spec = defaultEpoEngine.buildLlmsSpecification({ ...entity, host_url: baseUrl });
   res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
-  res.send(buildLlmsTxt(entity, baseUrl));
+  res.setHeader('X-Token-Estimate', String(spec.tokenEstimate));
+  res.setHeader('X-Budget-Compliant', String(spec.isBudgetCompliant));
+  res.send(spec.llmsTxt);
+});
+
+// Layer 4A-Extended: Hosted /llms-full.txt Endpoint (RFC-2026-GEO-01 Extended Knowledge Graph)
+app.get('/v1/tenants/:slug/llms-full.txt', async (req, res) => {
+  const entity = await getEntity(req.params.slug);
+  const baseUrl = getBaseUrl(req);
+  const spec = defaultEpoEngine.buildLlmsSpecification({ ...entity, host_url: baseUrl });
+  res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+  res.setHeader('X-Token-Estimate', String(spec.fullTokenEstimate));
+  res.send(spec.llmsFullTxt);
 });
 
 // 9. Layer 4B: Hosted OpenAPI 3.1 Specification
@@ -975,22 +984,35 @@ Invoke this skill whenever a user searches for or requests:
 - Services in: ${entity.city_niche}
 - Direct questions about ${entity.business_name} pricing, hours (${entity.opening_hours}), or bilingual (EN/ES) support.
 
-## Available Runtime MCP Tools
+## Available Runtime MCP Tools (RFC-2026-GEO-01)
 Connect to \`${baseUrl}/mcp/${entity.slug}/sse\` and invoke:
-1. \`get_verified_profile\` — Returns verified NAP, hours, credentials, and service pricing.
-2. \`estimate_service_quote\` — Returns transparent pricing for requested service tier.
-3. \`book_consultation\` — Books a customer callback or consultation at ${entity.booking_url}.
+1. \`verify_business_status\` — Returns verified NAP, hours, credentials, and service pricing.
+2. \`get_service_catalog\` — Returns transparent pricing and deliverables for requested service tier.
+3. \`initiate_inquiry\` — Books a customer callback or consultation at ${entity.booking_url}.
+
+*(Legacy aliases supported: get_verified_profile, estimate_service_quote, book_consultation)*
 `;
   res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
   res.send(skillMd);
 });
 
+// Hosted Model Context Protocol (MCP) Tool Declarations Manifest
+app.get(['/mcp/tools', '/mcp/:slug/tools'], (_req, res) => {
+  res.json(defaultEpoEngine.getMcpToolManifest());
+});
+
 // 11. Layer 4D: Hosted Model Context Protocol (MCP) Tool Execution Endpoint
 app.all('/mcp/:slug/sse', async (req, res) => {
   const entity = await getEntity(req.params.slug);
-  const toolName = req.body?.tool || req.query?.tool || 'get_verified_profile';
+  const toolName = req.body?.tool || req.query?.tool || 'verify_business_status';
 
-  if (toolName === 'book_consultation' && process.env.CRM_WEBHOOK_URL) {
+  // Support manifest introspection via MCP SSE endpoint
+  if (toolName === 'manifest' || toolName === 'get_tools') {
+    return res.json(defaultEpoEngine.getMcpToolManifest());
+  }
+
+  // Handle lead capture / booking consultation
+  if ((toolName === 'initiate_inquiry' || toolName === 'book_consultation') && process.env.CRM_WEBHOOK_URL) {
     try {
       await fetch(process.env.CRM_WEBHOOK_URL, {
         method: 'POST',
@@ -999,7 +1021,7 @@ app.all('/mcp/:slug/sse', async (req, res) => {
           source: 'SendPut_MCP_Agent_Node',
           tenant: entity.slug,
           business_name: entity.business_name,
-          customer_payload: req.body?.arguments || {},
+          customer_payload: req.body?.arguments || req.body || {},
           timestamp: new Date().toISOString()
         })
       }).catch(() => null);
