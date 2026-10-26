@@ -1,7 +1,7 @@
-# render.yaml — Render Blueprint for SendPut AI (SignalForge 3.0) PLG SaaS & White-Label Engine
+# render.yaml — Render Blueprint for SendPut EPO Engine PLG SaaS & White-Label Engine
 services:
   - type: web
-    name: sendput-ai-signalforge
+    name: sendput-ai-epo-engine
     runtime: node
     plan: starter
     region: ohio

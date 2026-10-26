@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name:       SendPut AI Visibility & MCP Node (SignalForge 3.0)
+ * Plugin Name:       SendPut EPO Engine — Entity Presence Optimization & MCP Node
  * Plugin URI:        https://sendput.com
  * Description:       Make your WordPress business visible to ChatGPT Search, Perplexity, Google Gemini, Claude & Copilot. Provides free LocalBusiness JSON-LD schema, dynamic /llms.txt generation, AI retrieval bot unblocking, and an AI-Verified Business highlight badge—plus 1-click Activation Code upgrade for Cloud Edge Sync, IndexNow, and Hosted MCP Booking Nodes.
  * Version:           3.1.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
- * Author:            SendPut AI (SignalForge 3.0)
+ * Author:            SendPut Technologies Inc.
  * Author URI:        https://sendput.com
  * License:           GPL v2 or later
  * Text Domain:       sendput-ai-visibility
@@ -101,12 +101,14 @@ class SendPut_AI_Visibility_Plugin {
         if (empty($code)) {
             return false;
         }
-        // Valid prefixes: SP-PRO-, SP-STARTER-, SP-GROWTH-, SP-AGENCY-, SIGNALFORGE-
+        // Valid prefixes: SP-PRO-, SP-STARTER-, SP-GROWTH-, SP-AGENCY-, SP-EPO-, EPO-, SIGNALFORGE-
         return (
             strpos($code, 'SP-PRO-') === 0 ||
             strpos($code, 'SP-STARTER-') === 0 ||
             strpos($code, 'SP-GROWTH-') === 0 ||
             strpos($code, 'SP-AGENCY-') === 0 ||
+            strpos($code, 'SP-EPO-') === 0 ||
+            strpos($code, 'EPO-') === 0 ||
             strpos($code, 'SIGNALFORGE-') === 0
         );
     }
@@ -396,7 +398,7 @@ class SendPut_AI_Visibility_Plugin {
         if ($settings['bilingual_es'] === '1' && !empty($settings['description_es'])) {
             echo "> [ES] " . $settings['description_es'] . "\n";
         }
-        echo "\n## Verified Business Profile (Indexed by SendPut AI SignalForge 3.0)\n";
+        echo "\n## Verified Business Profile (Indexed by SendPut EPO Engine)\n";
         echo "- **Official Website**: " . $settings['domain_url'] . "\n";
         echo "- **Public AI Verification Record**: https://" . $edge_host . "/verified/" . $settings['tenant_slug'] . "\n";
         echo "- **Category & Service Area**: " . $settings['city_niche'] . "\n";
@@ -457,7 +459,7 @@ class SendPut_AI_Visibility_Plugin {
             'PerplexityBot', 'Claude-SearchBot', 'ClaudeBot',
             'Google-Extended', 'Applebot-Extended', 'Bingbot'
         );
-        $rules = "\n# --- SendPut AI Visibility (SignalForge 3.0) — Allow AI Search Retrieval Crawlers ---\n";
+        $rules = "\n# --- SendPut EPO Engine — Allow AI Search Retrieval Crawlers ---\n";
         foreach ($bots as $bot) {
             $rules .= "User-agent: {$bot}\nAllow: /\n";
         }
@@ -547,7 +549,7 @@ class SendPut_AI_Visibility_Plugin {
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid #1E293B;padding-bottom:14px;">
                 <div>
                     <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#34D399;font-weight:700;">
-                        <?php echo $is_pro ? '✓ SendPut SignalForge 3.0 Verified Entity' : 'AI Search Ready Business Profile'; ?>
+                        <?php echo $is_pro ? '✓ SendPut EPO Engine Verified Entity' : 'AI Search Ready Business Profile'; ?>
                     </div>
                     <h3 style="margin:4px 0 0;font-size:20px;color:#FFFFFF;"><?php echo esc_html($settings['business_name']); ?></h3>
                 </div>
@@ -591,7 +593,7 @@ class SendPut_AI_Visibility_Plugin {
         ?>
         <div class="wrap" style="max-width:1120px;">
             <h1 style="display:flex;align-items:center;gap:10px;font-weight:800;">
-                <span>🚀 SendPut AI Visibility &amp; Agentic MCP Node (SignalForge 3.0)</span>
+                <span>🚀 SendPut EPO Engine — Entity Presence Optimization &amp; MCP Node</span>
                 <span style="font-size:12px;padding:4px 10px;border-radius:999px;background:<?php echo $is_pro ? '#DCFCE7' : '#EEF2FF'; ?>;color:<?php echo $is_pro ? '#166534' : '#3730A3'; ?>;">
                     <?php echo $is_pro ? '✓ PRO CLOUD SYNC ACTIVE (' . esc_html(strtoupper($settings['activation_tier'])) . ')' : 'FREE BASIC TIER (2/5 Layers Active)'; ?>
                 </span>
@@ -602,7 +604,7 @@ class SendPut_AI_Visibility_Plugin {
             <!-- TOP SCORECARD & UPGRADE INCENTIVE BANNER -->
             <div style="background:#0F172A;color:#F8FAFC;border-radius:14px;padding:22px;margin:18px 0;border:1px solid #334155;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:center;">
                 <div>
-                    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#38BDF8;font-weight:700;">Live SignalForge 3.0 AI Readiness Score</div>
+                    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#38BDF8;font-weight:700;">Live SendPut EPO Engine AI Readiness Score</div>
                     <div style="display:flex;align-items:baseline;gap:12px;margin:8px 0;">
                         <span style="font-size:40px;font-weight:900;color:<?php echo $is_pro ? '#34D399' : '#FBBF24'; ?>;">
                             <?php echo $is_pro ? '95' : '58'; ?><span style="font-size:18px;color:#94A3B8;">/100</span>

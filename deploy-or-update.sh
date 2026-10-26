@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# deploy-or-update.sh — SendPut AI (SignalForge 3.0 v3.4.0) Automated Runner
+# deploy-or-update.sh — SendPut EPO Engine (v3.4.0) Automated Runner
 # ==============================================================================
 # Safely upgrades an existing sendput.com repository or VPS directory:
 #  1. Backs up your existing project files (excluding node_modules & .git)
 #  2. Preserves your .git history and .env secrets
-#  3. Copies the new SignalForge 3.0 v3.4.0 full-stack files into place
+#  3. Copies the new SendPut EPO Engine v3.4.0 full-stack files into place
 #     (removing any legacy .next/ or api/index.ts artifacts)
 #  4. Installs dependencies & compiles dist/server.cjs + api/index.js via esbuild
 #  5. Runs the non-destructive SQL migration against $DATABASE_URL (if psql & URL set)
@@ -20,7 +20,7 @@ TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
 BACKUP_ARCHIVE="${TARGET_DIR}/backup_before_sf3_${TIMESTAMP}.tar.gz"
 
 echo "=================================================================="
-echo "🚀 SendPut AI (SignalForge 3.0 v3.4.0) — Upgrade & Verify Runner"
+echo "🚀 SendPut EPO Engine (v3.4.0) — Upgrade & Verify Runner"
 echo "=================================================================="
 echo "Source Package  : ${SCRIPT_DIR}"
 echo "Target Directory: ${TARGET_DIR}"
@@ -38,8 +38,8 @@ if [ "${SCRIPT_DIR}" != "${TARGET_DIR}" ]; then
     echo "📦 [1/6] Target directory is empty; performing clean installation..."
   fi
 
-  # Step 2: Copy SignalForge 3.0 v3.4.0 files without overwriting .env or .git
-  echo "🔄 [2/6] Copying SignalForge 3.0 v3.4.0 application files into ${TARGET_DIR}..."
+  # Step 2: Copy SendPut EPO Engine v3.4.0 files without overwriting .env or .git
+  echo "🔄 [2/6] Copying SendPut EPO Engine v3.4.0 application files into ${TARGET_DIR}..."
   mkdir -p "${TARGET_DIR}/src" "${TARGET_DIR}/api" "${TARGET_DIR}/sql" "${TARGET_DIR}/public" "${TARGET_DIR}/cloudflare-worker" "${TARGET_DIR}/wordpress-plugin"
   rm -rf "${TARGET_DIR}/.next" "${TARGET_DIR}/next.config.js" "${TARGET_DIR}/next.config.mjs" "${TARGET_DIR}/next.config.ts" "${TARGET_DIR}/api/index.ts" 2>/dev/null || true
   cp -f "${SCRIPT_DIR}/vercel.json" "${TARGET_DIR}/vercel.json"
@@ -59,7 +59,7 @@ if [ "${SCRIPT_DIR}" != "${TARGET_DIR}" ]; then
 else
   echo "📦 [1/6] Running in-place inside extracted package directory..."
   rm -rf "${TARGET_DIR}/.next" "${TARGET_DIR}/api/index.ts" 2>/dev/null || true
-  echo "🔄 [2/6] Verified all SignalForge 3.0 v3.4.0 source files present."
+  echo "🔄 [2/6] Verified all SendPut EPO Engine v3.4.0 source files present."
 fi
 
 cd "${TARGET_DIR}"
@@ -141,4 +141,4 @@ elif [ -d ".git" ]; then
 fi
 
 echo ""
-echo "✅ SendPut AI (SignalForge 3.0 v3.4.0) upgrade & verification complete!"
+echo "✅ SendPut EPO Engine (v3.4.0) upgrade & verification complete!"

@@ -1,4 +1,4 @@
--- sql/sendput_schema.sql — Multi-Tenant PostgreSQL Schema for SendPut AI (SignalForge 3.0)
+-- sql/sendput_schema.sql — Multi-Tenant PostgreSQL Schema for SendPut EPO Engine
 -- Compatible with Neon (ep-winter-poetry-ae51hoth) and VPS PostgreSQL (34.148.244.49:5432)
 
 CREATE SCHEMA IF NOT EXISTS vault_app_angelburgosrosado;
@@ -181,6 +181,25 @@ INSERT INTO business_entities (
 ) ON CONFLICT (slug) DO NOTHING;
 
 -- Seed Default Agency Workspace (Idempotent)
+INSERT INTO agency_workspaces (
+  agency_name, slug, custom_domain, brand_color, logo_url,
+  plan_tier, included_seats, active_seats, extra_seat_price_usd,
+  reseller_retail_price_starter_usd, reseller_retail_price_growth_usd
+) VALUES (
+  'SendPut EPO Growth Partners',
+  'epo-partners',
+  'audit.epopartners.com',
+  '#4F46E5',
+  'https://sendput.com/assets/agency-logo-demo.png',
+  'agency_command_299',
+  10,
+  2,
+  19.00,
+  197.00,
+  497.00
+) ON CONFLICT (slug) DO NOTHING;
+
+-- Legacy Agency Slug Backward Compatibility Alias
 INSERT INTO agency_workspaces (
   agency_name, slug, custom_domain, brand_color, logo_url,
   plan_tier, included_seats, active_seats, extra_seat_price_usd,

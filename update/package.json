@@ -1,7 +1,7 @@
 {
-  "name": "sendput-ai-signalforge-3",
+  "name": "sendput-epo-engine",
   "version": "3.1.0",
-  "description": "SendPut AI (SignalForge 3.0) — Active AI Search Visibility, Knowledge Graph Write-Back, WordPress Plugin & Multi-Protocol MCP Node",
+  "description": "SendPut EPO Engine — Active Entity Propagation, Real-Time IndexNow Relay, WordPress Plugin & Agentic MCP Readiness",
   "main": "dist/server.cjs",
   "scripts": {
     "dev": "tsx watch src/server.ts",

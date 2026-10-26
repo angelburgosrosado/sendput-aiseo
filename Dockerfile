@@ -1,4 +1,4 @@
-# Dockerfile — Cloud Run, Render & VPS Container for SendPut AI (SignalForge 3.0)
+# Dockerfile — Cloud Run, Render & VPS Container for SendPut EPO Engine
 FROM node:20-alpine
 WORKDIR /app
 COPY package.json ./

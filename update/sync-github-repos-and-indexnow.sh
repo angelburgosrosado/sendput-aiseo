@@ -57,7 +57,7 @@ update_repo_geo_files() {
 
 > ${summary_en}
 
-## Verified Entity Profile (SendPut SignalForge 3.0)
+## Verified Entity Profile (SendPut EPO Engine)
 - **Official Website**: https://${prod_domain}
 - **Public AI Verification Record**: ${SENDPUT_HOST}/verified/${tenant_slug}
 - **OpenAPI 3.1 Schema**: ${SENDPUT_HOST}/v1/tenants/${tenant_slug}/openapi.json
@@ -72,7 +72,7 @@ LLMSEOF
 User-agent: *
 Allow: /
 
-# SendPut AI (SignalForge 3.0) — Allow Verified AI Search Retrieval Bots
+# SendPut EPO Engine — Allow Verified AI Search Retrieval Bots
 User-agent: OAI-SearchBot
 Allow: /
 
@@ -114,7 +114,7 @@ ROBOTSEOF
       cd "${repo_dir}"
       git add -A
       if ! git diff --cached --quiet; then
-        git commit -m "feat(geo): add SendPut SignalForge 3.0 edge schema, llms.txt & IndexNow key (${INDEXNOW_KEY})"
+        git commit -m "feat(geo): add SendPut EPO Engine edge schema, llms.txt & IndexNow key (${INDEXNOW_KEY})"
         echo "   🚀 Pushing ${brand_name} to GitHub origin..."
         git push origin HEAD || echo "   ⚠️  git push requires credentials or manual push in ${repo_dir}"
       else
@@ -151,7 +151,7 @@ verify_domain_indexnow() {
 
 # 1. Update Current Repository (if run inside sendput-aiseo)
 if [ -f "${WORKSPACE_ROOT}/package.json" ]; then
-  update_repo_geo_files "${WORKSPACE_ROOT}" "sendput-ai" "SendPut AI (SignalForge 3.0)" "sendput.com" "Active AI Search Visibility, Knowledge Graph Write-Back & Multi-Protocol MCP Platform."
+  update_repo_geo_files "${WORKSPACE_ROOT}" "sendput-ai" "SendPut EPO Engine" "sendput.com" "Active Entity Propagation, Real-Time IndexNow Relay, and Agentic MCP Readiness."
 fi
 
 # 2. Update Sibling Portfolio Repositories (if cloned in parent directory)

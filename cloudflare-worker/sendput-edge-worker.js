@@ -1,6 +1,6 @@
 /**
  * cloudflare-worker/sendput-edge-worker.js
- * Server-Side HTMLRewriter Edge Worker for SendPut AI (SignalForge 3.0)
+ * Server-Side HTMLRewriter Edge Worker for SendPut EPO Engine
  * Injects LocalBusiness JSON-LD & Multi-Protocol Link headers before non-JS AI crawlers parse HTML.
  */
 export default {
@@ -25,7 +25,7 @@ export default {
       .on("head", {
         element(el) {
           el.append(
-            `<script src="${sendputHost}/sf-edge.js?tenant=${tenantSlug}" defer></script>` +
+            `<script src="${sendputHost}/epo-edge.js?tenant=${tenantSlug}" defer></script>` +
             `<link rel="llms-txt" type="text/markdown" href="${sendputHost}/v1/tenants/${tenantSlug}/llms.txt" />` +
             `<link rel="mcp-server" type="application/json" href="${sendputHost}/mcp/${tenantSlug}/sse" />`,
             { html: true }

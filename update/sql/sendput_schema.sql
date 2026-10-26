@@ -1,6 +1,5 @@
--- sql/sendput_schema.sql — Idempotent Multi-Tenant PostgreSQL Migration for SendPut AI (SignalForge 3.0)
--- Safe to run on existing Neon (ep-winter-poetry-ae51hoth) and VPS PostgreSQL (34.148.244.49:5432) databases!
--- Preserves all existing tables and rows while adding SignalForge 3.0 columns & tables.
+-- sql/sendput_schema.sql — Multi-Tenant PostgreSQL Schema for SendPut EPO Engine
+-- Compatible with Neon (ep-winter-poetry-ae51hoth) and VPS PostgreSQL (34.148.244.49:5432)
 
 CREATE SCHEMA IF NOT EXISTS vault_app_angelburgosrosado;
 SET search_path TO vault_app_angelburgosrosado, public;
@@ -19,11 +18,18 @@ CREATE TABLE IF NOT EXISTS agency_workspaces (
   included_seats INT DEFAULT 10,
   active_seats INT DEFAULT 1,
   extra_seat_price_usd NUMERIC(10,2) DEFAULT 19.00,
+  reseller_retail_price_starter_usd NUMERIC(10,2) DEFAULT 197.00,
+  reseller_retail_price_growth_usd NUMERIC(10,2) DEFAULT 497.00,
+  team_roles_json JSONB DEFAULT '[{"role":"agency_admin","email":"admin@agency.com"}]'::jsonb,
   stripe_customer_id VARCHAR(120),
   stripe_subscription_id VARCHAR(120),
   created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE agency_workspaces ADD COLUMN IF NOT EXISTS reseller_retail_price_starter_usd NUMERIC(10,2) DEFAULT 197.00;
+ALTER TABLE agency_workspaces ADD COLUMN IF NOT EXISTS reseller_retail_price_growth_usd NUMERIC(10,2) DEFAULT 497.00;
+ALTER TABLE agency_workspaces ADD COLUMN IF NOT EXISTS team_roles_json JSONB DEFAULT '[{"role":"agency_admin","email":"admin@agency.com"}]'::jsonb;
 
 -- 2. Business Entities (Self-Serve SMBs & White-Label Agency Client Seats)
 CREATE TABLE IF NOT EXISTS business_entities (
@@ -63,20 +69,29 @@ CREATE TABLE IF NOT EXISTS business_entities (
   updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. SendPut Audit Proposals (Creates if new, or safely alters if already present from Command Center schema)
+-- 3. Upgraded SendPut Audit Proposals & Free Grader Scans
 CREATE TABLE IF NOT EXISTS sendput_audit_proposals (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  entity_id UUID REFERENCES business_entities(id) ON DELETE SET NULL,
   business_name VARCHAR(255) NOT NULL,
   website_url TEXT NOT NULL,
   city_niche VARCHAR(255),
   sfai_score INT,
   aics_score INT,
+  dvs_score INT DEFAULT 0,
+  thq_score INT DEFAULT 0,
+  ai_bots_blocked BOOLEAN DEFAULT FALSE,
+  jsonld_detected BOOLEAN DEFAULT FALSE,
+  llms_txt_detected BOOLEAN DEFAULT FALSE,
+  mcp_node_detected BOOLEAN DEFAULT FALSE,
+  hallucination_alert TEXT,
+  competitors_json JSONB DEFAULT '[]'::jsonb,
   recommended_tier VARCHAR(64),
   proposal_markdown TEXT,
   created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
--- Safely add SignalForge 3.0 columns if sendput_audit_proposals already existed
+-- Non-destructive upgrade for pre-existing tables from previous schema versions
 ALTER TABLE sendput_audit_proposals ADD COLUMN IF NOT EXISTS entity_id UUID REFERENCES business_entities(id) ON DELETE SET NULL;
 ALTER TABLE sendput_audit_proposals ADD COLUMN IF NOT EXISTS dvs_score INT DEFAULT 0;
 ALTER TABLE sendput_audit_proposals ADD COLUMN IF NOT EXISTS thq_score INT DEFAULT 0;
@@ -91,7 +106,7 @@ ALTER TABLE sendput_audit_proposals ADD COLUMN IF NOT EXISTS competitors_json JS
 CREATE TABLE IF NOT EXISTS ai_bot_telemetry (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   entity_id UUID NOT NULL REFERENCES business_entities(id) ON DELETE CASCADE,
-  bot_name VARCHAR(100) NOT NULL,
+  bot_name VARCHAR(100) NOT NULL, -- OAI-SearchBot | GPTBot | PerplexityBot | Claude-SearchBot | Google-Extended | Applebot-Extended
   request_path TEXT NOT NULL,
   http_status INT DEFAULT 200,
   user_agent TEXT,
@@ -113,3 +128,93 @@ CREATE TABLE IF NOT EXISTS geo_prompt_cache (
 CREATE INDEX IF NOT EXISTS idx_business_entities_slug ON business_entities(slug);
 CREATE INDEX IF NOT EXISTS idx_ai_bot_telemetry_entity ON ai_bot_telemetry(entity_id, fetched_at DESC);
 CREATE INDEX IF NOT EXISTS idx_geo_prompt_cache_key ON geo_prompt_cache(city_niche_key);
+
+-- Seed Default Verified Entities (Idempotent)
+INSERT INTO business_entities (
+  slug, business_name, website_url, city_niche, primary_category, phone,
+  street_address, city, state_region, postal_code, country, opening_hours,
+  bilingual_es_enabled, description_en, description_es, booking_url,
+  gbp_synced, bing_synced, apple_synced, sfai_score, aics_score, dvs_score, thq_score, plan_tier
+) VALUES (
+  'myiad-insurance-ai',
+  'MyIAD InsuranceAI Ecosystem',
+  'https://saas.myiad.net',
+  'San Juan, PR & Miami, FL — Bilingual Insurance Agency SaaS & CRM',
+  'SoftwareApplication',
+  '+1-888-506-9423',
+  '200 E Robinson St, Suite 1120',
+  'Orlando',
+  'FL',
+  '32801',
+  'US',
+  'Mo-Fr 08:00-19:00, Sa 09:00-15:00',
+  TRUE,
+  'AI-powered bilingual (English/Spanish) insurance agency management platform, CRM, and automated ACORD compliance suite integrated natively with Microsoft 365.',
+  'Plataforma bilingüe (Inglés/Español) impulsada por IA para la gestión de agencias de seguros, CRM y cumplimiento automatizado ACORD integrada con Microsoft 365.',
+  'https://crm.myiad.net/book-demo',
+  TRUE, TRUE, TRUE, 91, 68, 88, 97, 'growth_79'
+) ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO business_entities (
+  slug, business_name, website_url, city_niche, primary_category, phone,
+  street_address, city, state_region, postal_code, country, opening_hours,
+  bilingual_es_enabled, description_en, description_es, booking_url,
+  gbp_synced, bing_synced, apple_synced, sfai_score, aics_score, dvs_score, thq_score, plan_tier
+) VALUES (
+  'ab-global-consulting',
+  'AB Global Consulting',
+  'https://abglco.com',
+  'Palm Coast & Orlando, FL — Life Insurance, Annuities & Financial Calculators',
+  'FinancialService',
+  '+1-386-555-0194',
+  'Palm Coast Parkway NW',
+  'Palm Coast',
+  'FL',
+  '32137',
+  'US',
+  'Mo-Fr 09:00-18:00',
+  TRUE,
+  'Bilingual financial consulting firm offering 7 live interactive retirement, annuity, and life insurance calculators with personalized actuarial guidance.',
+  'Firma de consultoría financiera bilingüe que ofrece 7 calculadoras interactivas de jubilación, anualidades y seguro de vida con asesoría personalizada.',
+  'https://abglco.com/contact',
+  TRUE, TRUE, FALSE, 84, 52, 79, 94, 'growth_79'
+) ON CONFLICT (slug) DO NOTHING;
+
+-- Seed Default Agency Workspace (Idempotent)
+INSERT INTO agency_workspaces (
+  agency_name, slug, custom_domain, brand_color, logo_url,
+  plan_tier, included_seats, active_seats, extra_seat_price_usd,
+  reseller_retail_price_starter_usd, reseller_retail_price_growth_usd
+) VALUES (
+  'SendPut EPO Growth Partners',
+  'epo-partners',
+  'audit.epopartners.com',
+  '#4F46E5',
+  'https://sendput.com/assets/agency-logo-demo.png',
+  'agency_command_299',
+  10,
+  2,
+  19.00,
+  197.00,
+  497.00
+) ON CONFLICT (slug) DO NOTHING;
+
+-- Legacy Agency Slug Backward Compatibility Alias
+INSERT INTO agency_workspaces (
+  agency_name, slug, custom_domain, brand_color, logo_url,
+  plan_tier, included_seats, active_seats, extra_seat_price_usd,
+  reseller_retail_price_starter_usd, reseller_retail_price_growth_usd
+) VALUES (
+  'SignalForge Growth Partners',
+  'signalforge-partners',
+  'audit.signalforgepartners.com',
+  '#4F46E5',
+  'https://sendput.com/assets/agency-logo-demo.png',
+  'agency_command_299',
+  10,
+  2,
+  19.00,
+  197.00,
+  497.00
+) ON CONFLICT (slug) DO NOTHING;
+

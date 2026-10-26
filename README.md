@@ -1,6 +1,6 @@
-# SendPut AI (SignalForge 3.0) — Full-Stack Sprint 1 Deployment Package
+# SendPut EPO Engine — Full-Stack Deployment Package
 
-The first **Active AI Search Presence, Knowledge Graph Write-Back & Multi-Protocol MCP Platform** built for Main Street SMBs and White-Label Marketing Agencies.
+The first **Entity Presence Optimization (EPO) Platform — Active Entity Propagation, Real-Time IndexNow Relay, and Agentic MCP Readiness** built for Main Street SMBs and White-Label Marketing Agencies.
 
 ## Quickstart (Local, Render, or VPS)
 
@@ -18,11 +18,11 @@ The first **Active AI Search Presence, Knowledge Graph Write-Back & Multi-Protoc
    npm start
    ```
 
-## Included 5-Layer SignalForge 3.0 Endpoints
-- `GET /` — Interactive SendPut AI 3.0 PLG Grader, 5-Layer Active Engine, White-Label Agency Command & Pricing Portal
+## Included 5-Layer SendPut EPO Engine Endpoints
+- `GET /` — Interactive SendPut EPO Engine PLG Grader, 5-Layer Active Engine, White-Label Agency Command & Pricing Portal
 - `GET /api/health` — Live PostgreSQL & TCP 5432 self-healing telemetry
 - `POST /api/audit` — Live AI Search Grader & Proposal Generator
-- `GET /sf-edge.js?tenant=:slug` — 1-Line Edge Script injecting `LocalBusiness` + `FAQPage` JSON-LD & AI Bot Telemetry
+- `GET /epo-edge.js?tenant=:slug` (alias: `/sf-edge.js`) — 1-Line Edge Script injecting `LocalBusiness` + `FAQPage` JSON-LD & AI Bot Telemetry
 - `GET /v1/tenants/:slug/llms.txt` — Dynamic spec-compliant `/llms.txt` markdown feed
 - `GET /v1/tenants/:slug/openapi.json` — Dynamic OpenAPI 3.1 specification
 - `GET /v1/tenants/:slug/skill.md` — Dynamic `agentskills.io` `SKILL.md` package

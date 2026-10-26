@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: SendPut AI — Active AI Search Presence & MCP Node (SignalForge 3.0)
+ * Plugin Name: SendPut EPO Engine — Active Entity Presence Optimization & MCP Node
  * Plugin URI: https://sendput.com
- * Description: Zero-code WordPress & Elementor integration for SendPut AI. Injects verified LocalBusiness/Organization JSON-LD, serves /llms.txt, unblocks AI retrieval bots, and connects your site to the SendPut Model Context Protocol (MCP) server.
+ * Description: Zero-code WordPress & Elementor integration for SendPut EPO Engine. Injects verified LocalBusiness/Organization JSON-LD, serves /llms.txt, unblocks AI retrieval bots, and connects your site to the SendPut Model Context Protocol (MCP) server.
  * Version: 3.0.0
  * Author: SendPut Technologies Inc.
  * License: GPLv2 or later
@@ -20,8 +20,8 @@ class SendPut_AI_Presence_Plugin {
     public function inject_edge_script() {
         $tenant_slug = esc_attr(get_option('sendput_tenant_slug', 'myiad-insurance-ai'));
         $edge_domain = esc_attr(get_option('sendput_edge_domain', 'sendput.com'));
-        echo "\n<!-- SendPut AI (SignalForge 3.0) Active Entity & MCP Injection -->\n";
-        echo '<script src="https://' . $edge_domain . '/sf-edge.js?tenant=' . $tenant_slug . '" defer></script>' . "\n";
+        echo "\n<!-- SendPut EPO Engine Active Entity & MCP Injection -->\n";
+        echo '<script src="https://' . $edge_domain . '/epo-edge.js?tenant=' . $tenant_slug . '" defer></script>' . "\n";
     }
 
     public function serve_virtual_llms_txt() {
@@ -39,7 +39,7 @@ class SendPut_AI_Presence_Plugin {
     }
 
     public function allow_ai_retrieval_bots($output, $public) {
-        $ai_rules = "\n# SendPut AI (SignalForge 3.0) — Allow Verified AI Search Retrieval Bots\n";
+        $ai_rules = "\n# SendPut EPO Engine — Allow Verified AI Search Retrieval Bots\n";
         $bots = array('OAI-SearchBot', 'GPTBot', 'PerplexityBot', 'Claude-SearchBot', 'ClaudeBot', 'Google-Extended', 'Applebot-Extended');
         foreach ($bots as $bot) {
             $ai_rules .= "User-agent: {$bot}\nAllow: /\n";

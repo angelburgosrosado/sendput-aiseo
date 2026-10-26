@@ -28229,7 +28229,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, x-founder-key, stripe-signature");
-  res.setHeader("X-Powered-By", "SendPut AI SignalForge 3.2");
+  res.setHeader("X-Powered-By", "SendPut EPO Engine");
   if (req.method === "OPTIONS") return res.sendStatus(200);
   next();
 });
@@ -28321,6 +28321,25 @@ var memoryEntities = {
   }
 };
 var memoryAgencies = {
+  "epo-partners": {
+    id: "a0000000-0000-0000-0000-000000000001",
+    agency_name: "SendPut EPO Growth Partners",
+    slug: "epo-partners",
+    custom_domain: "audit.epopartners.com",
+    brand_color: "#4F46E5",
+    logo_url: "https://sendput.com/assets/agency-logo-demo.png",
+    plan_tier: "agency_command_299",
+    included_seats: 10,
+    active_seats: 2,
+    extra_seat_price_usd: 19,
+    reseller_retail_price_starter_usd: 197,
+    reseller_retail_price_growth_usd: 497,
+    team_roles: [
+      { user_id: "u-1", email: "director@epopartners.com", role: "agency_admin" },
+      { user_id: "u-2", email: "seo-lead@epopartners.com", role: "account_manager" }
+    ]
+  },
+  // Backward-compatible alias for legacy contracts
   "signalforge-partners": {
     id: "a0000000-0000-0000-0000-000000000001",
     agency_name: "SignalForge Growth Partners",
@@ -28483,7 +28502,7 @@ function buildLlmsTxt(entity, baseUrl) {
 > ${entity.description_en}
 ${entity.bilingual_es_enabled && entity.description_es ? `> [ES] ${entity.description_es}` : ""}
 
-## Verified Entity Metadata (SendPut SignalForge 3.0 Verified)
+## Verified Entity Metadata (SendPut EPO Engine Verified)
 - **Official Website**: ${entity.website_url}
 - **Public Verification Record**: ${baseUrl}/verified/${entity.slug}
 - **Category & Market**: ${entity.city_niche}
@@ -28566,7 +28585,7 @@ async function probeLiveAiEngines(businessName, websiteUrl, cityNiche) {
   return results;
 }
 function generateProposalMarkdown(audit, agency) {
-  const agencyName = agency ? agency.agency_name : "SendPut AI (SignalForge 3.0)";
+  const agencyName = agency ? agency.agency_name : "SendPut EPO Engine";
   const starterPrice = agency ? agency.reseller_retail_price_starter_usd : 197;
   const growthPrice = agency ? agency.reseller_retail_price_growth_usd : 497;
   const wholesaleStarter = 39;
@@ -28613,7 +28632,7 @@ function generateProposalMarkdown(audit, agency) {
 - **Agency Reseller Margin**: **$${starterPrice - wholesaleStarter}/mo profit** (${starterMargin}% margin)
 
 ### Package B: Active Market Dominance + Autonomous MCP Node ($${growthPrice}/month) \u2014 *RECOMMENDED*
-- Full 5-Layer SignalForge 3.0 Active Presence
+- Full 5-Layer SendPut EPO Engine (Active Entity Presence Optimization)
 - Dedicated Model Context Protocol (MCP) live SSE node for Claude Desktop, Cursor & ChatGPT Search
 - Dynamic OpenAPI 3.1 + agentskills.io \`SKILL.md\` autonomous agent triggering
 - Real-time AI bot telemetry sensor (GPTBot, PerplexityBot, ClaudeBot tracking)
@@ -28632,7 +28651,8 @@ app.get("/api/health", async (_req, res) => {
   const vpsReachable = await testTcpPort("34.148.244.49", 5432, 1200);
   res.json({
     status: "ok",
-    platform: "SendPut AI (SignalForge 3.0 v3.4.0 \u2014 Vercel & Render Ready)",
+    platform: "SendPut EPO Engine (v3.4.0 \u2014 Vercel & Render Ready)",
+    legacy_codename: "SignalForge 3.0",
     runtime: process.env.VERCEL ? "vercel_serverless" : "node_container",
     timestamp: (/* @__PURE__ */ new Date()).toISOString(),
     database: {
@@ -28821,7 +28841,7 @@ app.get("/api/edge-worker/:slug", (req, res) => {
   const hostUrl = `${req.protocol}://${req.get("host")}`;
   const jsonLdString = JSON.stringify(buildEntityJsonLd(entity, hostUrl));
   const workerCode = `/**
- * SendPut AI (SignalForge 3.0) \u2014 Server-Side Cloudflare Edge Worker (HTMLRewriter)
+ * SendPut EPO Engine \u2014 Server-Side Cloudflare Edge Worker (HTMLRewriter)
  * Tenant: ${entity.business_name} (${entity.slug})
  * Solves non-JS AI crawler ingestion (GPTBot, OAI-SearchBot, PerplexityBot, ClaudeBot)
  */
@@ -28891,7 +28911,7 @@ app.get("/verified/:slug", (req, res) => {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${entity.business_name} \u2014 AI-Verified Entity Profile | SendPut SignalForge 3.0</title>
+  <title>${entity.business_name} \u2014 AI-Verified Entity Profile | SendPut EPO Engine</title>
   <link rel="llms-txt" type="text/markdown" href="${hostUrl}/v1/tenants/${entity.slug}/llms.txt" />
   <link rel="mcp-server" type="application/json" href="${hostUrl}/mcp/${entity.slug}/sse" />
   <script type="application/ld+json">${jsonLd}</script>
@@ -28901,7 +28921,7 @@ app.get("/verified/:slug", (req, res) => {
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-bottom:1px solid #1E293B;padding-bottom:18px;">
       <div>
         <span style="background:rgba(16,185,129,0.15);color:#34D399;border:1px solid rgba(16,185,129,0.4);padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;">
-          \u2713 VERIFIED AI-READY ENTITY (SIGNALFORGE 3.0)
+          \u2713 VERIFIED AI-READY ENTITY (SENDPUT EPO ENGINE)
         </span>
         <h1 style="margin:10px 0 4px;font-size:26px;">${entity.business_name}</h1>
         <div style="color:#94A3B8;font-size:14px;">${entity.city_niche}</div>
@@ -28925,7 +28945,7 @@ app.get("/verified/:slug", (req, res) => {
       <li><strong>Runtime MCP Server:</strong> <code style="color:#A5B4FC;">${hostUrl}/mcp/${entity.slug}/sse</code></li>
     </ul>
     <div style="margin-top:28px;padding-top:18px;border-top:1px solid #1E293B;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-      <span style="font-size:12px;color:#64748B;">Verified by SendPut AI (SignalForge 3.0) \u2022 Zero-Lock-In Entity Registry</span>
+      <span style="font-size:12px;color:#64748B;">Verified by SendPut EPO Engine \u2022 Zero-Lock-In Entity Registry</span>
       <a href="${hostUrl}" style="background:#4F46E5;color:#FFF;text-decoration:none;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;">Run Free AI Search Grader for Your Business \u2192</a>
     </div>
   </div>
@@ -28941,27 +28961,29 @@ app.get("/badge/:slug.svg", (req, res) => {
     <circle cx="22" cy="22" r="10" fill="#10B981"/>
     <path d="M18 22.5L21 25.5L27 19" stroke="#090D16" stroke-width="2.2" fill="none" stroke-linecap="round"/>
     <text x="40" y="19" fill="#F8FAFC" font-family="Inter,sans-serif" font-size="11" font-weight="800">AI-VERIFIED ENTITY</text>
-    <text x="40" y="32" fill="#34D399" font-family="monospace" font-size="10">SendPut SignalForge \u2022 SFAI ${entity.sfai_score || 94}/100</text>
+    <text x="40" y="32" fill="#34D399" font-family="monospace" font-size="10">SendPut EPO Engine \u2022 SFAI ${entity.sfai_score || 94}/100</text>
   </svg>`;
   res.setHeader("Content-Type", "image/svg+xml");
   res.send(svg);
 });
-app.get("/sf-edge.js", async (req, res) => {
+app.get(["/epo-edge.js", "/sf-edge.js"], async (req, res) => {
   const slug = String(req.query.tenant || "myiad-insurance-ai");
   const entity = await getEntity(slug);
   const hostUrl = getBaseUrl(req);
   const jsonLd = JSON.stringify(buildEntityJsonLd(entity, hostUrl));
   const edgeJs = `/**
- * SendPut AI (SignalForge 3.0) \u2014 Zero-Code Edge Injection & Bot Telemetry Sensor
+ * SendPut EPO Engine \u2014 Zero-Code Edge Injection & Bot Telemetry Sensor
  * Tenant: ${entity.business_name} (${entity.slug})
  */
 (function() {
   try {
     var s = document.createElement('script');
     s.type = 'application/ld+json';
-    s.id = 'sendput-signalforge-jsonld';
+    s.id = 'sendput-epo-jsonld';
+    s.setAttribute('data-legacy-id', 'sendput-signalforge-jsonld');
     s.text = ${JSON.stringify(jsonLd)};
     document.head.appendChild(s);
+    /* sendput-signalforge-jsonld backward compatibility alias */
 
     var links = [
       { rel: 'llms-txt', type: 'text/markdown', href: '${hostUrl}/v1/tenants/${entity.slug}/llms.txt' },
@@ -29073,7 +29095,8 @@ app.all("/mcp/:slug/sse", async (req, res) => {
     timestamp: (/* @__PURE__ */ new Date()).toISOString(),
     result: {
       business_name: entity.business_name,
-      verified_by: "SendPut SignalForge 3.0",
+      verified_by: "SendPut EPO Engine",
+      verified_by_legacy: "SendPut SignalForge 3.0",
       phone: entity.phone,
       opening_hours: entity.opening_hours,
       bilingual_es_en: entity.bilingual_es_enabled,
@@ -29126,7 +29149,7 @@ app.get("/api/agency", async (req, res) => {
 });
 app.post("/api/agency", async (req, res) => {
   const { agency_name, slug, custom_domain, brand_color, logo_url, reseller_starter, reseller_growth, team_roles } = req.body || {};
-  const agencySlug = slug || "signalforge-partners";
+  const agencySlug = slug || "epo-partners";
   const updated = {
     id: memoryAgencies[agencySlug]?.id || `a-${Date.now()}`,
     agency_name: agency_name || memoryAgencies[agencySlug]?.agency_name || "My Agency",
@@ -29658,7 +29681,7 @@ app.get("*", (_req, res) => {
 initDbPool().catch((err) => console.warn("[Self-Healing DB Init]:", err?.message));
 if (require.main === module || !process.env.VERCEL) {
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`\u{1F680} SendPut AI (SignalForge 3.0 v3.4.0) listening on http://0.0.0.0:${PORT}`);
+    console.log(`\u{1F680} SendPut EPO Engine (v3.4.0) listening on http://0.0.0.0:${PORT}`);
   });
 }
 var server_default = app;
