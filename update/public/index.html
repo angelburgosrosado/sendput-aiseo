@@ -1679,13 +1679,44 @@ Our multi-engine AI scan across ChatGPT Search, Perplexity, Google Gemini, Claud
 <<<<<<< HEAD
       // Tab 4 Checkout Buttons
       document.querySelectorAll('.checkout-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const tier = btn.getAttribute('data-checkout');
+        btn.addEventListener('click', async () => {
+          const tier = btn.getAttribute('data-checkout') || 'growth_79';
+          const bizName = document.getElementById('input-biz-name').value || '';
+          const bizUrl = document.getElementById('input-biz-url').value || '';
+          const prodMeta = {
+            oneshot_29: { id: 'prod_VVZcNbGZHG46T1', title: '$29 One-Shot Deep AI Audit Report', amount: '$29.00 one-time' },
+            starter_39: { id: 'prod_VVZfdwEubbbA2G', title: 'Self-Serve Starter Plan (Sync)', amount: billingCycle === 'annual' ? '$384/yr ($32/mo)' : '$39.00/mo' },
+            growth_79:  { id: 'prod_VVZgJ0BGZz8r51', title: 'Self-Serve Growth & MCP Node', amount: billingCycle === 'annual' ? '$780/yr ($65/mo)' : '$79.00/mo' },
+            agency_299: { id: 'prod_VVZhif3ZHILKAZ', title: 'White-Label Agency Command (10 Seats Included)', amount: billingCycle === 'annual' ? '$2,988/yr ($249/mo)' : '$299.00/mo' }
+          }[tier];
+
+          // Attempt live backend /api/checkout session creation when hosted on sendput.com
+          try {
+            const resp = await fetch(['', 'api', 'checkout'].join('/'), {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ tier, billing_cycle: billingCycle, business_name: bizName, website_url: bizUrl })
+            }).catch(() => null);
+            if (resp && resp.ok) {
+              const data = await resp.json();
+              if (data.status === 'redirect_to_stripe' && data.checkout_url) {
+                window.location.href = data.checkout_url;
+                return;
+              }
+            }
+          } catch (e) {}
+
           openModal(
-            'Stripe Self-Serve Checkout & Webhook Provisioning',
+            `Stripe Checkout Wired — ${prodMeta.title}`,
             `<div class="space-y-3">
-              <p class="text-slate-200">Selected Tier: <strong class="text-emerald-400 mono">${tier}</strong> (${billingCycle} billing)</p>
-              <p class="text-slate-300">In your production <code>src/server.ts</code> and <code>render.yaml</code> package, this button invokes <code>POST /api/checkout</code> and provisions the tenant workspace in PostgreSQL (<code>vault_app_angelburgosrosado.business_entities</code>) as soon as Stripe fires <code>checkout.session.completed</code>.</p>
+              <div class="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-bold text-emerald-300">${prodMeta.title}</div>
+                  <div class="text-[11px] text-slate-300 mono mt-0.5">Stripe Product ID: <strong>${prodMeta.id}</strong></div>
+                </div>
+                <div class="text-sm font-extrabold text-white mono">${prodMeta.amount}</div>
+              </div>
+              <p class="text-slate-300">Your live Stripe Product ID (<code>${prodMeta.id}</code>) is now hard-wired into <code>POST /api/checkout</code>. As soon as <code>STRIPE_SECRET_KEY</code> is present in your Vercel Environment Variables, clicking this button redirects customers straight to Stripe Hosted Checkout and issues their Activation Key upon completion.</p>
               <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 mono text-[11px] text-indigo-300">
                 STRIPE_PRICE_ONESHOT_29=price_sendput_oneshot_29<br/>
                 STRIPE_PRICE_STARTER_39=price_sendput_starter_39<br/>

@@ -816,10 +816,64 @@ app.post('/api/checkout', (req, res) => {
     growth_79: { name: 'SendPut Self-Serve Growth (Active GEO + Hosted MCP Node)', amount: billing_cycle === 'annual' ? 65 : 79, priceId: process.env.STRIPE_PRICE_GROWTH_79 || 'price_sendput_growth_79' },
     agency_299: { name: 'SendPut White-Label Agency Command (10 Seats Included)', amount: (billing_cycle === 'annual' ? 249 : 299) + (Math.max(0, Number(extra_seats) || 0) * 19), priceId: process.env.STRIPE_PRICE_AGENCY_299 || 'price_sendput_agency_299' }
   };
-  const selected = priceMap[tier] || priceMap.growth_79;
+
+  const selected = catalog[tier] || catalog.growth_79;
+  const stripeSecret = (process.env.STRIPE_SECRET_KEY || '').trim();
+
+  // If STRIPE_SECRET_KEY is configured in Vercel/Render env vars, create a real Stripe Checkout Session using the Product ID!
+  if (stripeSecret && stripeSecret.startsWith('sk_')) {
+    try {
+      const params = new URLSearchParams();
+      params.append('mode', selected.mode);
+      params.append('success_url', `${hostUrl}/?checkout=success&tier=${tier}&key=${selected.keyPrefix}-2026-LIVE`);
+      params.append('cancel_url', `${hostUrl}/?checkout=cancelled&tier=${tier}`);
+      params.append('line_items[0][quantity]', '1');
+      params.append('line_items[0][price_data][currency]', 'usd');
+      params.append('line_items[0][price_data][product]', selected.productId);
+      params.append('line_items[0][price_data][unit_amount]', String(selected.unitAmountCents));
+      if (selected.mode === 'subscription' && selected.interval) {
+        params.append('line_items[0][price_data][recurring][interval]', selected.interval);
+      }
+      params.append('metadata[tier]', String(tier));
+      if (business_name) {
+        params.append('metadata[business_name]', String(business_name));
+      }
+      if (website_url) {
+        params.append('metadata[website_url]', String(website_url));
+      }
+
+      const stripeResp = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${stripeSecret}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params.toString()
+      });
+
+      const sessionData: any = await stripeResp.json();
+      if (stripeResp.ok && sessionData.url) {
+        return res.json({
+          status: 'redirect_to_stripe',
+          mode: 'live_stripe_session',
+          plan: selected.name,
+          stripe_product_id: selected.productId,
+          amount_usd: selected.unitAmountCents / 100,
+          checkout_url: sessionData.url,
+          session_id: sessionData.id
+        });
+      } else {
+        console.warn('[Stripe Session Warning]:', sessionData?.error?.message || 'Unknown error');
+      }
+    } catch (err: any) {
+      console.error('[Stripe API Exception]:', err.message);
+    }
+  }
+
+  // Fallback response when STRIPE_SECRET_KEY is not yet set in env vars
   res.json({
     status: 'ready',
-    mode: process.env.STRIPE_SECRET_KEY ? 'live_stripe_session' : 'sandbox_preview',
+    mode: 'stripe_product_wired',
     plan: selected.name,
     monthly_total_usd: selected.amount,
     stripe_price_id: selected.priceId,

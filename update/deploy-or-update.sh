@@ -52,12 +52,13 @@ if [ "${SCRIPT_DIR}" != "${TARGET_DIR}" ]; then
     echo "📦 [1/5] Backing up existing files to ${BACKUP_ARCHIVE} (preserving .git & .env)..."
     tar --exclude='node_modules' --exclude='.git' --exclude='backup_before_sf3_*.tar.gz'         -czf "${BACKUP_ARCHIVE}" -C "${TARGET_DIR}" . || true
   else
-    echo "📦 [1/5] Target directory is empty; performing clean installation..."
+    echo "📦 [1/6] Target directory is empty; performing clean installation..."
   fi
 
-  # Step 2: Copy SignalForge 3.0 files without overwriting .env or .git
-  echo "🔄 [2/5] Copying SignalForge 3.0 application files into ${TARGET_DIR}..."
-  mkdir -p "${TARGET_DIR}/src" "${TARGET_DIR}/api" "${TARGET_DIR}/sql" "${TARGET_DIR}/public" "${TARGET_DIR}/wordpress-plugin"
+  # Step 2: Copy SignalForge 3.0 v3.4.0 files without overwriting .env or .git
+  echo "🔄 [2/6] Copying SignalForge 3.0 v3.4.0 application files into ${TARGET_DIR}..."
+  mkdir -p "${TARGET_DIR}/src" "${TARGET_DIR}/api" "${TARGET_DIR}/sql" "${TARGET_DIR}/public" "${TARGET_DIR}/cloudflare-worker" "${TARGET_DIR}/wordpress-plugin"
+  rm -rf "${TARGET_DIR}/.next" "${TARGET_DIR}/next.config.js" "${TARGET_DIR}/next.config.mjs" "${TARGET_DIR}/next.config.ts" "${TARGET_DIR}/api/index.ts" 2>/dev/null || true
   cp -f "${SCRIPT_DIR}/vercel.json" "${TARGET_DIR}/vercel.json"
   cp -f "${SCRIPT_DIR}/api/index.ts" "${TARGET_DIR}/api/index.ts"
   rm -rf "${TARGET_DIR}/.next" "${TARGET_DIR}/next.config.js" "${TARGET_DIR}/next.config.mjs" "${TARGET_DIR}/next.config.ts" 2>/dev/null || true
