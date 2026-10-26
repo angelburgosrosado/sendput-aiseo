@@ -365,30 +365,6 @@ ${faqsList || '- No FAQs published yet.'}
 `;
 }
 
-<<<<<<< HEAD
-// Official IndexNow Root Key Verification File
-app.get('/sendput8f92a1c4b7e34d12a9c8e5f102938475.txt', (_req, res) => {
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-  res.send('sendput8f92a1c4b7e34d12a9c8e5f102938475');
-});
-
-// 1. Health & Ecosystem Telemetry Endpoint
-app.get('/api/health', async (_req, res) => {
-  const vpsReachable = await testTcpPort('34.148.244.49', 5432, 2000);
-  res.json({
-    status: 'ok',
-    platform: 'SendPut AI (SignalForge 3.0 Active AI Presence Engine)',
-    timestamp: new Date().toISOString(),
-    database: {
-      poolConnected: dbOnline,
-      schema: SCHEMA_NAME,
-      neonHost: 'ep-winter-poetry-ae51hoth.us-east-2.aws.neon.tech',
-      vpsPostgresTcp5432: vpsReachable ? 'OPEN (34.148.244.49:5432)' : 'STANDBY / MEMORY_SHIELD'
-    },
-    protocolsSupported: ['Schema.org JSON-LD Edge', 'IndexNow Push', 'llms.txt v2', 'OpenAPI 3.1', 'agentskills.io SKILL.md', 'MCP Server 2026-07-28']
-  });
-});
-=======
 // Helper: Live Multi-LLM Geo-Anchored Probing (Gemini 2.5 Grounding + Perplexity Sonar)
 async function probeLiveAiEngines(businessName: string, websiteUrl: string, cityNiche: string) {
   const prompt = `Who are the top recommended providers for "${cityNiche}"? Also evaluate whether "${businessName}" (${websiteUrl}) is cited, what its reputation/hours/pricing are, and which third-party directories or competitors are cited instead.`;
@@ -453,7 +429,6 @@ async function probeLiveAiEngines(businessName: string, websiteUrl: string, city
 
   return results;
 }
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
 
 // Helper: Compile Agency-Branded Client Proposal Markdown & Closing Strategy
 function generateProposalMarkdown(audit: any, agency: AgencyWorkspace | null): string {

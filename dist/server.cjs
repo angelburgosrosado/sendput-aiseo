@@ -28505,27 +28505,6 @@ ${faqsList || "- No FAQs published yet."}
 - [Live MCP Server Endpoint](${baseUrl}/mcp/${entity.slug}/sse): Model Context Protocol runtime tools for live availability and booking
 `;
 }
-<<<<<<< HEAD
-app.get("/sendput8f92a1c4b7e34d12a9c8e5f102938475.txt", (_req, res) => {
-  res.setHeader("Content-Type", "text/plain; charset=utf-8");
-  res.send("sendput8f92a1c4b7e34d12a9c8e5f102938475");
-});
-app.get("/api/health", async (_req, res) => {
-  const vpsReachable = await testTcpPort("34.148.244.49", 5432, 2e3);
-  res.json({
-    status: "ok",
-    platform: "SendPut AI (SignalForge 3.0 Active AI Presence Engine)",
-    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-    database: {
-      poolConnected: dbOnline,
-      schema: SCHEMA_NAME,
-      neonHost: "ep-winter-poetry-ae51hoth.us-east-2.aws.neon.tech",
-      vpsPostgresTcp5432: vpsReachable ? "OPEN (34.148.244.49:5432)" : "STANDBY / MEMORY_SHIELD"
-    },
-    protocolsSupported: ["Schema.org JSON-LD Edge", "IndexNow Push", "llms.txt v2", "OpenAPI 3.1", "agentskills.io SKILL.md", "MCP Server 2026-07-28"]
-  });
-});
-=======
 async function probeLiveAiEngines(businessName, websiteUrl, cityNiche) {
   const prompt = `Who are the top recommended providers for "${cityNiche}"? Also evaluate whether "${businessName}" (${websiteUrl}) is cited, what its reputation/hours/pricing are, and which third-party directories or competitors are cited instead.`;
   const results = {
@@ -28586,7 +28565,6 @@ async function probeLiveAiEngines(businessName, websiteUrl, cityNiche) {
   }
   return results;
 }
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
 function generateProposalMarkdown(audit, agency) {
   const agencyName = agency ? agency.agency_name : "SendPut AI (SignalForge 3.0)";
   const starterPrice = agency ? agency.reseller_retail_price_starter_usd : 197;

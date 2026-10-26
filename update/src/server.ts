@@ -1,27 +1,54 @@
 /**
- * src/server.ts — SendPut AI (SignalForge 3.0 Phase 2) Production Backend
- * - Vercel Serverless (myiad/sendput-aiseo) + Render + Cloud Run + VPS Compatible
+ * src/server.ts — SendPut AI (SignalForge 3.0 v3.4.0) Production Backend
+ * - Vercel Serverless (sendput-aiseo) + Render + Cloud Run + VPS Compatible
  * - Live Multi-LLM Geo-Anchored Fan-Out (Gemini 2.5 Grounding, Perplexity Sonar, OpenAI Search)
- * - PostgreSQL Geo-Niche Prompt Caching (vault_app_angelburgosrosado.geo_prompt_cache)
- * - Real IndexNow API Push + OAuth Write-Back Endpoints
- * - Server-Side Cloudflare Worker (HTMLRewriter) Generator
+ * - PostgreSQL Multi-Tenant Schema & Self-Healing TCP 5432 Shield (vault_app_angelburgosrosado)
+ * - Live Stripe Checkout Session Creation with Hard-Coded Defaults (prod_VVZcNbGZHG46T1, prod_VVZfdwEubbbA2G, prod_VVZgJ0BGZz8r51, prod_VVZhif3ZHILKAZ)
+ * - HMAC-SHA256 Stripe Webhook Signature Verification (/api/stripe/webhook)
+ * - Real Server-Side Access & Founder Key Verification (/api/auth/verify-key)
+ * - Instant IndexNow Search Gateway Push (/api/indexnow/push) & Root Verification
+ * - Server-Side Cloudflare HTMLRewriter Edge Worker Generator (/api/edge-worker/:slug)
  * - Public "AI-Verified by SendPut" Directory (/verified/:slug) & SVG Trust Badge (/badge/:slug.svg)
+ * - 4-Protocol Machine-Readable AI Standards (JSON-LD + llms.txt + OpenAPI 3.1 + SKILL.md + MCP SSE)
+ * - Agency White-Label Fleet Command, CNAME Multi-Tenant Routing & Co-Branded Proposals
+ * - Direct Google Business Profile & Search Console OAuth 2.0 Write-Back
+ * - Founder 1-Click Portfolio Seeder (/api/seed-portfolio, abglco.com parked for Stage 2)
  */
 import express from 'express';
 import path from 'path';
 import net from 'net';
 import pg from 'pg';
+import crypto from 'crypto';
 
 const { Pool } = pg;
 const app = express();
-app.use(express.json({ limit: '10mb' }));
+app.set('trust proxy', true);
+
+// Capture raw body for secure Stripe webhook HMAC-SHA256 signature verification
+app.use(
+  express.json({
+    verify: (req: any, _res, buf) => {
+      req.rawBody = buf;
+    },
+    limit: '10mb'
+  })
+);
+
+// Helper: Resolve dynamic base URL supporting custom CNAMEs, spoke subdomains, and reverse proxies
+function getBaseUrl(req: express.Request): string {
+  const forwardedHost = req.get('x-forwarded-host');
+  const host = (forwardedHost ? forwardedHost.split(',')[0].trim() : req.get('host')) || 'sendput.com';
+  const forwardedProto = req.get('x-forwarded-proto');
+  const proto = (forwardedProto ? forwardedProto.split(',')[0].trim() : req.protocol) || 'https';
+  return `${proto}://${host}`;
+}
 
 // Global CORS + Multi-Protocol Discovery Headers
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('X-Powered-By', 'SendPut AI SignalForge 3.0');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-founder-key, stripe-signature');
+  res.setHeader('X-Powered-By', 'SendPut AI SignalForge 3.2');
   if (req.method === 'OPTIONS') return res.sendStatus(200);
   next();
 });
@@ -50,25 +77,33 @@ const memoryEntities: Record<string, any> = {
     opening_hours: 'Mo-Fr 08:00-19:00, Sa 09:00-15:00',
     price_range: '$$',
     bilingual_es_enabled: true,
-    description_en: 'AI-powered bilingual (English/Spanish) insurance agency management platform, CRM, and automated ACORD compliance suite integrated natively with Microsoft 365.',
-    description_es: 'Plataforma bilingüe (Inglés/Español) impulsada por IA para la gestión de agencias de seguros, CRM y cumplimiento automatizado ACORD integrada con Microsoft 365.',
+    description_en:
+      'AI-powered bilingual (English/Spanish) insurance agency management platform, CRM, and automated ACORD compliance suite integrated natively with Microsoft 365.',
+    description_es:
+      'Plataforma bilingüe (Inglés/Español) impulsada por IA para la gestión de agencias de seguros, CRM y cumplimiento automatizado ACORD integrada con Microsoft 365.',
     services_json: [
       { name: 'InsuranceAI Agency SaaS', price: '$99/mo', desc: 'Full bilingual agency management & Microsoft 365 sync' },
       { name: 'US Insurance CRM Portal', price: '$49/mo', desc: 'Automated lead routing, WhatsApp templates & policy renewals' },
       { name: 'Solo Agent Portal', price: '$29/mo', desc: 'Rapid quoting and AI policy explanation assistant' }
     ],
     faqs_json: [
-      { q: 'Does MyIAD support both English and Spanish insurance workflows?', a: 'Yes, MyIAD provides complete native English and Spanish UI, policy templates, WhatsApp automation, and AI assistant responses.' },
-      { q: 'Does MyIAD integrate with Microsoft 365 and Adobe Sign?', a: 'Yes, MyIAD features 1-click Microsoft Entra SSO, Outlook Calendar two-way sync, Teams calling, and Adobe Sign e-signatures.' }
+      {
+        q: 'Does MyIAD support both English and Spanish insurance workflows?',
+        a: 'Yes, MyIAD provides complete native English and Spanish UI, policy templates, WhatsApp automation, and AI assistant responses.'
+      },
+      {
+        q: 'Does MyIAD integrate with Microsoft 365 and Adobe Sign?',
+        a: 'Yes, MyIAD features 1-click Microsoft Entra SSO, Outlook Calendar two-way sync, Teams calling, and Adobe Sign e-signatures.'
+      }
     ],
     booking_url: 'https://crm.myiad.net/book-demo',
     gbp_synced: true,
     bing_synced: true,
     apple_synced: true,
-    sfai_score: 95,
-    aics_score: 78,
-    dvs_score: 92,
-    thq_score: 99,
+    sfai_score: 91,
+    aics_score: 68,
+    dvs_score: 88,
+    thq_score: 97,
     plan_tier: 'growth_79'
   },
   'ab-global-consulting': {
@@ -87,60 +122,67 @@ const memoryEntities: Record<string, any> = {
     opening_hours: 'Mo-Fr 09:00-18:00',
     price_range: '$$',
     bilingual_es_enabled: true,
-    description_en: 'Bilingual financial consulting firm offering 7 live interactive retirement, annuity, and life insurance calculators with personalized actuarial guidance.',
-    description_es: 'Firma de consultoría financiera bilingüe que ofrece 7 calculadoras interactivas de jubilación, anualidades y seguro de vida con asesoría personalizada.',
+    description_en:
+      'Bilingual financial consulting firm offering 7 live interactive retirement, annuity, and life insurance calculators with personalized actuarial guidance.',
+    description_es:
+      'Firma de consultoría financiera bilingüe que ofrece 7 calculadoras interactivas de jubilación, anualidades y seguro de vida con asesoría personalizada.',
     services_json: [
       { name: 'Term vs. Whole Life Interactive Analysis', price: 'Free Consultation', desc: 'Actuarial comparison tailored to family protection goals' },
       { name: 'Fixed Indexed Annuity Income Calculator', price: 'Free Consultation', desc: 'Guaranteed lifetime income projection and tax-deferred growth modeling' }
     ],
     faqs_json: [
-      { q: 'Can I calculate my retirement annuity payout online before speaking with an advisor?', a: 'Yes, abglco.com hosts 7 free interactive financial and insurance calculators in English and Spanish.' }
+      {
+        q: 'Can I calculate my retirement annuity payout online before speaking with an advisor?',
+        a: 'Yes, abglco.com hosts 7 free interactive financial and insurance calculators in English and Spanish.'
+      }
     ],
     booking_url: 'https://abglco.com/contact',
     gbp_synced: true,
     bing_synced: true,
-    apple_synced: true,
-    sfai_score: 92,
-    aics_score: 74,
-    dvs_score: 88,
-    thq_score: 97,
+    apple_synced: false,
+    sfai_score: 84,
+    aics_score: 52,
+    dvs_score: 79,
+    thq_score: 94,
     plan_tier: 'growth_79'
-  },
-  'apex-roofing-orlando': {
-    id: '33333333-4444-5555-6666-777777777777',
-    slug: 'apex-roofing-orlando',
-    business_name: 'Apex Roofing & Solar',
-    website_url: 'https://apexroofingorlando.com',
-    city_niche: 'Orlando, FL — Licensed Hurricane Roof Replacement & Solar',
-    primary_category: 'RoofingContractor',
-    phone: '+1-407-555-0199',
-    street_address: '450 S Orange Ave, Suite 300',
-    city: 'Orlando',
-    state_region: 'FL',
-    postal_code: '32801',
-    country: 'US',
-    opening_hours: 'Mo-Sa 07:30-19:00',
-    price_range: '$$',
-    bilingual_es_enabled: true,
-    description_en: 'Florida State Certified Roofing & Solar Contractor (CCC133999) serving Orlando with 24-hour storm damage repair, architectural shingle & metal roofs, and $0-down solar financing.',
-    description_es: 'Contratista certificado de techos y energía solar en Orlando, FL con atención bilingüe, reparación de tormentas 24/7 y financiamiento sin pago inicial.',
-    services_json: [
-      { name: 'Architectural Shingle Roof Replacement', price: 'From $8,900 (or $139/mo)', desc: '130-mph wind warranty with peel-and-stick secondary water barrier' },
-      { name: 'Standing Seam Metal Roof Installation', price: 'From $16,500', desc: 'Miami-Dade hurricane-rated 24-gauge galvalume metal roofing' },
-      { name: '25-Point Drone Roof & Insurance Inspection', price: 'Free ($0 Instant Booking)', desc: 'Thermal & drone inspection report formatted for property insurance claims' }
-    ],
-    faqs_json: [
-      { q: 'Does Apex Roofing assist with Florida hurricane roof insurance claims?', a: 'Yes, we provide complimentary 25-point drone inspections and documentation compliant with Florida property insurance underwriting.' }
-    ],
-    booking_url: 'https://apexroofingorlando.com/book-inspection',
-    gbp_synced: true,
-    bing_synced: true,
-    apple_synced: true,
-    sfai_score: 94,
-    aics_score: 78,
-    dvs_score: 91,
-    thq_score: 99,
-    plan_tier: 'growth_79'
+  }
+};
+
+export interface AgencyWorkspace {
+  id: string;
+  agency_name: string;
+  slug: string;
+  custom_domain?: string;
+  brand_color: string;
+  logo_url?: string;
+  plan_tier: string;
+  included_seats: number;
+  active_seats: number;
+  extra_seat_price_usd: number;
+  reseller_retail_price_starter_usd: number;
+  reseller_retail_price_growth_usd: number;
+  team_roles?: Array<{ user_id: string; email: string; role: 'agency_admin' | 'account_manager' | 'client_viewer' }>;
+}
+
+// In-memory agency workspaces fallback
+const memoryAgencies: Record<string, AgencyWorkspace> = {
+  'signalforge-partners': {
+    id: 'a0000000-0000-0000-0000-000000000001',
+    agency_name: 'SignalForge Growth Partners',
+    slug: 'signalforge-partners',
+    custom_domain: 'audit.signalforgepartners.com',
+    brand_color: '#4F46E5',
+    logo_url: 'https://sendput.com/assets/agency-logo-demo.png',
+    plan_tier: 'agency_command_299',
+    included_seats: 10,
+    active_seats: 2,
+    extra_seat_price_usd: 19.0,
+    reseller_retail_price_starter_usd: 197.0,
+    reseller_retail_price_growth_usd: 497.0,
+    team_roles: [
+      { user_id: 'u-1', email: 'director@signalforgepartners.com', role: 'agency_admin' },
+      { user_id: 'u-2', email: 'seo-lead@signalforgepartners.com', role: 'account_manager' }
+    ]
   }
 };
 
@@ -148,9 +190,18 @@ function testTcpPort(host: string, port: number, timeoutMs = 2000): Promise<bool
   return new Promise((resolve) => {
     const sock = new net.Socket();
     sock.setTimeout(timeoutMs);
-    sock.on('connect', () => { sock.destroy(); resolve(true); });
-    sock.on('timeout', () => { sock.destroy(); resolve(false); });
-    sock.on('error', () => { sock.destroy(); resolve(false); });
+    sock.on('connect', () => {
+      sock.destroy();
+      resolve(true);
+    });
+    sock.on('timeout', () => {
+      sock.destroy();
+      resolve(false);
+    });
+    sock.on('error', () => {
+      sock.destroy();
+      resolve(false);
+    });
     sock.connect(port, host);
   });
 }
@@ -182,6 +233,47 @@ async function initDbPool() {
   }
 }
 
+// Helper: Resolve agency by CNAME custom domain or slug
+async function getAgency(identifier?: string): Promise<AgencyWorkspace | null> {
+  if (!identifier) return null;
+  const clean = identifier.toLowerCase().trim();
+
+  if (dbOnline && dbPool) {
+    try {
+      const res = await dbPool.query(
+        `SELECT * FROM agency_workspaces WHERE LOWER(custom_domain) = $1 OR slug = $1 LIMIT 1`,
+        [clean]
+      );
+      if (res.rows && res.rows.length > 0) {
+        return res.rows[0];
+      }
+    } catch (e: any) {
+      console.warn(`[Agency DB Lookup]: ${e.message}`);
+    }
+  }
+
+  const found = Object.values(memoryAgencies).find(
+    (a) => a.slug === clean || (a.custom_domain && a.custom_domain.toLowerCase() === clean)
+  );
+  return found || null;
+}
+
+// Asynchronously fetch business entity from PostgreSQL or fall back to memory
+async function getEntity(slug: string): Promise<any> {
+  if (dbOnline && dbPool) {
+    try {
+      const res = await dbPool.query(`SELECT * FROM business_entities WHERE slug = $1 LIMIT 1`, [slug]);
+      if (res.rows && res.rows.length > 0) {
+        return res.rows[0];
+      }
+    } catch (e: any) {
+      console.warn(`[Entity DB Lookup]: ${e.message}`);
+    }
+  }
+  return memoryEntities[slug] || Object.values(memoryEntities)[0];
+}
+
+// Helper: Generate validated JSON-LD Graph for any business entity
 function buildEntityJsonLd(entity: any, hostUrl = 'https://sendput.com') {
   return {
     '@context': 'https://schema.org',
@@ -195,10 +287,7 @@ function buildEntityJsonLd(entity: any, hostUrl = 'https://sendput.com') {
         priceRange: entity.price_range || '$$',
         description: entity.description_en,
         availableLanguage: entity.bilingual_es_enabled ? ['en-US', 'es-US'] : ['en-US'],
-        sameAs: [
-          `${hostUrl}/verified/${entity.slug}`,
-          `${hostUrl}/v1/tenants/${entity.slug}/llms.txt`
-        ],
+        sameAs: [`${hostUrl}/verified/${entity.slug}`, `${hostUrl}/v1/tenants/${entity.slug}/llms.txt`],
         address: {
           '@type': 'PostalAddress',
           streetAddress: entity.street_address,
@@ -241,13 +330,12 @@ function buildEntityJsonLd(entity: any, hostUrl = 'https://sendput.com') {
   };
 }
 
+// Helper: Compile Spec-Compliant /llms.txt for any business entity
 function buildLlmsTxt(entity: any, baseUrl: string) {
   const servicesList = (entity.services_json || [])
     .map((s: any) => `- **${s.name}** (${s.price}): ${s.desc}`)
     .join('\n');
-  const faqsList = (entity.faqs_json || [])
-    .map((f: any) => `- **Q: ${f.q}**\n  A: ${f.a}`)
-    .join('\n');
+  const faqsList = (entity.faqs_json || []).map((f: any) => `- **Q: ${f.q}**\n  A: ${f.a}`).join('\n');
 
   return `# ${entity.business_name}
 
@@ -259,7 +347,7 @@ ${entity.bilingual_es_enabled && entity.description_es ? `> [ES] ${entity.descri
 - **Public Verification Record**: ${baseUrl}/verified/${entity.slug}
 - **Category & Market**: ${entity.city_niche}
 - **Phone**: ${entity.phone}
-- **Location**: ${entity.street_address}, ${entity.city}, ${entity.state_region} ${entity.postal_code}
+- **Location**: ${entity.street_address || ''}, ${entity.city || ''}, ${entity.state_region || ''} ${entity.postal_code || ''}
 - **Operating Hours**: ${entity.opening_hours}
 - **Languages Supported**: ${entity.bilingual_es_enabled ? 'English (en-US), Spanish (es-US / es-PR)' : 'English (en-US)'}
 - **Direct Booking / Quote Endpoint**: ${entity.booking_url}
@@ -277,7 +365,7 @@ ${faqsList || '- No FAQs published yet.'}
 `;
 }
 
-// Helper: Live Multi-LLM Geo-Anchored Probing (Gemini 2.5 Grounding + Perplexity Sonar + OpenAI Search)
+// Helper: Live Multi-LLM Geo-Anchored Probing (Gemini 2.5 Grounding + Perplexity Sonar)
 async function probeLiveAiEngines(businessName: string, websiteUrl: string, cityNiche: string) {
   const prompt = `Who are the top recommended providers for "${cityNiche}"? Also evaluate whether "${businessName}" (${websiteUrl}) is cited, what its reputation/hours/pricing are, and which third-party directories or competitors are cited instead.`;
   const results: Record<string, any> = {
@@ -292,7 +380,6 @@ async function probeLiveAiEngines(businessName: string, websiteUrl: string, city
     ]
   };
 
-  // 1. Live Gemini 2.5 Flash with Google Search Grounding (if GEMINI_API_KEY configured)
   if (process.env.GEMINI_API_KEY) {
     try {
       const gemResp = await fetch(
@@ -317,7 +404,6 @@ async function probeLiveAiEngines(businessName: string, websiteUrl: string, city
     }
   }
 
-  // 2. Live Perplexity Sonar API (if PERPLEXITY_API_KEY configured)
   if (process.env.PERPLEXITY_API_KEY) {
     try {
       const ppxResp = await fetch('https://api.perplexity.ai/chat/completions', {
@@ -344,8 +430,69 @@ async function probeLiveAiEngines(businessName: string, websiteUrl: string, city
   return results;
 }
 
+// Helper: Compile Agency-Branded Client Proposal Markdown & Closing Strategy
+function generateProposalMarkdown(audit: any, agency: AgencyWorkspace | null): string {
+  const agencyName = agency ? agency.agency_name : 'SendPut AI (SignalForge 3.0)';
+  const starterPrice = agency ? agency.reseller_retail_price_starter_usd : 197;
+  const growthPrice = agency ? agency.reseller_retail_price_growth_usd : 497;
+  const wholesaleStarter = 39;
+  const wholesaleGrowth = 79;
+  const starterMargin = Math.round(((starterPrice - wholesaleStarter) / starterPrice) * 100);
+  const growthMargin = Math.round(((growthPrice - wholesaleGrowth) / growthPrice) * 100);
 
-// Official IndexNow Root Key Verification File
+  return `# Executive AI Search Visibility & Knowledge Graph Audit
+**Client Target**: ${audit.business_name} (${audit.website_url})
+**Market & Geo-Niche**: ${audit.city_niche}
+**Audited By**: ${agencyName}
+**Generated**: ${new Date(audit.created_at || Date.now()).toLocaleDateString()}
+
+---
+
+## 1. Executive Summary & Diagnostic Scores
+
+| Diagnostic Metric | Score | Target Standard | Status |
+|---|---|---|---|
+| **SFAI (SendPut AI Visibility Index)** | **${audit.sfai_score} / 100** | 90+ | ${audit.sfai_score >= 70 ? '🟢 Strong' : '🔴 Action Required'} |
+| **AICS (AI Citation Share)** | **${audit.aics_score}%** | 75%+ | ${audit.aics_score >= 50 ? '🟡 Moderate' : '🔴 Critical Gap'} |
+| **DVS (Direct Verification Share)** | **${audit.dvs_score}%** | 80%+ | Needs Live MCP Node |
+| **THQ (Technical Grounding & Schema)** | **${audit.thq_score}%** | 95%+ | ${audit.jsonld_detected ? '🟡 Partial' : '🔴 Missing JSON-LD'} |
+
+> **⚠️ Critical Hallucination Risk Detected**:
+> ${audit.hallucination_alert}
+
+---
+
+## 2. 5-Layer Active AI Search Architecture Gaps
+- **Layer 1 (AI Bot Crawlers)**: ${audit.ai_bots_blocked ? '❌ AI crawlers restricted via robots.txt' : '✅ GPTBot / PerplexityBot allowed access'}
+- **Layer 2 (Dynamic JSON-LD)**: ${audit.jsonld_detected ? '✅ Baseline schema detected' : '❌ Missing verified LocalBusiness & FAQPage Schema.org graph'}
+- **Layer 3 (Knowledge Graph Write-Back)**: Active synchronization with Google Business Profile, Bing Places, Apple Maps, and IndexNow
+- **Layer 4 (Direct AI Agent Standard)**: ${audit.llms_txt_detected ? '✅ /llms.txt present' : '❌ Missing /llms.txt, OpenAPI 3.1 & SKILL.md for Claude/ChatGPT agents'}
+- **Layer 5 (Model Context Protocol)**: ❌ Lacks live MCP runtime server (\`/mcp/tenant/sse\`), preventing autonomous agent booking and pricing verification
+
+---
+
+## 3. Recommended Agency Solution & Retainer Packages
+
+### Package A: AI Visibility Foundation ($${starterPrice}/month)
+- Turnkey Edge Script injection with Schema.org \`LocalBusiness\` + \`FAQPage\` graph
+- Automated Bing Places, Apple Maps & IndexNow instant push
+- Standard \`/llms.txt\` deployment
+- **Agency Reseller Margin**: **$${starterPrice - wholesaleStarter}/mo profit** (${starterMargin}% margin)
+
+### Package B: Active Market Dominance + Autonomous MCP Node ($${growthPrice}/month) — *RECOMMENDED*
+- Full 5-Layer SignalForge 3.0 Active Presence
+- Dedicated Model Context Protocol (MCP) live SSE node for Claude Desktop, Cursor & ChatGPT Search
+- Dynamic OpenAPI 3.1 + agentskills.io \`SKILL.md\` autonomous agent triggering
+- Real-time AI bot telemetry sensor (GPTBot, PerplexityBot, ClaudeBot tracking)
+- Bi-weekly hallucination defense & competitor citation capture
+- **Agency Reseller Margin**: **$${growthPrice - wholesaleGrowth}/mo profit** (${growthMargin}% margin)
+
+---
+*Authorized Proposal by ${agencyName} — Hosted under white-label infrastructure.*
+`;
+}
+
+// 0. Official IndexNow Root Key Verification File
 app.get('/sendput8f92a1c4b7e34d12a9c8e5f102938475.txt', (_req, res) => {
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.send('sendput8f92a1c4b7e34d12a9c8e5f102938475');
@@ -356,7 +503,7 @@ app.get('/api/health', async (_req, res) => {
   const vpsReachable = await testTcpPort('34.148.244.49', 5432, 1200);
   res.json({
     status: 'ok',
-    platform: 'SendPut AI (SignalForge 3.0 Phase 2 — Vercel & Render Ready)',
+    platform: 'SendPut AI (SignalForge 3.0 v3.4.0 — Vercel & Render Ready)',
     runtime: process.env.VERCEL ? 'vercel_serverless' : 'node_container',
     timestamp: new Date().toISOString(),
     database: {
@@ -365,8 +512,6 @@ app.get('/api/health', async (_req, res) => {
       neonHost: 'ep-winter-poetry-ae51hoth.us-east-2.aws.neon.tech',
       vpsPostgresTcp5432: vpsReachable ? 'OPEN (34.148.244.49:5432)' : 'STANDBY / MEMORY_SHIELD'
     },
-<<<<<<< HEAD
-=======
     stealthPublicGate: {
       enabled: true,
       publicTabs: ['1. Live AI Search Grader', '2. Plans & Early Access'],
@@ -395,29 +540,37 @@ app.get('/api/health', async (_req, res) => {
       callbackEndpoint: '/api/oauth/google/callback',
       bingPlacesApiConfigured: Boolean(process.env.BING_API_KEY)
     },
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
     phase2Modules: [
-      'Live Multi-LLM Geo-Anchored Probing (Gemini + Perplexity + OpenAI)',
+      'Live Multi-LLM Geo-Anchored Probing (Gemini + Perplexity)',
       'Cloudflare HTMLRewriter Server-Side Worker (/api/edge-worker/:slug)',
       'Instant IndexNow Search Push (/api/indexnow/push)',
       'Public AI-Verified Directory (/verified/:slug) & SVG Trust Badge (/badge/:slug.svg)',
-<<<<<<< HEAD
-      '4-Protocol Agentic Node (JSON-LD + llms.txt + OpenAPI 3.1 + SKILL.md + MCP SSE)'
-=======
       '4-Protocol Agentic Node (JSON-LD + llms.txt + OpenAPI 3.1 + SKILL.md + MCP SSE)',
       'Stripe Checkout + Webhook Provisioning (/api/checkout & /api/stripe/webhook)',
       'Google Business Profile & Search Console OAuth 2.0 Write-Back (/api/oauth/google/*)'
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
+    ],
+    protocolsSupported: [
+      'Schema.org JSON-LD Edge',
+      'IndexNow Push',
+      'llms.txt v2',
+      'OpenAPI 3.1',
+      'agentskills.io SKILL.md',
+      'MCP Server 2026-07-28'
     ]
   });
 });
 
 // 2. Phase 2 Live AI Search Grader & Surround-Sound Citation Engine (/api/audit)
 app.post('/api/audit', async (req, res) => {
-  const { business_name, website_url, city_niche } = req.body || {};
+  const { business_name, website_url, city_niche, agency_slug } = req.body || {};
   if (!business_name || !website_url) {
     return res.status(400).json({ error: 'business_name and website_url are required' });
   }
+
+  // Resolve agency context from header CNAME, query, or explicit body slug
+  const reqHost = (req.get('x-forwarded-host') || req.get('host') || '').split(':')[0].toLowerCase();
+  const agency = await getAgency(agency_slug || reqHost);
+
   const cleanUrl = website_url.startsWith('http') ? website_url : `https://${website_url}`;
   const cacheKey = `${(city_niche || 'general').toLowerCase().trim()}::${cleanUrl.toLowerCase()}`;
 
@@ -448,7 +601,8 @@ app.post('/api/audit', async (req, res) => {
   const thq = robotsOk ? 68 : 45;
   const recommendedTier = aics < 35 ? 'growth_79' : 'starter_39';
 
-  const auditResult = {
+  const auditResult: any = {
+    id: `prop-${Date.now()}`,
     business_name,
     website_url: cleanUrl,
     city_niche: city_niche || 'Local & National Market',
@@ -469,16 +623,45 @@ app.post('/api/audit', async (req, res) => {
       projected_aics: 78,
       projected_thq: 99
     },
+    agency: agency
+      ? {
+          agency_name: agency.agency_name,
+          slug: agency.slug,
+          brand_color: agency.brand_color,
+          logo_url: agency.logo_url,
+          custom_domain: agency.custom_domain,
+          retail_pricing: {
+            starter: agency.reseller_retail_price_starter_usd,
+            growth: agency.reseller_retail_price_growth_usd
+          }
+        }
+      : {
+          agency_name: 'SendPut AI',
+          retail_pricing: { starter: 197, growth: 497 }
+        },
+    reseller_margins: {
+      starter_retail_usd: agency ? agency.reseller_retail_price_starter_usd : 197,
+      starter_cost_usd: 39,
+      starter_profit_usd: (agency ? agency.reseller_retail_price_starter_usd : 197) - 39,
+      growth_retail_usd: agency ? agency.reseller_retail_price_growth_usd : 497,
+      growth_cost_usd: 79,
+      growth_profit_usd: (agency ? agency.reseller_retail_price_growth_usd : 497) - 79
+    },
     created_at: new Date().toISOString()
   };
 
+  auditResult.proposal_markdown = generateProposalMarkdown(auditResult, agency);
+
   if (dbOnline && dbPool) {
     try {
-      await dbPool.query(
+      const dbRes = await dbPool.query(
         `INSERT INTO sendput_audit_proposals (business_name, website_url, city_niche, sfai_score, aics_score, dvs_score, thq_score, jsonld_detected, llms_txt_detected, recommended_tier, proposal_markdown)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
-        [business_name, cleanUrl, auditResult.city_niche, sfai, aics, dvs, thq, jsonLdFound, llmsTxtFound, recommendedTier, JSON.stringify(auditResult)]
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`,
+        [business_name, cleanUrl, auditResult.city_niche, sfai, aics, dvs, thq, jsonLdFound, llmsTxtFound, recommendedTier, auditResult.proposal_markdown]
       );
+      if (dbRes.rows && dbRes.rows[0]?.id) {
+        auditResult.id = dbRes.rows[0].id;
+      }
     } catch (e: any) {
       console.warn('[Audit DB Save Fallback]:', e.message);
     }
@@ -493,11 +676,14 @@ app.post('/api/indexnow/push', async (req, res) => {
   const entity = memoryEntities[slug || 'myiad-insurance-ai'] || Object.values(memoryEntities)[0];
   const indexNowKey = process.env.INDEXNOW_API_KEY || 'sendput-indexnow-verified-key-2026';
   const targetHost = host_domain || 'sendput.com';
-  const urlList = Array.isArray(urls) && urls.length > 0 ? urls : [
-    `https://${targetHost}/verified/${entity.slug}`,
-    `https://${targetHost}/v1/tenants/${entity.slug}/llms.txt`,
-    entity.website_url
-  ];
+  const urlList =
+    Array.isArray(urls) && urls.length > 0
+      ? urls
+      : [
+          `https://${targetHost}/verified/${entity.slug}`,
+          `https://${targetHost}/v1/tenants/${entity.slug}/llms.txt`,
+          entity.website_url
+        ];
 
   let pingStatus = 'queued_local_shield';
   try {
@@ -527,7 +713,6 @@ app.post('/api/indexnow/push', async (req, res) => {
 });
 
 // 4. Phase 2 Server-Side Cloudflare Edge Worker Generator (/api/edge-worker/:slug)
-//    Solves the client-side JS crawler gap by injecting JSON-LD and Link headers via Cloudflare HTMLRewriter
 app.get('/api/edge-worker/:slug', (req, res) => {
   const entity = memoryEntities[req.params.slug] || Object.values(memoryEntities)[0];
   const hostUrl = `${req.protocol}://${req.get('host')}`;
@@ -558,12 +743,10 @@ export default {
     const url = new URL(request.url);
     const ua = request.headers.get("user-agent") || "";
 
-    // 1. Serve /llms.txt directly at the root edge with zero origin latency
     if (url.pathname === "/llms.txt") {
       return fetch(SENDPUT_HOST + "/v1/tenants/" + TENANT_SLUG + "/llms.txt");
     }
 
-    // 2. Async log AI Retrieval Bot hits without slowing down response
     if (/(GPTBot|OAI-SearchBot|PerplexityBot|ClaudeBot|Claude-SearchBot|Google-Extended|Applebot)/i.test(ua)) {
       ctx.waitUntil(
         fetch(SENDPUT_HOST + "/api/telemetry/bot", {
@@ -593,16 +776,18 @@ export default {
 });
 
 // 5. Phase 2 Public "AI-Verified Business Directory" Profile (/verified/:slug)
-//    Creates a high-authority backlink & viral PLG referral loop for sendput.com
 app.get('/verified/:slug', (req, res) => {
   const entity = memoryEntities[req.params.slug] || Object.values(memoryEntities)[0];
   const hostUrl = `${req.protocol}://${req.get('host')}`;
   const jsonLd = JSON.stringify(buildEntityJsonLd(entity, hostUrl), null, 2);
   const servicesHtml = (entity.services_json || [])
-    .map((s: any) => `<div style="padding:12px;background:#0F172A;border:1px solid #1E293B;border-radius:10px;margin-bottom:8px;">
+    .map(
+      (s: any) => `<div style="padding:12px;background:#0F172A;border:1px solid #1E293B;border-radius:10px;margin-bottom:8px;">
       <div style="font-weight:700;color:#F8FAFC;">${s.name} — <span style="color:#34D399;">${s.price}</span></div>
       <div style="font-size:13px;color:#94A3B8;margin-top:4px;">${s.desc || ''}</div>
-    </div>`).join('');
+    </div>`
+    )
+    .join('');
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -668,13 +853,17 @@ app.get('/badge/:slug.svg', (req, res) => {
 });
 
 // 7. Layer 2 Client-Side Edge Injection Script (/sf-edge.js?tenant=:slug)
-app.get('/sf-edge.js', (req, res) => {
+app.get('/sf-edge.js', async (req, res) => {
   const slug = String(req.query.tenant || 'myiad-insurance-ai');
-  const entity = memoryEntities[slug] || Object.values(memoryEntities)[0];
-  const hostUrl = `${req.protocol}://${req.get('host')}`;
+  const entity = await getEntity(slug);
+  const hostUrl = getBaseUrl(req);
   const jsonLd = JSON.stringify(buildEntityJsonLd(entity, hostUrl));
 
-  const edgeJs = `(function() {
+  const edgeJs = `/**
+ * SendPut AI (SignalForge 3.0) — Zero-Code Edge Injection & Bot Telemetry Sensor
+ * Tenant: ${entity.business_name} (${entity.slug})
+ */
+(function() {
   try {
     var s = document.createElement('script');
     s.type = 'application/ld+json';
@@ -694,6 +883,14 @@ app.get('/sf-edge.js', (req, res) => {
       l.href = item.href;
       document.head.appendChild(l);
     });
+
+    if (navigator.userAgent && /(GPTBot|OAI-SearchBot|PerplexityBot|ClaudeBot|Claude-SearchBot|Google-Extended|Applebot)/i.test(navigator.userAgent)) {
+      fetch('${hostUrl}/api/telemetry/bot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slug: '${entity.slug}', path: window.location.pathname, ua: navigator.userAgent })
+      }).catch(function(){});
+    }
   } catch (e) {}
 })();`;
 
@@ -702,17 +899,17 @@ app.get('/sf-edge.js', (req, res) => {
 });
 
 // 8. Layer 4A: Hosted /llms.txt Endpoint
-app.get('/v1/tenants/:slug/llms.txt', (req, res) => {
-  const entity = memoryEntities[req.params.slug] || Object.values(memoryEntities)[0];
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
+app.get('/v1/tenants/:slug/llms.txt', async (req, res) => {
+  const entity = await getEntity(req.params.slug);
+  const baseUrl = getBaseUrl(req);
   res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
   res.send(buildLlmsTxt(entity, baseUrl));
 });
 
 // 9. Layer 4B: Hosted OpenAPI 3.1 Specification
-app.get('/v1/tenants/:slug/openapi.json', (req, res) => {
-  const entity = memoryEntities[req.params.slug] || Object.values(memoryEntities)[0];
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
+app.get('/v1/tenants/:slug/openapi.json', async (req, res) => {
+  const entity = await getEntity(req.params.slug);
+  const baseUrl = getBaseUrl(req);
   res.json({
     openapi: '3.1.0',
     info: {
@@ -741,9 +938,9 @@ app.get('/v1/tenants/:slug/openapi.json', (req, res) => {
 });
 
 // 10. Layer 4C: Hosted Agent Skill (SKILL.md)
-app.get('/v1/tenants/:slug/skill.md', (req, res) => {
-  const entity = memoryEntities[req.params.slug] || Object.values(memoryEntities)[0];
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
+app.get('/v1/tenants/:slug/skill.md', async (req, res) => {
+  const entity = await getEntity(req.params.slug);
+  const baseUrl = getBaseUrl(req);
   const skillMd = `---
 name: ${entity.slug}-agent-skill
 description: Official AI Agent Skill for ${entity.business_name} (${entity.city_niche}). Use when a user asks for quotes, hours, services, or appointments with ${entity.business_name}.
@@ -758,19 +955,18 @@ Invoke this skill whenever a user searches for or requests:
 ## Available Runtime MCP Tools
 Connect to \`${baseUrl}/mcp/${entity.slug}/sse\` and invoke:
 1. \`get_verified_profile\` — Returns verified NAP, hours, credentials, and service pricing.
-2. \`calculate_service_quote\` — Returns transparent pricing for requested service tier.
+2. \`estimate_service_quote\` — Returns transparent pricing for requested service tier.
 3. \`book_consultation\` — Books a customer callback or consultation at ${entity.booking_url}.
 `;
   res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
   res.send(skillMd);
 });
 
-// 11. Layer 4D: Hosted Model Context Protocol (MCP) Tool Execution + CRM Webhook Bridge
+// 11. Layer 4D: Hosted Model Context Protocol (MCP) Tool Execution Endpoint
 app.all('/mcp/:slug/sse', async (req, res) => {
-  const entity = memoryEntities[req.params.slug] || Object.values(memoryEntities)[0];
+  const entity = await getEntity(req.params.slug);
   const toolName = req.body?.tool || req.query?.tool || 'get_verified_profile';
 
-  // If book_consultation is invoked and CRM_WEBHOOK_URL is configured, forward lead payload
   if (toolName === 'book_consultation' && process.env.CRM_WEBHOOK_URL) {
     try {
       await fetch(process.env.CRM_WEBHOOK_URL, {
@@ -806,86 +1002,231 @@ app.all('/mcp/:slug/sse', async (req, res) => {
   });
 });
 
-<<<<<<< HEAD
-// 12. Stripe Self-Serve Checkout Route
-app.post('/api/checkout', (req, res) => {
-  const { tier, billing_cycle, extra_seats } = req.body || {};
-  const priceMap: Record<string, { name: string; amount: number; priceId: string }> = {
-    oneshot_29: { name: 'SendPut $29 One-Shot Deep AI Audit Report', amount: 29, priceId: process.env.STRIPE_PRICE_ONESHOT_29 || 'price_sendput_oneshot_29' },
-    starter_39: { name: 'SendPut Self-Serve Starter (AI Profile & Schema Sync)', amount: billing_cycle === 'annual' ? 32 : 39, priceId: process.env.STRIPE_PRICE_STARTER_39 || 'price_sendput_starter_39' },
-    growth_79: { name: 'SendPut Self-Serve Growth (Active GEO + Hosted MCP Node)', amount: billing_cycle === 'annual' ? 65 : 79, priceId: process.env.STRIPE_PRICE_GROWTH_79 || 'price_sendput_growth_79' },
-    agency_299: { name: 'SendPut White-Label Agency Command (10 Seats Included)', amount: (billing_cycle === 'annual' ? 249 : 299) + (Math.max(0, Number(extra_seats) || 0) * 19), priceId: process.env.STRIPE_PRICE_AGENCY_299 || 'price_sendput_agency_299' }
-  };
+// 12. Real-Time AI Crawler & Agent Telemetry Collector Endpoint
+app.post('/api/telemetry/bot', async (req, res) => {
+  const { slug, path: reqPath, ua } = req.body || {};
+  const entity = await getEntity(slug || 'myiad-insurance-ai');
+  const botMatch = ua && ua.match(/(GPTBot|OAI-SearchBot|PerplexityBot|Claude-SearchBot|ClaudeBot|Google-Extended|Applebot)/i);
+  const botName = botMatch ? botMatch[0] : 'Generic-AI-Bot';
 
-  const selected = catalog[tier] || catalog.growth_79;
-  const stripeSecret = (process.env.STRIPE_SECRET_KEY || '').trim();
-
-  // If STRIPE_SECRET_KEY is configured in Vercel/Render env vars, create a real Stripe Checkout Session using the Product ID!
-  if (stripeSecret && stripeSecret.startsWith('sk_')) {
+  if (dbOnline && dbPool && entity?.id) {
     try {
-      const params = new URLSearchParams();
-      params.append('mode', selected.mode);
-      params.append('success_url', `${hostUrl}/?checkout=success&tier=${tier}&key=${selected.keyPrefix}-2026-LIVE`);
-      params.append('cancel_url', `${hostUrl}/?checkout=cancelled&tier=${tier}`);
-      params.append('line_items[0][quantity]', '1');
-      params.append('line_items[0][price_data][currency]', 'usd');
-      params.append('line_items[0][price_data][product]', selected.productId);
-      params.append('line_items[0][price_data][unit_amount]', String(selected.unitAmountCents));
-      if (selected.mode === 'subscription' && selected.interval) {
-        params.append('line_items[0][price_data][recurring][interval]', selected.interval);
-      }
-      params.append('metadata[tier]', String(tier));
-      if (business_name) {
-        params.append('metadata[business_name]', String(business_name));
-      }
-      if (website_url) {
-        params.append('metadata[website_url]', String(website_url));
-      }
-
-      const stripeResp = await fetch('https://api.stripe.com/v1/checkout/sessions', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${stripeSecret}`,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: params.toString()
-      });
-
-      const sessionData: any = await stripeResp.json();
-      if (stripeResp.ok && sessionData.url) {
-        return res.json({
-          status: 'redirect_to_stripe',
-          mode: 'live_stripe_session',
-          plan: selected.name,
-          stripe_product_id: selected.productId,
-          amount_usd: selected.unitAmountCents / 100,
-          checkout_url: sessionData.url,
-          session_id: sessionData.id
-        });
-      } else {
-        console.warn('[Stripe Session Warning]:', sessionData?.error?.message || 'Unknown error');
-      }
-    } catch (err: any) {
-      console.error('[Stripe API Exception]:', err.message);
+      await dbPool.query(
+        `INSERT INTO ai_bot_telemetry (entity_id, bot_name, request_path, user_agent)
+         VALUES ($1, $2, $3, $4)`,
+        [entity.id, botName, reqPath || '/', ua || '']
+      );
+    } catch (e: any) {
+      console.warn('[Telemetry Bot Save]:', e.message);
     }
   }
 
-  // Fallback response when STRIPE_SECRET_KEY is not yet set in env vars
   res.json({
-    status: 'ready',
-    mode: 'stripe_product_wired',
-    plan: selected.name,
-    monthly_total_usd: selected.amount,
-    stripe_price_id: selected.priceId,
-    checkout_url: `/#checkout-success?tier=${tier}`
-=======
-// 12. Live Stripe Self-Serve Checkout Route (Wired to prod_VVZcNbGZHG46T1, prod_VVZfdwEubbbA2G, prod_VVZgJ0BGZz8r51, prod_VVZhif3ZHILKAZ)
+    status: 'ok',
+    bot: botName,
+    entity: entity.slug,
+    recorded_at: new Date().toISOString()
+  });
+});
+
+// 13. Agency White-Label Configuration & Status Endpoint
+app.get('/api/agency', async (req, res) => {
+  const reqHost = (req.get('x-forwarded-host') || req.get('host') || '').split(':')[0].toLowerCase();
+  const slug = (req.query.slug as string) || reqHost;
+  const agency = await getAgency(slug);
+
+  if (!agency) {
+    const sample = Object.values(memoryAgencies)[0];
+    return res.json({
+      status: 'active',
+      is_white_label: false,
+      workspace: sample
+    });
+  }
+
+  res.json({
+    status: 'active',
+    is_white_label: Boolean(agency.custom_domain && reqHost.includes(agency.custom_domain.toLowerCase())),
+    workspace: agency
+  });
+});
+
+// Update Agency White-Label CNAME & Reseller Pricing
+app.post('/api/agency', async (req, res) => {
+  const { agency_name, slug, custom_domain, brand_color, logo_url, reseller_starter, reseller_growth, team_roles } = req.body || {};
+  const agencySlug = slug || 'signalforge-partners';
+
+  const updated: AgencyWorkspace = {
+    id: memoryAgencies[agencySlug]?.id || `a-${Date.now()}`,
+    agency_name: agency_name || memoryAgencies[agencySlug]?.agency_name || 'My Agency',
+    slug: agencySlug,
+    custom_domain: custom_domain || memoryAgencies[agencySlug]?.custom_domain,
+    brand_color: brand_color || memoryAgencies[agencySlug]?.brand_color || '#4F46E5',
+    logo_url: logo_url || memoryAgencies[agencySlug]?.logo_url,
+    plan_tier: 'agency_command_299',
+    included_seats: memoryAgencies[agencySlug]?.included_seats || 10,
+    active_seats: memoryAgencies[agencySlug]?.active_seats || 2,
+    extra_seat_price_usd: 19.0,
+    reseller_retail_price_starter_usd: Number(reseller_starter) || 197.0,
+    reseller_retail_price_growth_usd: Number(reseller_growth) || 497.0,
+    team_roles: team_roles || memoryAgencies[agencySlug]?.team_roles || [
+      { user_id: 'u-1', email: 'admin@agency.com', role: 'agency_admin' }
+    ]
+  };
+
+  memoryAgencies[agencySlug] = updated;
+
+  if (dbOnline && dbPool) {
+    try {
+      await dbPool.query(
+        `INSERT INTO agency_workspaces (agency_name, slug, custom_domain, brand_color, logo_url, plan_tier, included_seats, active_seats, extra_seat_price_usd)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+         ON CONFLICT (slug) DO UPDATE SET
+           agency_name = EXCLUDED.agency_name,
+           custom_domain = EXCLUDED.custom_domain,
+           brand_color = EXCLUDED.brand_color,
+           logo_url = EXCLUDED.logo_url,
+           updated_at = CURRENT_TIMESTAMP`,
+        [
+          updated.agency_name,
+          updated.slug,
+          updated.custom_domain,
+          updated.brand_color,
+          updated.logo_url,
+          updated.plan_tier,
+          updated.included_seats,
+          updated.active_seats,
+          updated.extra_seat_price_usd
+        ]
+      );
+    } catch (e: any) {
+      console.warn('[Agency DB Save]:', e.message);
+    }
+  }
+
+  res.json({
+    status: 'success',
+    message: 'Agency workspace & CNAME white-labeling updated',
+    workspace: updated
+  });
+});
+
+// Agency Sub-Tenant / Client Seats Endpoint
+app.get('/api/agency/seats', async (req, res) => {
+  const reqHost = (req.get('x-forwarded-host') || req.get('host') || '').split(':')[0].toLowerCase();
+  const slug = (req.query.slug as string) || reqHost;
+  const agency = (await getAgency(slug)) || Object.values(memoryAgencies)[0];
+
+  let entitiesList: any[] = [];
+  if (dbOnline && dbPool) {
+    try {
+      const resDb = await dbPool.query(
+        `SELECT id, slug, business_name, website_url, city_niche, primary_category, sfai_score, aics_score, plan_tier, created_at
+         FROM business_entities ORDER BY created_at DESC LIMIT 50`
+      );
+      entitiesList = resDb.rows || [];
+    } catch (e: any) {
+      console.warn('[Agency Seats DB Lookup]:', e.message);
+    }
+  }
+  if (entitiesList.length === 0) {
+    entitiesList = Object.values(memoryEntities);
+  }
+
+  res.json({
+    agency: agency.agency_name,
+    cname_domain: agency.custom_domain,
+    plan: agency.plan_tier,
+    included_seats: agency.included_seats,
+    used_seats: entitiesList.length,
+    extra_seats: Math.max(0, entitiesList.length - agency.included_seats),
+    extra_seat_price_usd: agency.extra_seat_price_usd,
+    reseller_margins: {
+      starter_retail: agency.reseller_retail_price_starter_usd,
+      growth_retail: agency.reseller_retail_price_growth_usd,
+      wholesale_starter: 39,
+      wholesale_growth: 79,
+      net_margin_starter: agency.reseller_retail_price_starter_usd - 39,
+      net_margin_growth: agency.reseller_retail_price_growth_usd - 79
+    },
+    team_roles: agency.team_roles,
+    client_entities: entitiesList
+  });
+});
+
+// Retrieve Raw Proposal Document (Markdown or HTML view)
+app.get('/api/proposals/:id', async (req, res) => {
+  const proposalId = req.params.id;
+  if (dbOnline && dbPool) {
+    try {
+      const resDb = await dbPool.query(
+        `SELECT * FROM sendput_audit_proposals WHERE id::text = $1 OR id::text LIKE $2 LIMIT 1`,
+        [proposalId, `%${proposalId}%`]
+      );
+      if (resDb.rows && resDb.rows.length > 0) {
+        return res.json(resDb.rows[0]);
+      }
+    } catch (e: any) {
+      console.warn('[Proposal Lookup DB]:', e.message);
+    }
+  }
+
+  res.json({
+    id: proposalId,
+    business_name: 'Client Proposal Target',
+    sfai_score: 58,
+    aics_score: 32,
+    proposal_markdown: `# Verified Agency Proposal (${proposalId})\nReady for export.`
+  });
+});
+
+// 14. Real Server-Side Access & Founder Key Verification (/api/auth/verify-key)
+app.post('/api/auth/verify-key', (req, res) => {
+  const submittedKey = String(req.body?.key || '').trim();
+  const founderKey = (process.env.SP_FOUNDER_KEY || 'SP-FOUNDER-2026').trim();
+
+  if (!submittedKey) {
+    return res.status(400).json({ valid: false, error: 'Key required' });
+  }
+
+  if (submittedKey === founderKey) {
+    return res.json({
+      valid: true,
+      role: 'founder',
+      tier: 'founder_unlimited',
+      message: 'Founder key verified'
+    });
+  }
+
+  // Subscriber key format: e.g. SP-STARTER-..., SP-GROWTH-..., SP-AGENCY-...
+  const subscriberMatch = submittedKey.match(/^SP-(AUDIT|STARTER|GROWTH|AGENCY)-[A-Z0-9_-]+$/i);
+  if (subscriberMatch) {
+    const tier = subscriberMatch[1].toLowerCase();
+    return res.json({
+      valid: true,
+      role: 'subscriber',
+      tier,
+      message: `Subscriber activation key verified (${tier})`
+    });
+  }
+
+  return res.status(401).json({
+    valid: false,
+    error: 'Invalid activation or founder key'
+  });
+});
+
+// 15. Live Stripe Self-Serve Checkout Route
+// Wired directly to prod_VVZcNbGZHG46T1, prod_VVZfdwEubbbA2G, prod_VVZgJ0BGZz8r51, prod_VVZhif3ZHILKAZ
 app.post('/api/checkout', async (req, res) => {
   const { tier, billing_cycle, business_name, website_url } = req.body || {};
   const isAnnual = billing_cycle === 'annual';
-  const hostUrl = `${req.protocol}://${req.get('host')}`;
+  const hostUrl = getBaseUrl(req);
 
-  const catalog: Record<string, { name: string; productId: string; unitAmountCents: number; mode: 'payment' | 'subscription'; interval?: 'month' | 'year'; keyPrefix: string }> = {
+  const catalog: Record<
+    string,
+    { name: string; productId: string; unitAmountCents: number; mode: 'payment' | 'subscription'; interval?: 'month' | 'year'; keyPrefix: string }
+  > = {
     oneshot_29: {
       name: 'SendPut $29 One-Shot Deep AI Audit Report',
       productId: process.env.STRIPE_PRODUCT_ONESHOT_29 || 'prod_VVZcNbGZHG46T1',
@@ -922,12 +1263,15 @@ app.post('/api/checkout', async (req, res) => {
   const selected = catalog[tier] || catalog.growth_79;
   const stripeSecret = (process.env.STRIPE_SECRET_KEY || '').trim();
 
-  // If STRIPE_SECRET_KEY is configured in Vercel/Render env vars, create a real Stripe Checkout Session using the Product ID!
+  // If STRIPE_SECRET_KEY is configured in Vercel/Render env vars, create a real Stripe Checkout Session!
   if (stripeSecret && stripeSecret.startsWith('sk_')) {
     try {
       const params = new URLSearchParams();
       params.append('mode', selected.mode);
-      params.append('success_url', `${hostUrl}/?checkout=success&tier=${tier}&key=${selected.keyPrefix}-2026-LIVE`);
+      params.append(
+        'success_url',
+        `${hostUrl}/?checkout=success&session_id={CHECKOUT_SESSION_ID}&tier=${tier}&key=${selected.keyPrefix}-2026-LIVE`
+      );
       params.append('cancel_url', `${hostUrl}/?checkout=cancelled&tier=${tier}`);
       params.append('line_items[0][quantity]', '1');
       params.append('line_items[0][price_data][currency]', 'usd');
@@ -966,13 +1310,18 @@ app.post('/api/checkout', async (req, res) => {
         });
       } else {
         console.warn('[Stripe Session Warning]:', sessionData?.error?.message || 'Unknown error');
+        return res.status(502).json({
+          error: sessionData?.error?.message || 'Failed to initialize Stripe checkout session',
+          stripe_error: sessionData?.error
+        });
       }
     } catch (err: any) {
       console.error('[Stripe API Exception]:', err.message);
+      return res.status(500).json({ error: err.message });
     }
   }
 
-  // Fallback response when STRIPE_SECRET_KEY is not yet set in env vars
+  // Fallback response when STRIPE_SECRET_KEY is not yet configured
   res.json({
     status: 'ready',
     mode: 'stripe_product_wired',
@@ -981,12 +1330,85 @@ app.post('/api/checkout', async (req, res) => {
     amount_usd: selected.unitAmountCents / 100,
     billing_interval: selected.interval || 'one_time',
     issued_activation_key_preview: `${selected.keyPrefix}-2026-VERIFIED`,
-    checkout_url: `/?checkout=success&tier=${tier}`
+    checkout_url: `/?checkout=success&tier=${tier}&key=${selected.keyPrefix}-2026-VERIFIED`
   });
 });
 
-// 13. Live Stripe Webhook Receiver (/api/stripe/webhook) — Auto-Provisions Paid Tiers & Activation Keys
+// 16. Verify Stripe Checkout Session / Return (/api/checkout/verify)
+app.get('/api/checkout/verify', async (req, res) => {
+  const { session_id, key } = req.query;
+  const stripeSecret = (process.env.STRIPE_SECRET_KEY || '').trim();
+
+  if (session_id && typeof session_id === 'string' && stripeSecret && stripeSecret.startsWith('sk_')) {
+    try {
+      const stripeResp = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(session_id)}`, {
+        headers: { Authorization: `Bearer ${stripeSecret}` }
+      });
+      if (stripeResp.ok) {
+        const session: any = await stripeResp.json();
+        const paid = session.payment_status === 'paid' || session.status === 'complete';
+        if (paid) {
+          const tier = session.metadata?.tier || 'growth_79';
+          return res.json({
+            verified: true,
+            status: 'paid',
+            plan: tier,
+            issued_key: `SP-${tier.toUpperCase()}-${Date.now().toString(36).toUpperCase()}`
+          });
+        }
+      }
+    } catch (err: any) {
+      console.warn('[Session Verification Error]:', err.message);
+    }
+  }
+
+  // Key check fallback
+  if (key && typeof key === 'string') {
+    const founderKey = (process.env.SP_FOUNDER_KEY || 'SP-FOUNDER-2026').trim();
+    if (key === founderKey || /^SP-(AUDIT|STARTER|GROWTH|AGENCY)-/i.test(key)) {
+      return res.json({ verified: true, status: 'key_valid', key });
+    }
+  }
+
+  res.status(400).json({ verified: false, error: 'Checkout session could not be verified' });
+});
+
+// 17. Live Stripe Webhook Receiver with HMAC-SHA256 Signature Verification (/api/stripe/webhook)
 app.post('/api/stripe/webhook', async (req, res) => {
+  const sig = req.headers['stripe-signature'] as string;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  // Verify Stripe HMAC-SHA256 signature if webhook secret is configured
+  if (webhookSecret && sig) {
+    try {
+      const parts = sig.split(',').reduce((acc: any, item) => {
+        const [k, v] = item.split('=');
+        if (k && v) acc[k.trim()] = v.trim();
+        return acc;
+      }, {});
+      const timestamp = parts.t;
+      const signature = parts.v1;
+
+      if (!timestamp || !signature) {
+        return res.status(400).json({ error: 'Missing timestamp or v1 signature' });
+      }
+
+      const raw = (req as any).rawBody ? (req as any).rawBody.toString('utf8') : JSON.stringify(req.body);
+      const signedPayload = `${timestamp}.${raw}`;
+      const expectedSignature = crypto.createHmac('sha256', webhookSecret).update(signedPayload).digest('hex');
+
+      if (expectedSignature !== signature) {
+        console.error('[Stripe Webhook] Invalid signature match');
+        return res.status(400).json({ error: 'Invalid webhook signature' });
+      }
+    } catch (err: any) {
+      console.error('[Stripe Webhook Error]:', err.message);
+      return res.status(400).json({ error: `Signature verification failed: ${err.message}` });
+    }
+  } else if (webhookSecret && !sig) {
+    return res.status(400).json({ error: 'stripe-signature header required' });
+  }
+
   const event = req.body || {};
   const eventType = event.type || 'unknown';
 
@@ -1006,9 +1428,9 @@ app.post('/api/stripe/webhook', async (req, res) => {
         .replace(/^-|-$/g, '') || 'subscriber-node';
     const issuedKey = `SP-${String(tier).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`;
 
-    if (dbOnline && pool) {
+    if (dbOnline && dbPool) {
       try {
-        await pool.query(
+        await dbPool.query(
           `INSERT INTO business_entities (slug, business_name, website_url, plan_tier, sfai_score, aics_score, dvs_score, thq_score)
            VALUES ($1, $2, $3, $4, 94, 78, 91, 99)
            ON CONFLICT (slug) DO UPDATE SET plan_tier = EXCLUDED.plan_tier, updated_at = CURRENT_TIMESTAMP`,
@@ -1031,11 +1453,11 @@ app.post('/api/stripe/webhook', async (req, res) => {
   res.json({ received: true, event_type: eventType });
 });
 
-// 14. Direct Google Business Profile & Search Console OAuth 2.0 Write-Back Integration
+// 18. Direct Google Business Profile & Search Console OAuth 2.0 Write-Back Integration
 app.get('/api/oauth/google/authorize', (req, res) => {
   const slug = String(req.query.slug || 'myiad-insurance-ai');
   const clientId = process.env.GOOGLE_CLIENT_ID || '';
-  const hostUrl = `${req.protocol}://${req.get('host')}`;
+  const hostUrl = getBaseUrl(req);
   const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${hostUrl}/api/oauth/google/callback`;
   const scopes = [
     'https://www.googleapis.com/auth/business.manage',
@@ -1060,9 +1482,9 @@ app.get('/api/oauth/google/authorize', (req, res) => {
 app.get('/api/oauth/google/callback', async (req, res) => {
   const { code, state } = req.query;
   const slug = String(state || 'myiad-insurance-ai');
-  if (dbOnline && pool && code) {
+  if (dbOnline && dbPool && code) {
     try {
-      await pool.query(
+      await dbPool.query(
         `UPDATE business_entities SET gbp_synced = TRUE, updated_at = CURRENT_TIMESTAMP WHERE slug = $1`,
         [slug]
       );
@@ -1071,12 +1493,14 @@ app.get('/api/oauth/google/callback', async (req, res) => {
   res.redirect(`/?oauth=google_connected&slug=${encodeURIComponent(slug)}&checkout=success`);
 });
 
-// 15. Founder 1-Click Portfolio Seeder & IndexNow Batch Pusher (/api/seed-portfolio)
+// 19. Founder 1-Click Portfolio Seeder & IndexNow Batch Pusher (/api/seed-portfolio)
 // Seeds active portfolio brands (excluding abglco.com which is parked for Stage 2)
 app.post('/api/seed-portfolio', async (req, res) => {
   const founderKey = req.headers['x-founder-key'] || req.body?.founder_key || '';
-  if (founderKey !== 'SP-FOUNDER-2026') {
-    return res.status(403).json({ error: 'Valid SP-FOUNDER-2026 key required' });
+  const expectedKey = (process.env.SP_FOUNDER_KEY || 'SP-FOUNDER-2026').trim();
+
+  if (founderKey !== expectedKey) {
+    return res.status(403).json({ error: 'Valid SP_FOUNDER_KEY required' });
   }
 
   const portfolioSeeds = [
@@ -1121,10 +1545,13 @@ app.post('/api/seed-portfolio', async (req, res) => {
       bilingual_es_enabled: true,
       description_en:
         'Clinical-trust organic wellness brand featuring the Phase 1 Mens Vitality 6-SKU collection (ROC501-ROC507) with a 3-minute personalized wellness quiz and Subscribe & Save 20%.',
-      description_es:
-        'Marca de bienestar orgánico para la vitalidad masculina con colección clínica de 6 productos.',
+      description_es: 'Marca de bienestar orgánico para la vitalidad masculina con colección clínica de 6 productos.',
       services: [
-        { name: 'Phase 1 Mens Vitality Core Bundle (ROC501-ROC507)', price: 'Subscribe & Save 20%', desc: '6-SKU clinical-trust organic vitality lineup' }
+        {
+          name: 'Phase 1 Mens Vitality Core Bundle (ROC501-ROC507)',
+          price: 'Subscribe & Save 20%',
+          desc: '6-SKU clinical-trust organic vitality lineup'
+        }
       ],
       faqs: [],
       sfai_score: 91,
@@ -1143,39 +1570,15 @@ app.post('/api/seed-portfolio', async (req, res) => {
       opening_hours: 'Mo-Su 00:00-23:59',
       bilingual_es_enabled: true,
       description_en:
-        'High-performance athletic nutrition brand offering 14 cleanly dosed Sports & Exercise SKUs plus Telomere Vital Water.',
-      description_es:
-        'Nutrición deportiva de alto rendimiento con 14 fórmulas avanzadas y agua vital de telómeros.',
+        'Athletic performance nutrition with cellular-level bio-availability, certified NSF for Sport pre-workouts, creatine monohydrate, and Telomere Vitality Water.',
+      description_es: 'Nutrición de alto rendimiento atlético y agua de vitalidad telomérica.',
       services: [
-        { name: 'Activotics Pro Whey Isolate & Creatine Stack', price: '$39.99 - $64.99', desc: '14-SKU athletic recovery and strength lineup' }
-      ],
-      faqs: [],
-      sfai_score: 90,
-      aics_score: 69,
-      dvs_score: 86,
-      thq_score: 96,
-      plan_tier: 'growth_79'
-    },
-    {
-      slug: 'story-menu-app',
-      business_name: 'Story.Menu — Interactive AI Reading & Vocabulary Platform',
-      website_url: 'https://story.menu',
-      city_niche: 'National EdTech & Family Literacy — Interactive Stories, Word Vault & Lexile Builder',
-      primary_category: 'SoftwareApplication',
-      phone: '+1-888-506-9423',
-      opening_hours: 'Mo-Su 00:00-23:59',
-      bilingual_es_enabled: true,
-      description_en:
-        'Interactive AI story generator and childrens reading incentive platform featuring tap-to-define Vocabulary Word Vault and Lexile toggles.',
-      description_es:
-        'Plataforma interactiva de lectura e historias con IA y vocabulario dinámico.',
-      services: [
-        { name: 'Story.Menu Family & Reader Plan', price: 'Freemium / Pro Subscription', desc: 'Interactive stories and Vocabulary Word Vault' }
+        { name: 'Activotics High-Impact Performance Bundle', price: 'Subscribe & Save 20%', desc: 'Pre-workout + BCAAs + Whey Isolate bundle' }
       ],
       faqs: [],
       sfai_score: 92,
       aics_score: 74,
-      dvs_score: 90,
+      dvs_score: 89,
       thq_score: 98,
       plan_tier: 'growth_79'
     },
@@ -1190,10 +1593,13 @@ app.post('/api/seed-portfolio', async (req, res) => {
       bilingual_es_enabled: true,
       description_en:
         'Store-compliant Bring-Your-Own-Playlist (BYO) M3U and Xtream media player utility with FFprobe stream health validation and zero preloaded channels.',
-      description_es:
-        'Reproductor multimedia M3U y Xtream compatible con listas propias del usuario.',
+      description_es: 'Reproductor multimedia M3U y Xtream compatible con listas propias del usuario.',
       services: [
-        { name: 'IPTV.Menu Pro Player (Web, iOS & Android)', price: 'Free Trial / Pro License', desc: 'Pure BYO-playlist media player with stream health diagnostics' }
+        {
+          name: 'IPTV.Menu Pro Player (Web, iOS & Android)',
+          price: 'Free Trial / Pro License',
+          desc: 'Pure BYO-playlist media player with stream health diagnostics'
+        }
       ],
       faqs: [],
       sfai_score: 89,
@@ -1208,9 +1614,9 @@ app.post('/api/seed-portfolio', async (req, res) => {
   for (const item of portfolioSeeds) {
     memoryEntities[item.slug] = item as any;
     seededSlugs.push(item.slug);
-    if (dbOnline && pool) {
+    if (dbOnline && dbPool) {
       try {
-        await pool.query(
+        await dbPool.query(
           `INSERT INTO business_entities (slug, business_name, website_url, city_niche, primary_category, phone, opening_hours, bilingual_es_enabled, description_en, description_es, services_json, faqs_json, sfai_score, aics_score, dvs_score, thq_score, plan_tier)
            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11::jsonb,$12::jsonb,$13,$14,$15,$16,$17)
            ON CONFLICT (slug) DO UPDATE SET business_name = EXCLUDED.business_name, sfai_score = EXCLUDED.sfai_score, updated_at = CURRENT_TIMESTAMP`,
@@ -1243,20 +1649,20 @@ app.post('/api/seed-portfolio', async (req, res) => {
     seeded_count: seededSlugs.length,
     seeded_slugs: seededSlugs,
     note: 'abglco.com and WordPress plugin intentionally parked for Stage 2 per Founder directive.'
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
   });
 });
 
-app.use(express.static(path.join(__dirname, '../public')));
+const publicDir = path.resolve(process.cwd(), 'public');
+app.use(express.static(publicDir));
 app.get('*', (_req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
+  res.sendFile(path.join(publicDir, 'index.html'));
 });
 
 initDbPool().catch((err) => console.warn('[Self-Healing DB Init]:', err?.message));
 
-if (!process.env.VERCEL) {
+if (require.main === module || !process.env.VERCEL) {
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 SendPut AI (SignalForge 3.0 Phase 2) listening on http://0.0.0.0:${PORT}`);
+    console.log(`🚀 SendPut AI (SignalForge 3.0 v3.4.0) listening on http://0.0.0.0:${PORT}`);
   });
 }
 

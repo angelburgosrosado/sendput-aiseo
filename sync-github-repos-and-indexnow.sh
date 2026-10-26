@@ -6,13 +6,8 @@
 # What this script does:
 #  1. Drops the official IndexNow verification key file (sendput8f92a1c4b7e34d12a9c8e5f102938475.txt),
 #     /llms.txt feed, AI-friendly robots.txt, and SendPut Edge Script into your
-<<<<<<< HEAD
-#     GitHub repositories (sendput-aiseo, insuranceai-saas, insuranceai-crm,
-#     insuranceai-agent, iptv-menu-app, Story-Menu-App).
-=======
 #     GitHub repositories (sendput-aiseo, InsuranceAI-SaaS, InsuranceAI-CRM,
 #     InsuranceAI-Agency, iptv-menu-app, story-menu-app).
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
 #  2. Commits and pushes the updates to GitHub (triggering Vercel/Render deploys).
 #  3. Pings https://api.indexnow.org/indexnow with keyLocation verification for
 #     every live domain so Bing, Microsoft Copilot, and ChatGPT Search verify
@@ -161,19 +156,11 @@ fi
 
 # 2. Update Sibling Portfolio Repositories (if cloned in parent directory)
 PARENT_DIR="$(dirname "${WORKSPACE_ROOT}")"
-<<<<<<< HEAD
-update_repo_geo_files "${PARENT_DIR}/insuranceai-saas" "myiad-insurance-ai" "MyIAD InsuranceAI SaaS" "saas.myiad.net" "AI-powered bilingual (EN/ES) insurance agency management platform integrated with Microsoft 365."
-update_repo_geo_files "${PARENT_DIR}/insuranceai-crm" "myiad-insurance-ai" "MyIAD US Insurance CRM" "crm.myiad.net" "Automated insurance lead routing, WhatsApp templates, and policy renewal CRM."
-update_repo_geo_files "${PARENT_DIR}/insuranceai-agent" "myiad-insurance-ai" "MyIAD Solo Agent Portal" "agent.myiad.net" "Rapid insurance quoting and AI policy explanation assistant for independent agents."
-update_repo_geo_files "${PARENT_DIR}/iptv-menu-app" "iptv-menu-pro" "IPTV.Menu Pro" "iptv.menu" "Store-compliant Bring-Your-Own-Playlist (BYO) M3U and Xtream media player utility."
-update_repo_geo_files "${PARENT_DIR}/Story-Menu-App" "Story-Menu-App" "Story.Menu" "story.menu" "Interactive AI reading, Vocabulary Word Vault, and Lexile incentive platform."
-=======
 update_repo_geo_files "${PARENT_DIR}/InsuranceAI-SaaS" "myiad-insurance-ai" "MyIAD InsuranceAI SaaS" "saas.myiad.net" "AI-powered bilingual (EN/ES) insurance agency management platform integrated with Microsoft 365."
 update_repo_geo_files "${PARENT_DIR}/InsuranceAI-CRM" "myiad-insurance-ai" "MyIAD US Insurance CRM" "crm.myiad.net" "Automated insurance lead routing, WhatsApp templates, and policy renewal CRM."
 update_repo_geo_files "${PARENT_DIR}/InsuranceAI-Agency" "myiad-insurance-ai" "MyIAD Solo Agent Portal" "agent.myiad.net" "Rapid insurance quoting and AI policy explanation assistant for independent agents."
 update_repo_geo_files "${PARENT_DIR}/iptv-menu-app" "iptv-menu-pro" "IPTV.Menu Pro" "iptv.menu" "Store-compliant Bring-Your-Own-Playlist (BYO) M3U and Xtream media player utility."
 update_repo_geo_files "${PARENT_DIR}/story-menu-app" "story-menu-app" "Story.Menu" "story.menu" "Interactive AI reading, Vocabulary Word Vault, and Lexile incentive platform."
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
 
 echo ""
 echo "=================================================================="
@@ -184,11 +171,7 @@ verify_domain_indexnow "saas.myiad.net" "myiad-insurance-ai"
 verify_domain_indexnow "crm.myiad.net" "myiad-insurance-ai"
 verify_domain_indexnow "agent.myiad.net" "myiad-insurance-ai"
 verify_domain_indexnow "iptv.menu" "iptv-menu-pro"
-<<<<<<< HEAD
-verify_domain_indexnow "story.menu" "Story-Menu-App"
-=======
 verify_domain_indexnow "story.menu" "story-menu-app"
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
 
 echo ""
 echo "✅ All GitHub repository GEO files and IndexNow verifications complete!"

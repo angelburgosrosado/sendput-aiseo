@@ -959,14 +959,9 @@ Standing Seam Metal Roof Installation | From $16,500 (Hurricane Rated)
           <p class="text-slate-200">To protect SendPut AI's proprietary <strong>5-Layer Active PUT Compiler</strong>, <strong>Hosted MCP Server Node</strong>, and <strong>White-Label Agency Wholesale Portal</strong>, full console access requires an active subscription or Founder key.</p>
           <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
             <label class="block text-xs font-bold text-indigo-300">Enter Activation / Founder Key:</label>
-<<<<<<< HEAD
-            <input id="modal-access-key-input" type="text" value="SP-FOUNDER-2026" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs text-emerald-300 mono" />
-            <p class="text-[11px] text-slate-400">Default pre-filled for Angel: <code>SP-FOUNDER-2026</code> (Public visitors must subscribe to Starter $39/mo, Growth $79/mo, or Agency $299/mo to receive a key).</p>
-=======
             <input id="modal-access-key-input" type="password" placeholder="Enter Founder or Subscriber Key" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs text-emerald-300 mono" />
             <p id="modal-key-error" class="hidden text-[11px] text-rose-400 font-semibold"></p>
             <p class="text-[11px] text-slate-400">Public visitors must subscribe to Starter ($39/mo), Growth ($79/mo), or Agency ($299/mo) to receive an activation key.</p>
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
           </div>
           <div class="flex gap-2 pt-1">
             <button type="button" id="btn-confirm-unlock" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs">
@@ -981,15 +976,6 @@ Standing Seam Metal Roof Installation | From $16,500 (Hurricane Rated)
       setTimeout(() => {
         const unlockBtn = document.getElementById('btn-confirm-unlock');
         const plansBtn = document.getElementById('btn-go-plans');
-<<<<<<< HEAD
-        if (unlockBtn) {
-          unlockBtn.addEventListener('click', () => {
-            founderUnlocked = true;
-            updateStealthUI();
-            closeModal();
-            switchTab(targetTab || 'engine');
-            showToast('🔓 Full Founder & Pro Workspace Unlocked!');
-=======
         const keyInput = document.getElementById('modal-access-key-input');
         const errorEl = document.getElementById('modal-key-error');
 
@@ -1034,7 +1020,6 @@ Standing Seam Metal Roof Installation | From $16,500 (Hurricane Rated)
           unlockBtn.addEventListener('click', attemptUnlock);
           keyInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') attemptUnlock();
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
           });
         }
         if (plansBtn) {
@@ -1601,11 +1586,7 @@ Our multi-engine AI scan across ChatGPT Search, Perplexity, Google Gemini, Claud
           `<div class="space-y-3">
             <p class="text-slate-200">This self-liquidating <strong>$29 One-Shot Audit</strong> converts 8% of free grader visitors into immediate cash flow (generating <strong>$98.6k in Year 1</strong> and <strong>$737k in Year 2</strong>) while offering a 1-click upgrade that credits the $29 toward the $39/mo or $79/mo recurring plan.</p>
             <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 mono text-[11px] text-emerald-300">
-<<<<<<< HEAD
-              POST /api/checkout { "tier": "oneshot_29", "stripe_price_id": "price_sendput_oneshot_29" }
-=======
               POST /api/checkout { "tier": "oneshot_29", "stripe_product_id": "prod_VVZcNbGZHG46T1" }
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
             </div>
             <p class="text-slate-400">Included in your downloadable <code>sendput-ai-signalforge3-fullstack.zip</code> package!</p>
           </div>`
@@ -1729,22 +1710,6 @@ Our multi-engine AI scan across ChatGPT Search, Perplexity, Google Gemini, Claud
         updatePricingDisplay();
       });
 
-<<<<<<< HEAD
-      // Tab 4 Checkout Buttons
-      document.querySelectorAll('.checkout-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const tier = btn.getAttribute('data-checkout');
-          openModal(
-            'Stripe Self-Serve Checkout & Webhook Provisioning',
-            `<div class="space-y-3">
-              <p class="text-slate-200">Selected Tier: <strong class="text-emerald-400 mono">${tier}</strong> (${billingCycle} billing)</p>
-              <p class="text-slate-300">In your production <code>src/server.ts</code> and <code>render.yaml</code> package, this button invokes <code>POST /api/checkout</code> and provisions the tenant workspace in PostgreSQL (<code>vault_app_angelburgosrosado.business_entities</code>) as soon as Stripe fires <code>checkout.session.completed</code>.</p>
-              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 mono text-[11px] text-indigo-300">
-                STRIPE_PRICE_ONESHOT_29=price_sendput_oneshot_29<br/>
-                STRIPE_PRICE_STARTER_39=price_sendput_starter_39<br/>
-                STRIPE_PRICE_GROWTH_79=price_sendput_growth_79<br/>
-                STRIPE_PRICE_AGENCY_299=price_sendput_agency_299
-=======
       // Tab 4 Checkout Buttons (Wired to Live Stripe Product IDs)
       const STRIPE_PRODUCTS = {
         oneshot_29: { id: 'prod_VVZcNbGZHG46T1', title: '$29 One-Shot Deep AI Audit Report', amount: '$29.00 one-time' },
@@ -1797,15 +1762,12 @@ Our multi-engine AI scan across ChatGPT Search, Perplexity, Google Gemini, Claud
                 STRIPE_PRODUCT_STARTER_39=prod_VVZfdwEubbbA2G ($39/mo Starter)<br/>
                 STRIPE_PRODUCT_GROWTH_79=prod_VVZgJ0BGZz8r51 ($79/mo Growth + MCP)<br/>
                 STRIPE_PRODUCT_AGENCY_299=prod_VVZhif3ZHILKAZ ($299/mo Agency WL)
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
               </div>
             </div>`
           );
         });
       });
 
-<<<<<<< HEAD
-=======
       // Restore session key if already authenticated
       const savedKey = sessionStorage.getItem('sendput_access_key');
       if (savedKey) {
@@ -1850,8 +1812,6 @@ Our multi-engine AI scan across ChatGPT Search, Perplexity, Google Gemini, Claud
             showToast('🎉 Stripe Checkout Complete! Full SendPut AI Workspace Unlocked.');
           });
       }
-
->>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
       // Tab 4 ARR Simulator Sliders
       ['sim-smb-slider', 'sim-agency-slider', 'sim-oneshot-slider'].forEach(id => {
         document.getElementById(id).addEventListener('input', updateArrSimulator);
