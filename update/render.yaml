@@ -1,0 +1,43 @@
+# render.yaml — Render Blueprint for SendPut AI (SignalForge 3.0) PLG SaaS & White-Label Engine
+services:
+  - type: web
+    name: sendput-ai-signalforge
+    runtime: node
+    plan: starter
+    region: ohio
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false # Connect to Neon (ep-winter-poetry-ae51hoth) or VPS Postgres (34.148.244.49:5432)
+      - key: VPS_POSTGRES_URL
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: PERPLEXITY_API_KEY
+        sync: false
+      - key: DATAFORSEO_LOGIN
+        sync: false
+      - key: DATAFORSEO_PASSWORD
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PRICE_ONESHOT_29
+        value: price_sendput_oneshot_29
+      - key: STRIPE_PRICE_STARTER_39
+        value: price_sendput_starter_39
+      - key: STRIPE_PRICE_GROWTH_79
+        value: price_sendput_growth_79
+      - key: STRIPE_PRICE_AGENCY_299
+        value: price_sendput_agency_299
+      - key: INDEXNOW_API_KEY
+        value: sendput-indexnow-verified-key-2026

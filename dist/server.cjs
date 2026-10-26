@@ -28488,6 +28488,10 @@ ${faqsList || "- No FAQs published yet."}
 - [Live MCP Server Endpoint](${baseUrl}/mcp/${entity.slug}/sse): Model Context Protocol runtime tools for live availability and booking
 `;
 }
+app.get("/sendput8f92a1c4b7e34d12a9c8e5f102938475.txt", (_req, res) => {
+  res.setHeader("Content-Type", "text/plain; charset=utf-8");
+  res.send("sendput8f92a1c4b7e34d12a9c8e5f102938475");
+});
 app.get("/api/health", async (_req, res) => {
   const vpsReachable = await testTcpPort("34.148.244.49", 5432, 2e3);
   res.json({
