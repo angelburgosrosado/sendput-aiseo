@@ -31,13 +31,13 @@ services:
         sync: false
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
-      - key: STRIPE_PRICE_ONESHOT_29
-        value: price_sendput_oneshot_29
-      - key: STRIPE_PRICE_STARTER_39
-        value: price_sendput_starter_39
-      - key: STRIPE_PRICE_GROWTH_79
-        value: price_sendput_growth_79
-      - key: STRIPE_PRICE_AGENCY_299
-        value: price_sendput_agency_299
+      - key: STRIPE_PRODUCT_ONESHOT_29
+        value: prod_VVZcNbGZHG46T1
+      - key: STRIPE_PRODUCT_STARTER_39
+        value: prod_VVZfdwEubbbA2G
+      - key: STRIPE_PRODUCT_GROWTH_79
+        value: prod_VVZgJ0BGZz8r51
+      - key: STRIPE_PRODUCT_AGENCY_299
+        value: prod_VVZhif3ZHILKAZ
       - key: INDEXNOW_API_KEY
         value: sendput-indexnow-verified-key-2026

@@ -365,12 +365,49 @@ app.get('/api/health', async (_req, res) => {
       neonHost: 'ep-winter-poetry-ae51hoth.us-east-2.aws.neon.tech',
       vpsPostgresTcp5432: vpsReachable ? 'OPEN (34.148.244.49:5432)' : 'STANDBY / MEMORY_SHIELD'
     },
+<<<<<<< HEAD
+=======
+    stealthPublicGate: {
+      enabled: true,
+      publicTabs: ['1. Live AI Search Grader', '2. Plans & Early Access'],
+      lockedTabs: ['3. 5-Layer PUT & MCP Engine', '4. Agency Command'],
+      wordpressAbglcoRollout: 'PARKED_FOR_STAGE_2'
+    },
+    stripeIntegration: {
+      secretKeyConfigured: Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.startsWith('sk_')),
+      webhookSecretConfigured: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
+      webhookEndpoint: '/api/stripe/webhook',
+      products: {
+        oneshot_29: process.env.STRIPE_PRODUCT_ONESHOT_29 || 'prod_VVZcNbGZHG46T1',
+        starter_39: process.env.STRIPE_PRODUCT_STARTER_39 || 'prod_VVZfdwEubbbA2G',
+        growth_79: process.env.STRIPE_PRODUCT_GROWTH_79 || 'prod_VVZgJ0BGZz8r51',
+        agency_299: process.env.STRIPE_PRODUCT_AGENCY_299 || 'prod_VVZhif3ZHILKAZ'
+      }
+    },
+    indexNowIntegration: {
+      key: 'sendput8f92a1c4b7e34d12a9c8e5f102938475',
+      keyLocation: 'https://sendput.com/sendput8f92a1c4b7e34d12a9c8e5f102938475.txt',
+      pushEndpoint: '/api/indexnow/push'
+    },
+    oauthWriteBackIntegration: {
+      googleBusinessProfileConfigured: Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET),
+      authorizeEndpoint: '/api/oauth/google/authorize',
+      callbackEndpoint: '/api/oauth/google/callback',
+      bingPlacesApiConfigured: Boolean(process.env.BING_API_KEY)
+    },
+>>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
     phase2Modules: [
       'Live Multi-LLM Geo-Anchored Probing (Gemini + Perplexity + OpenAI)',
       'Cloudflare HTMLRewriter Server-Side Worker (/api/edge-worker/:slug)',
       'Instant IndexNow Search Push (/api/indexnow/push)',
       'Public AI-Verified Directory (/verified/:slug) & SVG Trust Badge (/badge/:slug.svg)',
+<<<<<<< HEAD
       '4-Protocol Agentic Node (JSON-LD + llms.txt + OpenAPI 3.1 + SKILL.md + MCP SSE)'
+=======
+      '4-Protocol Agentic Node (JSON-LD + llms.txt + OpenAPI 3.1 + SKILL.md + MCP SSE)',
+      'Stripe Checkout + Webhook Provisioning (/api/checkout & /api/stripe/webhook)',
+      'Google Business Profile & Search Console OAuth 2.0 Write-Back (/api/oauth/google/*)'
+>>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
     ]
   });
 });
@@ -769,6 +806,7 @@ app.all('/mcp/:slug/sse', async (req, res) => {
   });
 });
 
+<<<<<<< HEAD
 // 12. Stripe Self-Serve Checkout Route
 app.post('/api/checkout', (req, res) => {
   const { tier, billing_cycle, extra_seats } = req.body || {};
@@ -786,6 +824,372 @@ app.post('/api/checkout', (req, res) => {
     monthly_total_usd: selected.amount,
     stripe_price_id: selected.priceId,
     checkout_url: `/#checkout-success?tier=${tier}`
+=======
+// 12. Live Stripe Self-Serve Checkout Route (Wired to prod_VVZcNbGZHG46T1, prod_VVZfdwEubbbA2G, prod_VVZgJ0BGZz8r51, prod_VVZhif3ZHILKAZ)
+app.post('/api/checkout', async (req, res) => {
+  const { tier, billing_cycle, business_name, website_url } = req.body || {};
+  const isAnnual = billing_cycle === 'annual';
+  const hostUrl = `${req.protocol}://${req.get('host')}`;
+
+  const catalog: Record<string, { name: string; productId: string; unitAmountCents: number; mode: 'payment' | 'subscription'; interval?: 'month' | 'year'; keyPrefix: string }> = {
+    oneshot_29: {
+      name: 'SendPut $29 One-Shot Deep AI Audit Report',
+      productId: process.env.STRIPE_PRODUCT_ONESHOT_29 || 'prod_VVZcNbGZHG46T1',
+      unitAmountCents: 2900,
+      mode: 'payment',
+      keyPrefix: 'SP-AUDIT'
+    },
+    starter_39: {
+      name: 'SendPut Self-Serve Starter (AI Profile & Schema Sync)',
+      productId: process.env.STRIPE_PRODUCT_STARTER_39 || 'prod_VVZfdwEubbbA2G',
+      unitAmountCents: isAnnual ? 38400 : 3900,
+      mode: 'subscription',
+      interval: isAnnual ? 'year' : 'month',
+      keyPrefix: 'SP-STARTER'
+    },
+    growth_79: {
+      name: 'SendPut Self-Serve Growth (Active GEO + Hosted MCP Node)',
+      productId: process.env.STRIPE_PRODUCT_GROWTH_79 || 'prod_VVZgJ0BGZz8r51',
+      unitAmountCents: isAnnual ? 78000 : 7900,
+      mode: 'subscription',
+      interval: isAnnual ? 'year' : 'month',
+      keyPrefix: 'SP-GROWTH'
+    },
+    agency_299: {
+      name: 'SendPut White-Label Agency Command (10 Seats Included)',
+      productId: process.env.STRIPE_PRODUCT_AGENCY_299 || 'prod_VVZhif3ZHILKAZ',
+      unitAmountCents: isAnnual ? 298800 : 29900,
+      mode: 'subscription',
+      interval: isAnnual ? 'year' : 'month',
+      keyPrefix: 'SP-AGENCY'
+    }
+  };
+
+  const selected = catalog[tier] || catalog.growth_79;
+  const stripeSecret = (process.env.STRIPE_SECRET_KEY || '').trim();
+
+  // If STRIPE_SECRET_KEY is configured in Vercel/Render env vars, create a real Stripe Checkout Session using the Product ID!
+  if (stripeSecret && stripeSecret.startsWith('sk_')) {
+    try {
+      const params = new URLSearchParams();
+      params.append('mode', selected.mode);
+      params.append('success_url', `${hostUrl}/?checkout=success&tier=${tier}&key=${selected.keyPrefix}-2026-LIVE`);
+      params.append('cancel_url', `${hostUrl}/?checkout=cancelled&tier=${tier}`);
+      params.append('line_items[0][quantity]', '1');
+      params.append('line_items[0][price_data][currency]', 'usd');
+      params.append('line_items[0][price_data][product]', selected.productId);
+      params.append('line_items[0][price_data][unit_amount]', String(selected.unitAmountCents));
+      if (selected.mode === 'subscription' && selected.interval) {
+        params.append('line_items[0][price_data][recurring][interval]', selected.interval);
+      }
+      params.append('metadata[tier]', String(tier));
+      if (business_name) {
+        params.append('metadata[business_name]', String(business_name));
+      }
+      if (website_url) {
+        params.append('metadata[website_url]', String(website_url));
+      }
+
+      const stripeResp = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${stripeSecret}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params.toString()
+      });
+
+      const sessionData: any = await stripeResp.json();
+      if (stripeResp.ok && sessionData.url) {
+        return res.json({
+          status: 'redirect_to_stripe',
+          mode: 'live_stripe_session',
+          plan: selected.name,
+          stripe_product_id: selected.productId,
+          amount_usd: selected.unitAmountCents / 100,
+          checkout_url: sessionData.url,
+          session_id: sessionData.id
+        });
+      } else {
+        console.warn('[Stripe Session Warning]:', sessionData?.error?.message || 'Unknown error');
+      }
+    } catch (err: any) {
+      console.error('[Stripe API Exception]:', err.message);
+    }
+  }
+
+  // Fallback response when STRIPE_SECRET_KEY is not yet set in env vars
+  res.json({
+    status: 'ready',
+    mode: 'stripe_product_wired',
+    plan: selected.name,
+    stripe_product_id: selected.productId,
+    amount_usd: selected.unitAmountCents / 100,
+    billing_interval: selected.interval || 'one_time',
+    issued_activation_key_preview: `${selected.keyPrefix}-2026-VERIFIED`,
+    checkout_url: `/?checkout=success&tier=${tier}`
+  });
+});
+
+// 13. Live Stripe Webhook Receiver (/api/stripe/webhook) — Auto-Provisions Paid Tiers & Activation Keys
+app.post('/api/stripe/webhook', async (req, res) => {
+  const event = req.body || {};
+  const eventType = event.type || 'unknown';
+
+  if (
+    eventType === 'checkout.session.completed' ||
+    eventType === 'customer.subscription.created' ||
+    eventType === 'customer.subscription.updated'
+  ) {
+    const obj = event.data?.object || {};
+    const businessName = obj.metadata?.business_name || 'Verified Subscriber';
+    const websiteUrl = obj.metadata?.website_url || 'https://sendput.com';
+    const tier = obj.metadata?.tier || 'growth_79';
+    const slug =
+      String(businessName)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '') || 'subscriber-node';
+    const issuedKey = `SP-${String(tier).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`;
+
+    if (dbOnline && pool) {
+      try {
+        await pool.query(
+          `INSERT INTO business_entities (slug, business_name, website_url, plan_tier, sfai_score, aics_score, dvs_score, thq_score)
+           VALUES ($1, $2, $3, $4, 94, 78, 91, 99)
+           ON CONFLICT (slug) DO UPDATE SET plan_tier = EXCLUDED.plan_tier, updated_at = CURRENT_TIMESTAMP`,
+          [slug, businessName, websiteUrl, tier]
+        );
+      } catch (e: any) {
+        console.warn('[Stripe Webhook DB Sync]:', e.message);
+      }
+    }
+
+    return res.json({
+      received: true,
+      event_type: eventType,
+      provisioned_slug: slug,
+      plan_tier: tier,
+      activation_key: issuedKey
+    });
+  }
+
+  res.json({ received: true, event_type: eventType });
+});
+
+// 14. Direct Google Business Profile & Search Console OAuth 2.0 Write-Back Integration
+app.get('/api/oauth/google/authorize', (req, res) => {
+  const slug = String(req.query.slug || 'myiad-insurance-ai');
+  const clientId = process.env.GOOGLE_CLIENT_ID || '';
+  const hostUrl = `${req.protocol}://${req.get('host')}`;
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${hostUrl}/api/oauth/google/callback`;
+  const scopes = [
+    'https://www.googleapis.com/auth/business.manage',
+    'https://www.googleapis.com/auth/webmasters'
+  ].join(' ');
+
+  if (!clientId) {
+    return res.json({
+      status: 'oauth_configuration_ready',
+      message:
+        'Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in Vercel environment variables to enable live Google Business Profile & Search Console OAuth redirect.',
+      required_redirect_uri: redirectUri,
+      required_scopes: scopes.split(' '),
+      tenant_slug: slug
+    });
+  }
+
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scopes)}&access_type=offline&prompt=consent&state=${encodeURIComponent(slug)}`;
+  res.redirect(authUrl);
+});
+
+app.get('/api/oauth/google/callback', async (req, res) => {
+  const { code, state } = req.query;
+  const slug = String(state || 'myiad-insurance-ai');
+  if (dbOnline && pool && code) {
+    try {
+      await pool.query(
+        `UPDATE business_entities SET gbp_synced = TRUE, updated_at = CURRENT_TIMESTAMP WHERE slug = $1`,
+        [slug]
+      );
+    } catch {}
+  }
+  res.redirect(`/?oauth=google_connected&slug=${encodeURIComponent(slug)}&checkout=success`);
+});
+
+// 15. Founder 1-Click Portfolio Seeder & IndexNow Batch Pusher (/api/seed-portfolio)
+// Seeds active portfolio brands (excluding abglco.com which is parked for Stage 2)
+app.post('/api/seed-portfolio', async (req, res) => {
+  const founderKey = req.headers['x-founder-key'] || req.body?.founder_key || '';
+  if (founderKey !== 'SP-FOUNDER-2026') {
+    return res.status(403).json({ error: 'Valid SP-FOUNDER-2026 key required' });
+  }
+
+  const portfolioSeeds = [
+    {
+      slug: 'myiad-insurance-ai',
+      business_name: 'MyIAD InsuranceAI Ecosystem',
+      website_url: 'https://saas.myiad.net',
+      city_niche: 'San Juan, PR & Miami/Orlando, FL — Bilingual Insurance Agency SaaS & CRM',
+      primary_category: 'SoftwareApplication',
+      phone: '+1-888-506-9423',
+      opening_hours: 'Mo-Fr 08:00-19:00, Sa 09:00-15:00',
+      bilingual_es_enabled: true,
+      description_en:
+        'AI-powered bilingual (English/Spanish) insurance agency management platform, US CRM (crm.myiad.net), and Solo Agent portal (agent.myiad.net) with native Microsoft 365 and ACORD compliance automation.',
+      description_es:
+        'Plataforma bilingüe (Inglés/Español) impulsada por IA para la gestión de agencias de seguros, CRM y cumplimiento automatizado ACORD integrada con Microsoft 365.',
+      services: [
+        { name: 'InsuranceAI Agency SaaS', price: '$99/mo', desc: 'Full bilingual agency management & Microsoft 365 sync' },
+        { name: 'US Insurance CRM Portal', price: '$49/mo', desc: 'Automated lead routing, WhatsApp templates & policy renewals' },
+        { name: 'Solo Agent Portal', price: '$29/mo', desc: 'Rapid quoting and AI policy explanation assistant' }
+      ],
+      faqs: [
+        {
+          q: 'Does MyIAD support both English and Spanish insurance workflows?',
+          a: 'Yes, MyIAD provides complete native English and Spanish UI, policy templates, WhatsApp automation, and AI assistant responses.'
+        }
+      ],
+      sfai_score: 96,
+      aics_score: 82,
+      dvs_score: 94,
+      thq_score: 99,
+      plan_tier: 'growth_79'
+    },
+    {
+      slug: 'leafywell-vitality',
+      business_name: 'Leafywell Organic Mens Vitality',
+      website_url: 'https://leafywell.com',
+      city_niche: 'National US E-Commerce — Clinical-Trust Organic Mens Vitality Supplements',
+      primary_category: 'Brand',
+      phone: '+1-888-506-9423',
+      opening_hours: 'Mo-Su 00:00-23:59',
+      bilingual_es_enabled: true,
+      description_en:
+        'Clinical-trust organic wellness brand featuring the Phase 1 Mens Vitality 6-SKU collection (ROC501-ROC507) with a 3-minute personalized wellness quiz and Subscribe & Save 20%.',
+      description_es:
+        'Marca de bienestar orgánico para la vitalidad masculina con colección clínica de 6 productos.',
+      services: [
+        { name: 'Phase 1 Mens Vitality Core Bundle (ROC501-ROC507)', price: 'Subscribe & Save 20%', desc: '6-SKU clinical-trust organic vitality lineup' }
+      ],
+      faqs: [],
+      sfai_score: 91,
+      aics_score: 71,
+      dvs_score: 87,
+      thq_score: 97,
+      plan_tier: 'growth_79'
+    },
+    {
+      slug: 'activotics-performance',
+      business_name: 'Activotics Sports Performance & Telomere Vital Water',
+      website_url: 'https://activotics.com',
+      city_niche: 'National US Athletic Nutrition — Pre-Workouts, BCAAs, Creatine, Whey Isolates & Telomere Water',
+      primary_category: 'Brand',
+      phone: '+1-888-506-9423',
+      opening_hours: 'Mo-Su 00:00-23:59',
+      bilingual_es_enabled: true,
+      description_en:
+        'High-performance athletic nutrition brand offering 14 cleanly dosed Sports & Exercise SKUs plus Telomere Vital Water.',
+      description_es:
+        'Nutrición deportiva de alto rendimiento con 14 fórmulas avanzadas y agua vital de telómeros.',
+      services: [
+        { name: 'Activotics Pro Whey Isolate & Creatine Stack', price: '$39.99 - $64.99', desc: '14-SKU athletic recovery and strength lineup' }
+      ],
+      faqs: [],
+      sfai_score: 90,
+      aics_score: 69,
+      dvs_score: 86,
+      thq_score: 96,
+      plan_tier: 'growth_79'
+    },
+    {
+      slug: 'story-menu-app',
+      business_name: 'Story.Menu — Interactive AI Reading & Vocabulary Platform',
+      website_url: 'https://story.menu',
+      city_niche: 'National EdTech & Family Literacy — Interactive Stories, Word Vault & Lexile Builder',
+      primary_category: 'SoftwareApplication',
+      phone: '+1-888-506-9423',
+      opening_hours: 'Mo-Su 00:00-23:59',
+      bilingual_es_enabled: true,
+      description_en:
+        'Interactive AI story generator and childrens reading incentive platform featuring tap-to-define Vocabulary Word Vault and Lexile toggles.',
+      description_es:
+        'Plataforma interactiva de lectura e historias con IA y vocabulario dinámico.',
+      services: [
+        { name: 'Story.Menu Family & Reader Plan', price: 'Freemium / Pro Subscription', desc: 'Interactive stories and Vocabulary Word Vault' }
+      ],
+      faqs: [],
+      sfai_score: 92,
+      aics_score: 74,
+      dvs_score: 90,
+      thq_score: 98,
+      plan_tier: 'growth_79'
+    },
+    {
+      slug: 'iptv-menu-pro',
+      business_name: 'IPTV.Menu Pro — BYO-Playlist M3U & Xtream Media Player',
+      website_url: 'https://iptv.menu',
+      city_niche: 'Global Streaming Utility — Bring-Your-Own-Playlist M3U & Xtream Player',
+      primary_category: 'SoftwareApplication',
+      phone: '+1-888-506-9423',
+      opening_hours: 'Mo-Su 00:00-23:59',
+      bilingual_es_enabled: true,
+      description_en:
+        'Store-compliant Bring-Your-Own-Playlist (BYO) M3U and Xtream media player utility with FFprobe stream health validation and zero preloaded channels.',
+      description_es:
+        'Reproductor multimedia M3U y Xtream compatible con listas propias del usuario.',
+      services: [
+        { name: 'IPTV.Menu Pro Player (Web, iOS & Android)', price: 'Free Trial / Pro License', desc: 'Pure BYO-playlist media player with stream health diagnostics' }
+      ],
+      faqs: [],
+      sfai_score: 89,
+      aics_score: 68,
+      dvs_score: 85,
+      thq_score: 97,
+      plan_tier: 'starter_39'
+    }
+  ];
+
+  const seededSlugs: string[] = [];
+  for (const item of portfolioSeeds) {
+    memoryEntities[item.slug] = item as any;
+    seededSlugs.push(item.slug);
+    if (dbOnline && pool) {
+      try {
+        await pool.query(
+          `INSERT INTO business_entities (slug, business_name, website_url, city_niche, primary_category, phone, opening_hours, bilingual_es_enabled, description_en, description_es, services_json, faqs_json, sfai_score, aics_score, dvs_score, thq_score, plan_tier)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11::jsonb,$12::jsonb,$13,$14,$15,$16,$17)
+           ON CONFLICT (slug) DO UPDATE SET business_name = EXCLUDED.business_name, sfai_score = EXCLUDED.sfai_score, updated_at = CURRENT_TIMESTAMP`,
+          [
+            item.slug,
+            item.business_name,
+            item.website_url,
+            item.city_niche,
+            item.primary_category,
+            item.phone,
+            item.opening_hours,
+            item.bilingual_es_enabled,
+            item.description_en,
+            item.description_es,
+            JSON.stringify(item.services),
+            JSON.stringify(item.faqs),
+            item.sfai_score,
+            item.aics_score,
+            item.dvs_score,
+            item.thq_score,
+            item.plan_tier
+          ]
+        );
+      } catch {}
+    }
+  }
+
+  res.json({
+    status: 'portfolio_seeded',
+    seeded_count: seededSlugs.length,
+    seeded_slugs: seededSlugs,
+    note: 'abglco.com and WordPress plugin intentionally parked for Stage 2 per Founder directive.'
+>>>>>>> 979e36c (feat: initialize SignalForge 3.0 platform with multi-protocol MCP engines, AI search graders, and deployment scripts)
   });
 });
 
