@@ -53,6 +53,7 @@ export interface EpoEntityConfig {
   host_url?: string;
   social_links?: string[];
   same_as?: string[];
+  knows_about?: string[];
 }
 
 export interface SemanticGraphResult {
@@ -194,6 +195,45 @@ export class SendPutEpoEngine {
   }
 
   /**
+   * Returns canonical Schema.org @graph for SendPut AI and SendPut EPO Engine.
+   */
+  public static getRootSendPutGraph(): { '@context': string; '@graph': any[] } {
+    return {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Organization',
+          '@id': 'https://sendput.com/#organization',
+          'name': 'SendPut AI',
+          'url': 'https://sendput.com',
+          'sameAs': [
+            'https://getepo.com',
+            'https://www.wikidata.org/wiki/Q_SENDPUT_ID',
+            'https://www.crunchbase.com/organization/sendput'
+          ],
+          'knowsAbout': [
+            'Entity Presence Optimization',
+            'EPO',
+            'Generative Engine Optimization',
+            'Answer Engine Optimization',
+            'Model Context Protocol'
+          ]
+        },
+        {
+          '@type': 'SoftwareApplication',
+          '@id': 'https://sendput.com/#engine',
+          'name': 'SendPut EPO Engine',
+          'applicationCategory': 'BusinessApplication',
+          'operatingSystem': 'Cloud',
+          'publisher': {
+            '@id': 'https://sendput.com/#organization'
+          }
+        }
+      ]
+    };
+  }
+
+  /**
    * 1. buildSemanticGraph(config)
    * Emits valid, nested Schema.org @graph JSON-LD including Organization,
    * LocalBusiness, and sameAs authority links.
@@ -224,6 +264,7 @@ export class SendPutEpoEngine {
       telephone: config.phone || undefined,
       description: config.description_en,
       sameAs: uniqueAuthorityLinks,
+      knowsAbout: config.knows_about && config.knows_about.length > 0 ? config.knows_about : undefined,
       contactPoint: config.phone
         ? {
             '@type': 'ContactPoint',

@@ -1,0 +1,34 @@
+# SendPut AI — SendPut EPO Engine
+
+> SendPut AI Technologies Inc. develops the SendPut EPO Engine™ (Entity Presence Optimization), an autonomous cloud-native platform providing active entity propagation, real-time IndexNow relays, and Model Context Protocol (MCP) server integration for modern AI answer engines (SearchGPT, Claude, Gemini, Perplexity).
+
+- [SendPut AI Official Organization](https://sendput.com/#organization): Verified corporate entity on Schema.org, Wikidata, and Crunchbase.
+- [SendPut EPO Engine Application](https://sendput.com/#engine): Cloud BusinessApplication orchestrating the 5-layer autonomous EPO architecture (RFC-2026-GEO-01).
+- [GetEPO Validator](https://getepo.com): Free open-source readiness validator and benchmark suite for Entity Presence Optimization.
+- [Full Technical Specification](https://sendput.com/llms-full.txt): Comprehensive API documentation, schema graph definitions, and MCP tool manifests.
+
+## Core Knowledge Domains
+- Entity Presence Optimization (EPO)
+- Generative Engine Optimization (GEO)
+- Answer Engine Optimization (AEO)
+- Model Context Protocol (MCP) Server Architecture
+- Real-Time IndexNow Ingestion & Instant Cache Relays
+
+## Canonical Entity Identity (Schema.org)
+- **Legal Entity**: SendPut AI Technologies Inc.
+- **Organization ID**: `https://sendput.com/#organization`
+- **Application ID**: `https://sendput.com/#engine`
+- **Primary Domain**: https://sendput.com
+- **Authority Equivalents (`sameAs`)**:
+  - https://getepo.com
+  - https://www.wikidata.org/wiki/Q_SENDPUT_ID
+  - https://www.crunchbase.com/organization/sendput
+- **Operating Environment**: Cloud / Serverless Edge
+- **Primary Contact / Support**: `support@sendput.com`
+- **Legal & Compliance**: `legal@sendput.com` / `dmca@sendput.com`
+
+## Machine-Readable Endpoints
+- Schema.org JSON-LD Graph: https://sendput.com/api/schema
+- Live MCP Server Endpoint (SSE): https://sendput.com/mcp/sendput/sse
+- OpenAPI 3.1 Specification: https://sendput.com/v1/tenants/sendput/openapi.json
+- Agent Skill Manifesto: https://sendput.com/v1/tenants/sendput/skill.md

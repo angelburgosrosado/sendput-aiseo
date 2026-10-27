@@ -1,0 +1,58 @@
+# SendPut AI — SendPut EPO Engine (Full Technical Specification)
+
+> Comprehensive technical specification for SendPut AI Technologies Inc. and the SendPut EPO Engine™ (Entity Presence Optimization), RFC-2026-GEO-01.
+
+## 1. Executive Summary & Structured Entity Graph
+SendPut AI is an autonomous entity propagation infrastructure engineered to anchor brands, local enterprises, and digital services inside AI search models (OpenAI SearchGPT, Google Gemini, Anthropic Claude, Perplexity Pro).
+
+```json
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://sendput.com/#organization",
+      "name": "SendPut AI",
+      "url": "https://sendput.com",
+      "sameAs": [
+        "https://getepo.com",
+        "https://www.wikidata.org/wiki/Q_SENDPUT_ID",
+        "https://www.crunchbase.com/organization/sendput"
+      ],
+      "knowsAbout": [
+        "Entity Presence Optimization",
+        "EPO",
+        "Generative Engine Optimization",
+        "Answer Engine Optimization",
+        "Model Context Protocol"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://sendput.com/#engine",
+      "name": "SendPut EPO Engine",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Cloud",
+      "publisher": {
+        "@id": "https://sendput.com/#organization"
+      }
+    }
+  ]
+}
+```
+
+## 2. Five-Layer EPO Pipeline (RFC-2026-GEO-01)
+1. **Layer 1: Deterministic Schema.org @graph Generation**: Emits validated, nested JSON-LD graphs linking Organization, LocalBusiness/SoftwareApplication, offers, and canonical `sameAs` authority anchors.
+2. **Layer 2: Token-Budgeted /llms.txt Generation**: Generates strictly structured, token-bounded Markdown documentation consumable by LLM context windows.
+3. **Layer 3: High-Velocity IndexNow Relays**: Dispatches real-time batch pings to `https://api.indexnow.org/IndexNow` across Bing, Yandex, and Naver search crawler endpoints.
+4. **Layer 4: Model Context Protocol (MCP) Server**: Exposes standardized tools (`verify_business_status`, `get_service_catalog`, `initiate_inquiry`) over Server-Sent Events (SSE).
+5. **Layer 5: Continuous EPO Scoring**: Deterministic evaluation formula:
+   `Score = (0.30 * SchemaAccuracy) + (0.25 * CitationCoherence) + (0.25 * CrawlReadiness) + (0.20 * McpAvailability)`
+
+## 3. Official Endpoints & Verification
+- Primary Website: https://sendput.com
+- GetEPO Benchmark: https://getepo.com
+- Schema Endpoint: https://sendput.com/api/schema
+- Health Status: https://sendput.com/api/health
+- MCP Server Endpoint: https://sendput.com/mcp/sendput/sse
+- Contact: legal@sendput.com, support@sendput.com

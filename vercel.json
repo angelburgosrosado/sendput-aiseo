@@ -16,6 +16,7 @@
     { "source": "/privacy", "destination": "/api/index.js" },
     { "source": "/dmca", "destination": "/api/index.js" },
     { "source": "/license", "destination": "/api/index.js" },
+    { "source": "/schema.json", "destination": "/api/index.js" },
     { "source": "/(.*)\\.map", "destination": "/api/index.js" }
   ],
   "headers": [

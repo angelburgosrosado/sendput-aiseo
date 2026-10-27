@@ -13,6 +13,44 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="llms-txt" type="text/markdown" href="/llms.txt" />
+
+  <!-- SendPut AI & EPO Engine Structured Entity Graph (Schema.org JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://sendput.com/#organization",
+        "name": "SendPut AI",
+        "url": "https://sendput.com",
+        "sameAs": [
+          "https://getepo.com",
+          "https://www.wikidata.org/wiki/Q_SENDPUT_ID",
+          "https://www.crunchbase.com/organization/sendput"
+        ],
+        "knowsAbout": [
+          "Entity Presence Optimization",
+          "EPO",
+          "Generative Engine Optimization",
+          "Answer Engine Optimization",
+          "Model Context Protocol"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://sendput.com/#engine",
+        "name": "SendPut EPO Engine",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Cloud",
+        "publisher": {
+          "@id": "https://sendput.com/#organization"
+        }
+      }
+    ]
+  }
+  </script>
   <style>
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;

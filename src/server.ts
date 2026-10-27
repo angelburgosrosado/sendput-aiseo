@@ -17,6 +17,7 @@
  */
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import net from 'net';
 import pg from 'pg';
 import crypto from 'crypto';
@@ -272,6 +273,34 @@ app.get('/license', (_req, res) => {
   });
 });
 
+// Official Schema.org Entity Graph & LLM Specifications
+app.get(['/api/schema', '/schema.json'], (_req, res) => {
+  res.setHeader('Content-Type', 'application/ld+json; charset=utf-8');
+  res.json(SendPutEpoEngine.getRootSendPutGraph());
+});
+
+app.get('/llms.txt', (_req, res) => {
+  const primaryPath = path.join(__dirname, '..', 'public', 'llms.txt');
+  const fallbackPath = path.join(process.cwd(), 'public', 'llms.txt');
+  const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
+  if (fs.existsSync(targetPath)) {
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    return res.sendFile(targetPath);
+  }
+  res.status(404).send('# /llms.txt Not Found');
+});
+
+app.get('/llms-full.txt', (_req, res) => {
+  const primaryPath = path.join(__dirname, '..', 'public', 'llms-full.txt');
+  const fallbackPath = path.join(process.cwd(), 'public', 'llms-full.txt');
+  const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
+  if (fs.existsSync(targetPath)) {
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    return res.sendFile(targetPath);
+  }
+  res.status(404).send('# /llms-full.txt Not Found');
+});
+
 const PORT = Number(process.env.PORT) || 10000;
 const SCHEMA_NAME = 'vault_app_angelburgosrosado';
 
@@ -280,6 +309,63 @@ let dbOnline = false;
 
 // Stateful fallback store for instant zero-config operation
 const memoryEntities: Record<string, any> = {
+  'sendput': {
+    id: '00000000-0000-0000-0000-000000000001',
+    slug: 'sendput',
+    business_name: 'SendPut AI',
+    website_url: 'https://sendput.com',
+    city_niche: 'Global Cloud — Entity Presence Optimization (EPO) & Real-Time IndexNow Relay',
+    primary_category: 'SoftwareApplication',
+    phone: '+1-888-506-9423',
+    street_address: '200 E Robinson St, Suite 1120',
+    city: 'Orlando',
+    state_region: 'FL',
+    postal_code: '32801',
+    country: 'US',
+    opening_hours: 'Mo-Su 00:00-24:00',
+    price_range: '$$$',
+    bilingual_es_enabled: true,
+    description_en:
+      'SendPut EPO Engine™ provides autonomous Entity Presence Optimization (EPO), real-time IndexNow relays, and Model Context Protocol (MCP) server nodes for generative search engines.',
+    description_es:
+      'SendPut EPO Engine™ proporciona Optimización de Presencia de Entidad (EPO) autónoma, retransmisión IndexNow en tiempo real y nodos de servidor MCP para motores de búsqueda de IA.',
+    same_as: [
+      'https://getepo.com',
+      'https://www.wikidata.org/wiki/Q_SENDPUT_ID',
+      'https://www.crunchbase.com/organization/sendput'
+    ],
+    knows_about: [
+      'Entity Presence Optimization',
+      'EPO',
+      'Generative Engine Optimization',
+      'Answer Engine Optimization',
+      'Model Context Protocol'
+    ],
+    services_json: [
+      { name: 'Self-Serve Starter (AI Pro Presence)', price: '$39/mo', desc: 'Active JSON-LD propagation, IndexNow pings & llms.txt' },
+      { name: 'Growth & Multi-Engine Scaling', price: '$79/mo', desc: 'Real-time multi-engine relay, MCP SSE server node, daily drift heals' },
+      { name: 'Agency Command & Unlimited Scale', price: '$249/mo', desc: 'White-label CNAME client portals, bulk client seats, custom MCP' }
+    ],
+    faqs_json: [
+      {
+        q: 'What is Entity Presence Optimization (EPO)?',
+        a: 'Entity Presence Optimization (EPO) is the practice of anchoring brand truth and service catalogs directly into AI answer engines (SearchGPT, Claude, Gemini, Perplexity) via structured Schema.org graphs, llms.txt, IndexNow, and MCP.'
+      },
+      {
+        q: 'What is the relationship between SendPut and GetEPO?',
+        a: 'SendPut AI Technologies Inc. is the corporate publisher and enterprise cloud engine; GetEPO (getepo.com) is the open-source validator and community benchmark authority.'
+      }
+    ],
+    booking_url: 'https://sendput.com/#pricing',
+    gbp_synced: true,
+    bing_synced: true,
+    apple_synced: true,
+    sfai_score: 98,
+    aics_score: 95,
+    dvs_score: 96,
+    thq_score: 99,
+    plan_tier: 'agency_249'
+  },
   'myiad-insurance-ai': {
     id: '11111111-2222-3333-4444-555555555555',
     slug: 'myiad-insurance-ai',
