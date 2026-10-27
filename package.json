@@ -5,7 +5,7 @@
   "main": "dist/server.cjs",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "esbuild src/server.ts --bundle --platform=node --target=node20 --outfile=dist/server.cjs --external:pg-native && mkdir -p api && cp dist/server.cjs api/index.js",
+    "build": "esbuild src/server.ts --bundle --platform=node --target=node20 --minify-whitespace --minify-syntax --outfile=dist/server.cjs --external:pg-native && mkdir -p api && cp dist/server.cjs api/index.js",
     "start": "node dist/server.cjs",
     "db:migrate": "psql $DATABASE_URL -f sql/sendput_schema.sql"
   },

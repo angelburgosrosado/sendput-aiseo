@@ -758,6 +758,62 @@ Standing Seam Metal Roof Installation | From $16,500 (Hurricane Rated)
       </div>
     </section>
 
+    <!-- ======================================================================== -->
+    <!-- Proactive Defense 4 & 5: Corporate Footer & Legal Formalities -->
+    <!-- ======================================================================== -->
+    <footer class="mt-16 pt-10 pb-12 border-t border-slate-800/90 text-xs text-slate-400">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div class="space-y-3 md:col-span-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="font-extrabold text-white text-sm tracking-wide">SendPut EPO Engine™</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-950 text-indigo-300 border border-indigo-700/60">v3.4.0 Production</span>
+          </div>
+          <p class="text-slate-300 text-xs leading-relaxed max-w-xl">
+            Official platform for Entity Presence Optimization (EPO). Delivering Active Entity Propagation, Real-Time IndexNow Relay, and Autonomous Model Context Protocol (MCP) Readiness across Gemini Grounding, Perplexity Sonar, and ChatGPT Search.
+          </p>
+          <div class="flex items-center gap-2 pt-1 text-[11px] text-slate-400">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-emerald-400 font-semibold">
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v4a1 1 0 102 0V7z" clip-rule="evenodd"></path></svg>
+              Cloudflare Turnstile Protected
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-indigo-300 font-semibold">
+              🔒 Server-Side Entitlement Isolation
+            </span>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="font-bold text-white text-xs uppercase tracking-wider">Legal & Compliance</div>
+          <ul class="space-y-1.5 text-xs">
+            <li><button id="btn-footer-terms" type="button" class="text-slate-400 hover:text-indigo-400 transition">Terms of Service</button></li>
+            <li><button id="btn-footer-privacy" type="button" class="text-slate-400 hover:text-indigo-400 transition">Privacy & Data Policy</button></li>
+            <li><button id="btn-footer-dmca" type="button" class="text-slate-400 hover:text-indigo-400 transition">DMCA Fast-Track (24–48hr SLA)</button></li>
+            <li><button id="btn-footer-license" type="button" class="text-slate-400 hover:text-indigo-400 transition">Dual Software License</button></li>
+          </ul>
+        </div>
+
+        <div class="space-y-2">
+          <div class="font-bold text-white text-xs uppercase tracking-wider">Standards & Open-Source</div>
+          <ul class="space-y-1.5 text-xs">
+            <li><button id="btn-footer-sdk" type="button" class="text-slate-400 hover:text-indigo-400 transition">@sendput/geo-core (MIT License)</button></li>
+            <li><a href="/sendput8f92a1c4b7e34d12a9c8e5f102938475.txt" target="_blank" class="text-slate-400 hover:text-indigo-400 transition">Official IndexNow Root Key</a></li>
+            <li><a href="/v1/tenants/myiad-insurance-ai/llms.txt" target="_blank" class="text-slate-400 hover:text-indigo-400 transition">llms.txt Standard Specification</a></li>
+            <li><a href="/mcp/tools" target="_blank" class="text-slate-400 hover:text-indigo-400 transition">MCP Tool Declarations</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800/80 flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
+        <div>
+          © 2026 SendPut AI Technologies Inc. All rights reserved. <strong>SendPut™</strong>, <strong>SendPut EPO Engine™</strong>, <strong>Entity Presence Optimization (EPO)™</strong>, and <strong>SFAI™</strong> are proprietary trademarks.
+        </div>
+        <div class="text-slate-400">
+          Proprietary Multi-LLM Ingestion &amp; Real-Time IndexNow Relay Architecture Patent-Pending.
+        </div>
+      </div>
+    </footer>
+
   </main>
 
   <!-- In-Page Modal (Used for Checkout Preview & Full-Stack Zip Architecture Inspection) -->
@@ -1867,6 +1923,70 @@ Our multi-engine AI scan across ChatGPT Search, Perplexity, Google Gemini, Claud
           </div>`
         );
       });
+      // Footer Legal & Compliance Modals (Proactive Defenses 4 & 5)
+      const bindModalBtn = (id, title, content) => {
+        const btn = document.getElementById(id);
+        if (btn) btn.addEventListener('click', () => openModal(title, content));
+      };
+
+      bindModalBtn(
+        'btn-footer-terms',
+        'SendPut AI Technologies Inc. — Terms of Service',
+        `<div class="space-y-3">
+          <p class="text-slate-200"><strong>1. Proprietary Rights:</strong> SendPut™, SendPut EPO Engine™, Entity Presence Optimization (EPO)™, and SFAI™ are proprietary trademarks. Backend ingestion routines, AI grounding pipelines, and schemas are proprietary trade secrets.</p>
+          <p class="text-slate-300"><strong>2. Anti-Siphoning & Server Entitlements:</strong> Access to write-back operations and MCP nodes strictly requires server-side validation. Local storage bypass or automated scraping is actionable under the Computer Fraud & Abuse Act (CFAA).</p>
+          <p class="text-slate-300"><strong>3. Contact:</strong> SendPut Legal & IP Enforcement: <code>legal@sendput.com</code></p>
+        </div>`
+      );
+
+      bindModalBtn(
+        'btn-footer-privacy',
+        'SendPut AI Technologies Inc. — Privacy & Data Policy',
+        `<div class="space-y-3">
+          <p class="text-slate-200">We respect enterprise data sovereignty. Public NAP data and audit scores are processed solely for verification and indexation.</p>
+          <p class="text-slate-300">Stripe payment tokens and webhooks are processed through strict HMAC-SHA256 authenticated channels. We never sell customer or tenant business intelligence.</p>
+          <p class="text-slate-400">Direct inquiries: <code>privacy@sendput.com</code></p>
+        </div>`
+      );
+
+      bindModalBtn(
+        'btn-footer-dmca',
+        'DMCA Fast-Track 24–48hr Takedown Protocol',
+        `<div class="space-y-3">
+          <p class="text-slate-200">SendPut AI maintains an expedited 24–48hr DMCA fast-track with major cloud hosts (Vercel, Cloudflare, AWS, Render) and registrars (Namecheap, GoDaddy).</p>
+          <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl mono text-[11px] text-amber-300">
+            Designated DMCA Agent: dmca@sendput.com<br>
+            Legal Notice SLA: 24–48 Hours Expedited Response<br>
+            Statutory Basis: 17 U.S.C. § 512(c)(3) & Lanham Act § 43(a)
+          </div>
+          <p class="text-slate-300">Infringing replicas, typo-squatted clones, or scraper mirrors are removed immediately upon statutory filing.</p>
+        </div>`
+      );
+
+      bindModalBtn(
+        'btn-footer-license',
+        'SendPut Dual Commercial & Open-Source Licensing',
+        `<div class="space-y-3">
+          <p class="text-slate-200"><strong>Dual Licensing Architecture:</strong></p>
+          <ul class="space-y-1.5 text-xs text-slate-300 bg-slate-900 p-3 rounded-xl border border-slate-800">
+            <li>• <strong>Proprietary Commercial License:</strong> Ingestion backend (<code>src/server.ts</code>, <code>src/lib/epo/engine.ts</code>), multi-LLM probing engine, and PostgreSQL schemas.</li>
+            <li>• <strong>MIT Open-Source License:</strong> Client SDK (<code>@sendput/geo-core</code>), <code>/epo-edge.js</code> script tag, and machine-readable schema templates.</li>
+          </ul>
+        </div>`
+      );
+
+      bindModalBtn(
+        'btn-footer-sdk',
+        '@sendput/geo-core Client SDK (MIT License)',
+        `<div class="space-y-3">
+          <p class="text-slate-200">The <code>@sendput/geo-core</code> SDK provides client-side TypeScript bindings and lightweight tag injection for modern web apps.</p>
+          <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl mono text-[11px] text-emerald-300">
+            &lt;script src="https://sendput.com/epo-edge.js?tenant=YOUR-SLUG" defer&gt;&lt;/script&gt;
+          </div>
+          <p class="text-slate-400">Open-source under MIT for community adoption, backed by SendPut's closed-source proprietary ingestion engine.</p>
+        </div>`
+      );
+
       document.getElementById('btn-close-modal').addEventListener('click', closeModal);
       document.getElementById('btn-modal-primary').addEventListener('click', closeModal);
 

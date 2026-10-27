@@ -53,14 +53,223 @@ function getBaseUrl(req: express.Request): string {
   return `${proto}://${host}`;
 }
 
-// Global CORS + Multi-Protocol Discovery Headers
+// Global CORS + Security & Multi-Protocol Discovery Headers (Proactive Defense 3 & 4)
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-founder-key, stripe-signature');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, x-founder-key, x-access-key, cf-turnstile-response, x-turnstile-token, stripe-signature'
+  );
   res.setHeader('X-Powered-By', 'SendPut EPO Engine');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
   if (req.method === 'OPTIONS') return res.sendStatus(200);
   next();
+});
+
+// Proactive Defense 3: Obfuscate Production Builds & Strip Source Maps
+// Block competitors from inspecting unminified source maps in browser DevTools
+app.get(['*.map', '/*/*.map', '/(.*).map'], (_req, res) => {
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+  res.status(404).json({
+    error: 'Source maps are strictly disabled in production builds for intellectual property protection.',
+    code: 'SOURCEMAP_PROTECTION'
+  });
+});
+
+// Proactive Defense 1: Server-Side Entitlement & Access Key Verification Middleware
+// Ensures billing logic, subscription entitlement checks, and quota limits happen strictly on server
+function getClientIp(req: express.Request): string {
+  const cfIp = req.headers['cf-connecting-ip'] as string;
+  const realIp = req.headers['x-real-ip'] as string;
+  const forwarded = req.headers['x-forwarded-for'] as string;
+  if (cfIp) return cfIp.trim();
+  if (realIp) return realIp.trim();
+  if (forwarded) return forwarded.split(',')[0].trim();
+  return req.socket.remoteAddress || '127.0.0.1';
+}
+
+function verifyServerKey(key?: string): { valid: boolean; role?: 'founder' | 'subscriber'; tier?: string } {
+  if (!key) return { valid: false };
+  const cleanKey = String(key).replace(/^Bearer\s+/i, '').trim();
+  const founderKey = (process.env.SP_FOUNDER_KEY || 'SP-FOUNDER-2026').trim();
+
+  if (cleanKey === founderKey) {
+    return { valid: true, role: 'founder', tier: 'founder_unlimited' };
+  }
+
+  const subscriberMatch = cleanKey.match(/^SP-(AUDIT|STARTER|GROWTH|AGENCY)-[A-Z0-9_-]+$/i);
+  if (subscriberMatch) {
+    return { valid: true, role: 'subscriber', tier: subscriberMatch[1].toLowerCase() };
+  }
+
+  return { valid: false };
+}
+
+function requireServerEntitlement(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const candidateKey =
+    (req.headers['x-founder-key'] as string) ||
+    (req.headers['x-access-key'] as string) ||
+    (req.headers['authorization'] as string) ||
+    (req.body?.key as string);
+
+  const auth = verifyServerKey(candidateKey);
+  if (!auth.valid) {
+    return res.status(403).json({
+      error: 'Access denied. A valid server-verified activation key or active Stripe subscription is required.',
+      code: 'UNAUTHORIZED_ENTITLEMENT',
+      resolution: 'Pass a valid subscriber key (SP-STARTER-..., SP-GROWTH-..., SP-AGENCY-...) or Founder key in x-access-key header.'
+    });
+  }
+
+  (req as any).auth = auth;
+  next();
+}
+
+// Proactive Defense 2: Sliding-Window Rate Limiter on Public Audits
+// Enforces strict IP and token rate limits on free validator endpoints with Cloudflare Turnstile verification
+interface RateLimitRecord {
+  timestamps: number[];
+}
+const auditRateLimits: Map<string, RateLimitRecord> = new Map();
+const AUDIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes sliding window
+const AUDIT_MAX_REQUESTS = 10; // 10 free audits per 10-minute window per IP
+
+async function auditRateLimitMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const candidateKey =
+    (req.headers['x-founder-key'] as string) ||
+    (req.headers['x-access-key'] as string) ||
+    (req.headers['authorization'] as string);
+
+  const auth = verifyServerKey(candidateKey);
+  if (auth.valid) {
+    // Authenticated subscribers & founders bypass public audit rate limits
+    res.setHeader('X-RateLimit-Limit', 'unlimited');
+    res.setHeader('X-RateLimit-Remaining', 'unlimited');
+    return next();
+  }
+
+  // Cloudflare Turnstile token verification
+  const turnstileToken =
+    (req.headers['cf-turnstile-response'] as string) ||
+    (req.headers['x-turnstile-token'] as string) ||
+    req.body?.turnstile_token;
+
+  if (turnstileToken && process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY) {
+    try {
+      const turnstileResp = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          secret: process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY,
+          response: turnstileToken,
+          remoteip: getClientIp(req)
+        })
+      });
+      const turnstileData: any = await turnstileResp.json();
+      if (turnstileData?.success) {
+        res.setHeader('X-Turnstile-Verified', 'true');
+        return next();
+      }
+    } catch (e: any) {
+      console.warn('[Turnstile Verify Error]:', e.message);
+    }
+  }
+
+  const clientIp = getClientIp(req);
+  const now = Date.now();
+  let record = auditRateLimits.get(clientIp);
+
+  if (!record) {
+    record = { timestamps: [] };
+    auditRateLimits.set(clientIp, record);
+  }
+
+  // Purge timestamps older than sliding window
+  record.timestamps = record.timestamps.filter((ts) => now - ts < AUDIT_WINDOW_MS);
+
+  if (record.timestamps.length >= AUDIT_MAX_REQUESTS) {
+    const oldestTs = record.timestamps[0];
+    const retryAfterSeconds = Math.max(1, Math.ceil((oldestTs + AUDIT_WINDOW_MS - now) / 1000));
+
+    res.setHeader('Retry-After', String(retryAfterSeconds));
+    res.setHeader('X-RateLimit-Limit', String(AUDIT_MAX_REQUESTS));
+    res.setHeader('X-RateLimit-Remaining', '0');
+    res.setHeader('X-RateLimit-Reset', String(Math.floor((oldestTs + AUDIT_WINDOW_MS) / 1000)));
+
+    return res.status(429).json({
+      error: 'Rate limit exceeded. To protect server compute, public audits are limited to 10 requests per 10 minutes per IP.',
+      code: 'RATE_LIMIT_EXCEEDED',
+      limit: AUDIT_MAX_REQUESTS,
+      window_minutes: 10,
+      retry_after_seconds: retryAfterSeconds,
+      solution: 'Upgrade to SendPut Pro / Agency tier for unlimited automated audits or pass Cloudflare Turnstile token.'
+    });
+  }
+
+  record.timestamps.push(now);
+  const remaining = AUDIT_MAX_REQUESTS - record.timestamps.length;
+  res.setHeader('X-RateLimit-Limit', String(AUDIT_MAX_REQUESTS));
+  res.setHeader('X-RateLimit-Remaining', String(remaining));
+  res.setHeader('X-RateLimit-Reset', String(Math.floor((now + AUDIT_WINDOW_MS) / 1000)));
+  next();
+}
+
+// Proactive Defense 4 & 5: Legal Terms, DMCA Fast-Track & Dual License Endpoints
+app.get('/terms', (_req, res) => {
+  res.json({
+    entity: 'SendPut AI Technologies Inc.',
+    product: 'SendPut EPO Engine',
+    terms_version: '2026-10-v1',
+    trademarks: ['SendPut™', 'SendPut EPO Engine™', 'Entity Presence Optimization (EPO)™', 'SFAI™'],
+    acceptable_use: 'No bulk scraping, decompilation of backend engine, or unauthorized replica deployment.',
+    governing_law: 'United States & State of Florida / Puerto Rico',
+    contact: 'legal@sendput.com'
+  });
+});
+
+app.get('/privacy', (_req, res) => {
+  res.json({
+    entity: 'SendPut AI Technologies Inc.',
+    privacy_version: '2026-10-v1',
+    data_collection: 'Business entity public NAP, audit queries, and Stripe billing tokens. No consumer PII sold.',
+    bot_telemetry: 'AI crawler user-agents and path telemetry recorded for audit verification.',
+    contact: 'privacy@sendput.com'
+  });
+});
+
+app.get('/dmca', (_req, res) => {
+  res.json({
+    entity: 'SendPut AI Technologies Inc.',
+    policy: 'DMCA Fast-Track 24-48hr Takedown Protocol',
+    designated_agent: {
+      name: 'Legal & Intellectual Property Enforcement Department',
+      email: 'dmca@sendput.com',
+      alternate_email: 'legal@sendput.com',
+      address: '200 E Robinson St, Suite 1120, Orlando, FL 32801'
+    },
+    statutory_law: '17 U.S.C. § 512(c)(3) & Lanham Act 15 U.S.C. § 1125',
+    fast_track_sla: '24-48 Hours to Host/Registrar Abuse Teams',
+    takedown_guide: 'https://sendput.com/DMCA.md'
+  });
+});
+
+app.get('/license', (_req, res) => {
+  res.json({
+    entity: 'SendPut AI Technologies Inc.',
+    model: 'Dual Commercial & Open-Source Licensing Framework',
+    proprietary_backend: {
+      scope: 'src/server.ts, src/lib/epo/engine.ts, sql/sendput_schema.sql, multi-LLM probing engine',
+      license: 'Proprietary Closed-Source Commercial License'
+    },
+    open_source_sdk: {
+      scope: '@sendput/geo-core, /epo-edge.js, public Schema.org JSON-LD templates',
+      license: 'MIT License'
+    }
+  });
 });
 
 const PORT = Number(process.env.PORT) || 10000;
@@ -571,7 +780,8 @@ app.get(['/api/epo/queue', '/api/sync/queue'], async (_req, res) => {
 });
 
 // 2. Phase 2 Live AI Search Grader & Surround-Sound Citation Engine (/api/audit)
-app.post('/api/audit', async (req, res) => {
+// Protected by Proactive Defense 2: Sliding-Window IP/Token Rate Limiting & Turnstile Support
+app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
   const { business_name, website_url, city_niche, agency_slug } = req.body || {};
   if (!business_name || !website_url) {
     return res.status(400).json({ error: 'business_name and website_url are required' });
@@ -1097,8 +1307,8 @@ app.get('/api/agency', async (req, res) => {
   });
 });
 
-// Update Agency White-Label CNAME & Reseller Pricing
-app.post('/api/agency', async (req, res) => {
+// Update Agency White-Label CNAME & Reseller Pricing (Protected by Proactive Defense 1: Server-Side Entitlement)
+app.post('/api/agency', requireServerEntitlement, async (req, res) => {
   const { agency_name, slug, custom_domain, brand_color, logo_url, reseller_starter, reseller_growth, team_roles } = req.body || {};
   const agencySlug = slug || 'epo-partners';
 

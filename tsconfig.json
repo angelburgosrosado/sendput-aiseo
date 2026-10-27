@@ -6,8 +6,10 @@
     "outDir": "./dist",
     "strict": false,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": false,
+    "inlineSources": false,
+    "declaration": false
   },
   "include": ["src/**/*", "api/**/*"]
 }
