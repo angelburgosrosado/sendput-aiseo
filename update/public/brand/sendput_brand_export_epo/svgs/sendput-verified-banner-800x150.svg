@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 150" width="800" height="150" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080C14"/>
+      <stop offset="50%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#05080E"/>
+    </linearGradient>
+    <linearGradient id="gridGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00FF66" stop-opacity="0.12"/>
+      <stop offset="50%" stop-color="#00FF66" stop-opacity="0.02"/>
+      <stop offset="100%" stop-color="#FF6B00" stop-opacity="0.05"/>
+    </linearGradient>
+    <filter id="neonGreenGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#00FF66" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+  <rect width="800" height="150" rx="14" fill="url(#bgGrad)" stroke="#1E293B" stroke-width="2"/>
+  <rect x="2" y="2" width="796" height="146" rx="12" fill="url(#gridGlow)"/>
+  <line x1="2" y1="20" x2="2" y2="130" stroke="#00FF66" stroke-width="3" filter="url(#neonGreenGlow)"/>
+  <text x="32" y="32" fill="#00FF66" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="1.5">[&gt;_]</text>
+  <text x="56" y="32" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="800" letter-spacing="2">VERIFIED EPO SEARCH COMPLIANT</text>
+  <g transform="translate(32, 75)">
+    <text x="0" y="0" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="900" letter-spacing="-0.5">Sendput</text>
+    <text x="138" y="0" fill="#FF6B00" font-family="'JetBrains Mono', monospace" font-size="34" font-weight="800">[</text>
+    <text x="156" y="0" fill="#FFFFFF" font-family="'JetBrains Mono', monospace" font-size="30" font-weight="700">com</text>
+    <text x="214" y="0" fill="#FF6B00" font-family="'JetBrains Mono', monospace" font-size="34" font-weight="800">]</text>
+  </g>
+  <text x="34" y="102" fill="#00FF66" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="1.6">EPO ENGINE • ENTITY PRESENCE OPTIMIZATION</text>
+  <g transform="translate(34, 126)" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#94A3B8">
+    <circle cx="3" cy="-3" r="2.5" fill="#00FF66"/>
+    <text x="12" y="0" fill="#CBD5E1">ACTIVE ENCRYPTED CONNECTION</text>
+    <text x="190" y="0" fill="#FF6B00">•</text>
+    <circle cx="205" cy="-3" r="2.5" fill="#00FF66"/>
+    <text x="214" y="0" fill="#CBD5E1">5-LAYER IDENTITY INJECTION</text>
+    <text x="365" y="0" fill="#FF6B00">•</text>
+    <circle cx="380" cy="-3" r="2.5" fill="#2563EB"/>
+    <text x="389" y="0" fill="#CBD5E1">MCP PROTOCOL SECURE</text>
+  </g>
+  <g transform="translate(620, 18)">
+    <rect width="150" height="114" rx="10" fill="#090E17" stroke="#1E293B" stroke-width="1.5"/>
+    <g transform="translate(48, 12)">
+      <rect width="54" height="54" rx="10" fill="#0F172A" stroke="#00FF66" stroke-width="1.2" stroke-opacity="0.4"/>
+      <path d="M 14 14 L 8 14 L 8 40 L 14 40" stroke="#FF6B00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 40 14 L 46 14 L 46 40 L 40 40" stroke="#FF6B00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 18 28 L 25 35 L 36 20" stroke="#00FF66" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#neonGreenGlow)"/>
+    </g>
+    <text x="75" y="82" text-anchor="middle" fill="#FFFFFF" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="800" letter-spacing="1">TRUST BADGE</text>
+    <text x="75" y="94" text-anchor="middle" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="8" font-weight="600">SECURE EPO GATEWAY</text>
+    <text x="75" y="105" text-anchor="middle" fill="#00FF66" font-family="'JetBrains Mono', monospace" font-size="7.5" font-weight="700">VERIFIED BY SENDPUT</text>
+  </g>
+</svg>

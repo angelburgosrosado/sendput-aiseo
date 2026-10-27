@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" fill="none">
+  <defs>
+    <linearGradient id="sealMetallic" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="40%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <filter id="sealGlow">
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#00FF66" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  <circle cx="100" cy="100" r="96" fill="url(#sealMetallic)" stroke="#1E293B" stroke-width="2"/>
+  <circle cx="100" cy="100" r="88" stroke="#00FF66" stroke-width="3" stroke-dasharray="5 3" filter="url(#sealGlow)"/>
+  <circle cx="100" cy="100" r="80" fill="#070B13" stroke="#1E293B" stroke-width="1"/>
+  <text x="100" y="42" text-anchor="middle" fill="#00FF66" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="800" letter-spacing="2">SENDPUT EPO</text>
+  <g transform="translate(60, 60)">
+    <path d="M 20 20 L 10 20 L 10 60 L 20 60" stroke="#FF6B00" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 60 20 L 70 20 L 70 60 L 60 60" stroke="#FF6B00" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 28 42 L 38 52 L 56 30" stroke="#00FF66" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="100" y="162" text-anchor="middle" fill="#FFFFFF" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="800" letter-spacing="1.5">EPO VERIFIED</text>
+  <text x="100" y="176" text-anchor="middle" fill="#94A3B8" font-family="'JetBrains Mono', monospace" font-size="7.5" font-weight="600">ACTIVE GATEWAY</text>
+</svg>

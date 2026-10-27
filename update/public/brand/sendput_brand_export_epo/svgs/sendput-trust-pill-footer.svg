@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 40" width="260" height="40" fill="none">
+  <rect width="260" height="40" rx="20" fill="#080C14" stroke="#1E293B" stroke-width="1.5"/>
+  <circle cx="20" cy="20" r="11" fill="#00FF66" fill-opacity="0.15" stroke="#00FF66" stroke-width="1.2"/>
+  <path d="M 15 20 L 18.5 23.5 L 25 17" stroke="#00FF66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="40" y="24" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="12" font-weight="700">Sendput</text>
+  <text x="90" y="24" fill="#FF6B00" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="800">[EPO]</text>
+  <text x="130" y="23" fill="#334155" font-family="system-ui" font-size="12">|</text>
+  <text x="142" y="24" fill="#00FF66" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="700" letter-spacing="0.5">Verified Active</text>
+</svg>
