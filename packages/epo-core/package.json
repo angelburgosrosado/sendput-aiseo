@@ -1,0 +1,32 @@
+{
+  "name": "@sendput/epo-core",
+  "version": "1.0.0",
+  "description": "Official TypeScript SDK for Entity Presence Optimization (EPO) and Model Context Protocol (MCP) injection, implementing RFC-2026-GEO-01.",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --format=esm --outfile=dist/index.mjs && esbuild src/index.ts --bundle --format=cjs --outfile=dist/index.cjs",
+    "test": "node --test"
+  },
+  "keywords": [
+    "epo",
+    "entity-presence-optimization",
+    "geo",
+    "generative-engine-optimization",
+    "schema-org",
+    "json-ld",
+    "llms-txt",
+    "indexnow",
+    "mcp",
+    "model-context-protocol"
+  ],
+  "author": "SendPut AI Technologies Inc. <support@sendput.com>",
+  "license": "MIT",
+  "homepage": "https://sendput.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angelburgosrosado/sendput-aiseo.git",
+    "directory": "packages/epo-core"
+  }
+}

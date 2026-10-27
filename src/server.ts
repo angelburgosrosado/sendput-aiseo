@@ -35,6 +35,16 @@ const { Pool } = pg;
 const app = express();
 app.set('trust proxy', true);
 
+// Canonical 301 Permanent Redirect for getepo.com (EPO-002)
+app.use((req, res, next) => {
+  const host = (req.get('host') || '').toLowerCase();
+  if (host.includes('getepo.com') && !req.path.startsWith('/validator')) {
+    const targetUrl = `https://sendput.com${req.originalUrl}`;
+    return res.redirect(301, targetUrl);
+  }
+  next();
+});
+
 // Capture raw body for secure Stripe webhook HMAC-SHA256 signature verification
 app.use(
   express.json({
@@ -299,6 +309,17 @@ app.get('/llms-full.txt', (_req, res) => {
     return res.sendFile(targetPath);
   }
   res.status(404).send('# /llms-full.txt Not Found');
+});
+
+// Standalone GetEPO Validator (EPO-008)
+app.get('/validator', (_req, res) => {
+  const primaryPath = path.join(__dirname, '..', 'public', 'validator.html');
+  const fallbackPath = path.join(process.cwd(), 'public', 'validator.html');
+  const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
+  if (fs.existsSync(targetPath)) {
+    return res.sendFile(targetPath);
+  }
+  res.redirect('/');
 });
 
 const PORT = Number(process.env.PORT) || 10000;

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GetEPO — Open-Source Entity Presence Optimization (EPO) &amp; AI Readiness Validator</title>
+  <meta name="description" content="Validate your domain's readiness for SearchGPT, Claude, Gemini, and Perplexity with the open-source GetEPO benchmark. Powered by SendPut EPO Engine (RFC-2026-GEO-01)." />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #090D16;
+      color: #F8FAFC;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 32px -8px rgba(6, 182, 212, 0.4);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur-md sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center font-extrabold text-white text-base shadow">
+            EPO
+          </div>
+          <div>
+            <span class="font-extrabold text-lg tracking-tight text-white">GetEPO<span class="text-cyan-400">.com</span></span>
+            <span class="ml-2 text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">Validator</span>
+          </div>
+        </a>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        <a href="https://sendput.com" class="text-slate-400 hover:text-white transition hidden sm:inline">SendPut AI Engine</a>
+        <a href="https://sendput.com/llms.txt" class="text-slate-400 hover:text-white transition mono hidden md:inline">/llms.txt Spec</a>
+        <a href="https://sendput.com" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition">
+          Full Enterprise Portal →
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Hero -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-10 space-y-8">
+    <div class="text-center space-y-4">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-xs font-bold uppercase tracking-wider">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+        OPEN-SOURCE BENCHMARK • RFC-2026-GEO-01
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+        Test If AI Models Recommend <br class="hidden sm:inline" />
+        <span class="bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">Your Business Or Your Competitors</span>
+      </h1>
+      <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+        Verify your Schema.org graph, IndexNow real-time crawler sync, <code class="mono text-cyan-300">/llms.txt</code> feed, and Model Context Protocol (MCP) agent node readiness in 5 seconds.
+      </p>
+    </div>
+
+    <!-- Audit Input Box -->
+    <div class="glass-card rounded-2xl p-6 glow-cyan">
+      <form id="validator-form" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+          <div class="md:col-span-5">
+            <label for="val-biz-name" class="block text-xs font-semibold text-slate-300 mb-1">Business or Brand Name</label>
+            <input id="val-biz-name" type="text" required placeholder="e.g. Apex Roofing Orlando" class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
+          </div>
+          <div class="md:col-span-5">
+            <label for="val-biz-url" class="block text-xs font-semibold text-slate-300 mb-1">Website Domain URL</label>
+            <input id="val-biz-url" type="url" required placeholder="https://example.com" class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white mono focus:outline-none focus:border-cyan-400" />
+          </div>
+          <div class="md:col-span-2">
+            <button id="btn-val-submit" type="submit" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-sm shadow-lg transition flex items-center justify-center gap-2">
+              <span id="val-btn-text">Audit Now</span>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Quick presets -->
+      <div class="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-slate-800 text-xs">
+        <span class="text-slate-400">Try a test preset:</span>
+        <button type="button" class="preset-pill px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700" data-name="MyIAD InsuranceAI" data-url="https://saas.myiad.net">MyIAD InsuranceAI</button>
+        <button type="button" class="preset-pill px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700" data-name="Apex Roofing Orlando" data-url="https://apexroofingorlando.com">Apex Roofing</button>
+        <button type="button" class="preset-pill px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700" data-name="SendPut AI" data-url="https://sendput.com">SendPut AI</button>
+      </div>
+
+      <!-- Loading Indicator -->
+      <div id="val-loading" class="hidden mt-6 p-4 rounded-xl bg-slate-950 border border-cyan-500/40 text-center space-y-2">
+        <div class="inline-block w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+        <div class="text-xs text-cyan-300 font-mono">Probing SearchGPT, Claude, Gemini &amp; IndexNow nodes...</div>
+      </div>
+    </div>
+
+    <!-- Results Box -->
+    <div id="val-results" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <div id="res-biz-title" class="text-xl font-bold text-white">Domain Audit Results</div>
+            <div id="res-biz-url" class="text-xs text-slate-400 mono mt-0.5"></div>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-slate-400 uppercase font-semibold">EPO Overall Score</span>
+            <div class="flex items-baseline gap-1 mt-0.5 justify-end">
+              <span id="res-score-overall" class="text-4xl font-extrabold text-cyan-400 mono">--</span>
+              <span class="text-sm text-slate-400">/ 100</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Core Pillars -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="text-[11px] uppercase font-bold text-slate-400">Schema.org Accuracy</span>
+            <div id="res-score-sfai" class="text-2xl font-bold text-white mono mt-1">--</div>
+            <div id="res-badge-sfai" class="text-[10px] mt-1 text-slate-400">Checking @graph...</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="text-[11px] uppercase font-bold text-slate-400">AI Citation Share</span>
+            <div id="res-score-aics" class="text-2xl font-bold text-white mono mt-1">--</div>
+            <div id="res-badge-aics" class="text-[10px] mt-1 text-slate-400">Recommendation rate</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="text-[11px] uppercase font-bold text-slate-400">IndexNow Velocity</span>
+            <div id="res-score-dvs" class="text-2xl font-bold text-white mono mt-1">--</div>
+            <div id="res-badge-dvs" class="text-[10px] mt-1 text-slate-400">Crawler latency</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="text-[11px] uppercase font-bold text-slate-400">Agent &amp; MCP Health</span>
+            <div id="res-score-thq" class="text-2xl font-bold text-white mono mt-1">--</div>
+            <div id="res-badge-thq" class="text-[10px] mt-1 text-slate-400">MCP tool availability</div>
+          </div>
+        </div>
+
+        <!-- Remediation Callout -->
+        <div class="p-4 rounded-xl bg-gradient-to-r from-indigo-950/60 via-slate-900 to-indigo-950/60 border border-indigo-500/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="text-sm font-bold text-white">Ready to fix these gaps in 1 click?</div>
+            <div class="text-xs text-slate-300">Deploy SendPut's 5-Layer EPO Engine to inject validated Schema.org, /llms.txt, and live IndexNow relays.</div>
+          </div>
+          <a href="https://sendput.com" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold text-xs shrink-0 shadow-lg transition">
+            Remediate on SendPut.com →
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 space-y-2">
+      <p>© 2026 SendPut AI Technologies Inc. — Open-Source GetEPO Validator under MIT License.</p>
+      <p>RFC-2026-GEO-01 Standard • <a href="https://sendput.com" class="text-cyan-400 hover:underline">SendPut.com Cloud Infrastructure</a></p>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.preset-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('val-biz-name').value = btn.dataset.name;
+        document.getElementById('val-biz-url').value = btn.dataset.url;
+      });
+    });
+
+    document.getElementById('validator-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('val-biz-name').value.trim();
+      const url = document.getElementById('val-biz-url').value.trim();
+      const loadBox = document.getElementById('val-loading');
+      const resBox = document.getElementById('val-results');
+      const submitBtn = document.getElementById('btn-val-submit');
+
+      loadBox.classList.remove('hidden');
+      resBox.classList.add('hidden');
+      submitBtn.disabled = true;
+
+      try {
+        const resp = await fetch('/api/audit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ business_name: name, website_url: url, city_niche: 'Global Market' })
+        });
+        const data = await resp.json();
+        
+        loadBox.classList.add('hidden');
+        submitBtn.disabled = false;
+
+        if (resp.ok && data.audit) {
+          const a = data.audit;
+          document.getElementById('res-biz-title').textContent = a.business_name;
+          document.getElementById('res-biz-url').textContent = a.website_url;
+          
+          const overall = Math.round((a.sfai_score * 0.3) + (a.aics_score * 0.25) + (a.dvs_score * 0.25) + (a.thq_score * 0.2));
+          document.getElementById('res-score-overall').textContent = overall;
+          document.getElementById('res-score-sfai').textContent = `${a.sfai_score}%`;
+          document.getElementById('res-score-aics').textContent = `${a.aics_score}%`;
+          document.getElementById('res-score-dvs').textContent = `${a.dvs_score}%`;
+          document.getElementById('res-score-thq').textContent = `${a.thq_score}%`;
+
+          document.getElementById('res-badge-sfai').textContent = a.jsonld_detected ? '✅ Schema.org Graph Active' : '❌ Missing Nested @graph';
+          document.getElementById('res-badge-aics').textContent = a.aics_score > 50 ? '✅ Above-Average Share' : '⚠️ Low AI Share';
+          document.getElementById('res-badge-dvs').textContent = a.indexnow_active ? '✅ IndexNow Relays Active' : '❌ IndexNow Idle';
+          document.getElementById('res-badge-thq').textContent = a.llms_txt_detected ? '✅ /llms.txt Configured' : '❌ Missing /llms.txt';
+
+          resBox.classList.remove('hidden');
+        } else {
+          alert(data.error || 'Audit failed. Please try again.');
+        }
+      } catch (err) {
+        loadBox.classList.add('hidden');
+        submitBtn.disabled = false;
+        alert('Network error communicating with audit API.');
+      }
+    });
+  </script>
+</body>
+</html>

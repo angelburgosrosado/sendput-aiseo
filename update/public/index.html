@@ -153,32 +153,48 @@
     <section id="tab-grader" class="tab-panel space-y-6">
       <!-- Hero Banner & Preset Selector -->
       <div class="glass-card rounded-2xl p-6 glow-indigo">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-5 border-b border-slate-800">
-          <div>
-            <span class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-cyan-400 mb-1">
-              Free Acquisition Wedge • Self-Liquidating $29 One-Shot &amp; $39–$79/mo PLG Funnel
-            </span>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Local &amp; National AI Search Grader
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-slate-800">
+          <div class="space-y-3 max-w-4xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-xs font-bold tracking-wider uppercase">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              THE NEW STANDARD: ENTITY PRESENCE OPTIMIZATION (EPO)
+            </div>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+              Make Your Business the <span class="bg-gradient-to-r from-indigo-400 via-violet-300 to-cyan-400 bg-clip-text text-transparent">Irrefutable Answer</span> in AI Search.
             </h1>
-            <p class="text-sm text-slate-300 mt-1 max-w-3xl">
-              Test what <strong class="text-white">ChatGPT Search, Perplexity, Google Gemini, Anthropic Claude, and Microsoft Copilot</strong> actually tell buyers about any business—and push verified entity fixes in one click.
+            <p class="text-sm sm:text-base text-slate-300 max-w-3xl leading-relaxed">
+              Traditional SEO stopped at Google's blue links. Early GEO settled for passive citation tracking. SendPut's EPO Engine programmatically pushes, validates, and anchors your verified entity graph directly into <strong class="text-white">ChatGPT, Perplexity, Gemini, and Claude</strong>.
             </p>
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="hero-btn-launch-engine" type="button" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold text-xs sm:text-sm shadow-lg shadow-indigo-500/25 transition flex items-center gap-2">
+                <span>🚀 Launch EPO Engine</span>
+                <span class="text-[11px] bg-white/20 px-2 py-0.5 rounded-full font-mono">RFC-2026</span>
+              </button>
+              <button id="hero-btn-run-audit" type="button" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs sm:text-sm transition flex items-center gap-2">
+                <span>🔍 Run Free AI Entity Audit</span>
+              </button>
+              <a href="https://getepo.com" target="_blank" rel="noopener" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 sm:ml-2">
+                <span>GetEPO.com Standards</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+              </a>
+            </div>
           </div>
-          <div class="flex flex-wrap items-center gap-2">
+          <div class="flex flex-col gap-2 shrink-0">
             <span class="text-xs text-slate-400 font-medium">Load Preset Business:</span>
-            <button type="button" data-preset="myiad" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-500/30 transition">
-              MyIAD InsuranceAI
-            </button>
-            <button type="button" data-preset="abglco" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition">
-              AB Global Consulting
-            </button>
-            <button type="button" data-preset="roofer" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition">
-              Apex Roofing (Orlando SMB)
-            </button>
-            <button type="button" data-preset="medspa" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition">
-              Bella Vista MedSpa
-            </button>
+            <div class="grid grid-cols-2 lg:grid-cols-1 gap-2">
+              <button type="button" data-preset="myiad" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-500/30 transition text-left">
+                MyIAD InsuranceAI
+              </button>
+              <button type="button" data-preset="abglco" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition text-left">
+                AB Global Consulting
+              </button>
+              <button type="button" data-preset="roofer" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition text-left">
+                Apex Roofing (SMB)
+              </button>
+              <button type="button" data-preset="medspa" class="preset-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition text-left">
+                Bella Vista MedSpa
+              </button>
+            </div>
           </div>
         </div>
 
@@ -627,6 +643,105 @@ Standing Seam Metal Roof Installation | From $16,500 (Hurricane Rated)
               </button>
             </div>
             <pre id="agency-proposal-preview" class="w-full h-40 overflow-auto text-xs text-slate-200 mono whitespace-pre-wrap leading-relaxed"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- THE EPO PARADIGM SHIFT: 3-COLUMN COMPARISON TABLE       -->
+      <!-- ======================================================== -->
+      <div class="glass-card rounded-2xl p-6 glow-indigo">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">Architectural Paradigm Shift</span>
+            <h2 class="text-xl sm:text-2xl font-black text-white mt-1">Why Entity Presence Optimization (EPO) Supersedes Legacy Search</h2>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl">
+              AI answer engines don't rank blue links—they synthesize answers from grounded entity graphs. Here is how SendPut EPO fundamentally changes discovery:
+            </p>
+          </div>
+          <a href="https://getepo.com" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/15 text-indigo-300 hover:bg-indigo-500/25 border border-indigo-500/30 text-xs font-bold transition self-start sm:self-auto">
+            <span>Read RFC-2026-GEO-01</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+          </a>
+        </div>
+
+        <div class="overflow-x-auto mt-6">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="border-b border-slate-800 text-[11px] uppercase tracking-wider">
+                <th class="py-3 px-4 text-slate-400 font-semibold w-1/4">Capability / Dimension</th>
+                <th class="py-3 px-4 text-slate-400 font-semibold w-1/4">1. Legacy SEO (2010–2023)</th>
+                <th class="py-3 px-4 text-slate-400 font-semibold w-1/4">2. First-Wave GEO (2024–2025)</th>
+                <th class="py-3 px-4 text-cyan-300 font-bold w-1/4 bg-indigo-950/40 border-x border-indigo-500/30 rounded-t-xl">3. SendPut EPO (2026+)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60">
+              <tr>
+                <td class="py-3.5 px-4 font-bold text-white">Target Mechanism</td>
+                <td class="py-3.5 px-4 text-slate-400">PageRank, keyword density &amp; backlink farming</td>
+                <td class="py-3.5 px-4 text-slate-300">Third-party mentions &amp; Reddit/forum seeding</td>
+                <td class="py-3.5 px-4 text-emerald-300 font-semibold bg-indigo-950/20 border-x border-indigo-500/30">Deterministic Schema.org @graph &amp; verified knowledge nodes</td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-4 font-bold text-white">Crawler Latency</td>
+                <td class="py-3.5 px-4 text-slate-400">Weeks to months for Googlebot recrawl</td>
+                <td class="py-3.5 px-4 text-slate-300">Days to weeks waiting for search index refreshes</td>
+                <td class="py-3.5 px-4 text-emerald-300 font-semibold bg-indigo-950/20 border-x border-indigo-500/30">&lt;12 hours via real-time automated IndexNow batch relay</td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-4 font-bold text-white">Model Ingestion Mode</td>
+                <td class="py-3.5 px-4 text-slate-400">Passive HTML scraping (chokes on JS heavy sites)</td>
+                <td class="py-3.5 px-4 text-slate-300">Passive post-hoc citation analytics charts</td>
+                <td class="py-3.5 px-4 text-emerald-300 font-semibold bg-indigo-950/20 border-x border-indigo-500/30">Active programmatic /llms.txt token-budgeted feed</td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-4 font-bold text-white">Autonomous Agent Support</td>
+                <td class="py-3.5 px-4 text-rose-400/80">❌ None (Humans click links manually)</td>
+                <td class="py-3.5 px-4 text-rose-400/80">❌ None (Only monitors search results)</td>
+                <td class="py-3.5 px-4 text-emerald-300 font-semibold bg-indigo-950/20 border-x border-indigo-500/30">✅ Live Model Context Protocol (MCP) server nodes</td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-4 font-bold text-white">Hallucination Defense</td>
+                <td class="py-3.5 px-4 text-slate-400">N/A (Irrelevant to traditional search)</td>
+                <td class="py-3.5 px-4 text-amber-300/80">Reactive alerts (notifies you after sales are lost)</td>
+                <td class="py-3.5 px-4 text-emerald-300 font-semibold bg-indigo-950/20 border-x border-indigo-500/30">Proactive authority anchoring + daily self-healing telemetry</td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-4 font-bold text-white">Bilingual &amp; Local Geo</td>
+                <td class="py-3.5 px-4 text-slate-400">Hreflang tags (frequently misconfigured)</td>
+                <td class="py-3.5 px-4 text-slate-400">English-only prompt tracking</td>
+                <td class="py-3.5 px-4 text-emerald-300 font-semibold bg-indigo-950/20 border-x border-indigo-500/30">Native EN/ES parallel entity grounding &amp; NAP protection</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- CATEGORY AUTHORITY: THOUGHT LEADERSHIP MANIFESTO CALLOUT -->
+      <!-- ======================================================== -->
+      <div class="glass-card rounded-2xl p-6 border border-cyan-500/30 bg-gradient-to-r from-slate-900 via-indigo-950/50 to-slate-900 relative overflow-hidden">
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 relative z-10">
+          <div class="space-y-2 max-w-3xl">
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold uppercase tracking-wider">
+              <span>📖 Category Authority Manifesto</span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+              Why the Link Graph is Dead: The Case for Entity Presence Optimization
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              When Google ruled search, PageRank counted backlinks. Today, conversational AI models (SearchGPT, Claude, Gemini, Perplexity) do not click links—they query vector spaces and knowledge graphs to synthesize authoritative direct answers. Businesses that rely on backlinks are invisible to agents. Entity Presence Optimization (EPO) is the architectural standard that guarantees AI models retrieve your verified truth.
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row md:flex-col gap-3 shrink-0">
+            <a href="https://getepo.com" target="_blank" rel="noopener" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm text-center shadow-lg transition flex items-center justify-center gap-2">
+              <span>Explore GetEPO.com</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+            </a>
+            <button id="btn-read-manifesto-modal" type="button" class="px-5 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 border border-slate-700 font-semibold text-xs text-center transition">
+              Read RFC-2026 Summary
+            </button>
           </div>
         </div>
       </div>
@@ -2026,6 +2141,50 @@ Our multi-engine AI scan across ChatGPT Search, Perplexity, Google Gemini, Claud
             &lt;script src="https://sendput.com/epo-edge.js?tenant=YOUR-SLUG" defer&gt;&lt;/script&gt;
           </div>
           <p class="text-slate-400">Open-source under MIT for community adoption, backed by SendPut's closed-source proprietary ingestion engine.</p>
+        </div>`
+      );
+
+      // Hero CTAs & Manifesto Modal (Prompt 4 / EPO-006)
+      const heroLaunchBtn = document.getElementById('hero-btn-launch-engine');
+      if (heroLaunchBtn) {
+        heroLaunchBtn.addEventListener('click', () => {
+          if (founderUnlocked) {
+            switchTab('engine');
+          } else {
+            promptFounderOrSubscriberUnlock('engine');
+          }
+        });
+      }
+
+      const heroAuditBtn = document.getElementById('hero-btn-run-audit');
+      if (heroAuditBtn) {
+        heroAuditBtn.addEventListener('click', () => {
+          switchTab('grader');
+          const input = document.getElementById('input-biz-name');
+          if (input) {
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            input.focus();
+          }
+        });
+      }
+
+      bindModalBtn(
+        'btn-read-manifesto-modal',
+        'The Case for Entity Presence Optimization (RFC-2026-GEO-01)',
+        `<div class="space-y-3 text-xs sm:text-sm">
+          <p class="text-slate-200"><strong>The Death of the Link Graph:</strong> For 25 years, search engines discovered relevance by following blue links and computing PageRank. Generative answer engines (ChatGPT, Claude, Gemini, Perplexity) operate fundamentally differently: they traverse dense multidimensional embeddings and knowledge graphs to synthesize authoritative direct answers.</p>
+          <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1.5 mono text-[11px] text-cyan-300">
+            <div>• Layer 1 (Ground Truth): Clean, canonical Schema.org @graph (Organization + LocalBusiness)</div>
+            <div>• Layer 2 (Context Ingestion): Token-budgeted /llms.txt (&lt;2,000 tokens)</div>
+            <div>• Layer 3 (High-Velocity Relay): Instant IndexNow multi-engine batch dispatch</div>
+            <div>• Layer 4 (Agent Execution): Standardized Model Context Protocol (MCP) server nodes</div>
+            <div>• Layer 5 (Continuous Drift Defense): Proactive multi-LLM probing and self-healing</div>
+          </div>
+          <p class="text-slate-300">When your brand is grounded through the SendPut EPO Engine, AI agents cite your verified services and execute transactions with zero hallucination risk.</p>
+          <div class="pt-2 flex items-center justify-between">
+            <span class="text-slate-400 text-xs">Standard: <strong>RFC-2026-GEO-01</strong></span>
+            <a href="https://getepo.com" target="_blank" rel="noopener" class="text-cyan-400 hover:text-cyan-300 underline font-semibold">Visit GetEPO.com →</a>
+          </div>
         </div>`
       );
 
