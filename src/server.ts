@@ -509,25 +509,6 @@ const memoryAgencies: Record<string, AgencyWorkspace> = {
       { user_id: 'u-1', email: 'director@epopartners.com', role: 'agency_admin' },
       { user_id: 'u-2', email: 'seo-lead@epopartners.com', role: 'account_manager' }
     ]
-  },
-  // Backward-compatible alias for legacy contracts
-  'signalforge-partners': {
-    id: 'a0000000-0000-0000-0000-000000000001',
-    agency_name: 'SignalForge Growth Partners',
-    slug: 'signalforge-partners',
-    custom_domain: 'audit.signalforgepartners.com',
-    brand_color: '#4F46E5',
-    logo_url: 'https://sendput.com/assets/agency-logo-demo.png',
-    plan_tier: 'agency_command_299',
-    included_seats: 10,
-    active_seats: 2,
-    extra_seat_price_usd: 19.0,
-    reseller_retail_price_starter_usd: 197.0,
-    reseller_retail_price_growth_usd: 497.0,
-    team_roles: [
-      { user_id: 'u-1', email: 'director@signalforgepartners.com', role: 'agency_admin' },
-      { user_id: 'u-2', email: 'seo-lead@signalforgepartners.com', role: 'account_manager' }
-    ]
   }
 };
 
@@ -778,7 +759,6 @@ app.get('/api/health', async (_req, res) => {
   res.json({
     status: 'ok',
     platform: 'SendPut EPO Engine (v3.4.0 — Vercel & Render Ready)',
-    legacy_codename: 'SignalForge 3.0',
     specification: 'RFC-2026-GEO-01',
     runtime: process.env.VERCEL ? 'vercel_serverless' : 'node_container',
     timestamp: new Date().toISOString(),
@@ -1202,10 +1182,8 @@ app.get(['/epo-edge.js', '/sf-edge.js'], async (req, res) => {
     var s = document.createElement('script');
     s.type = 'application/ld+json';
     s.id = 'sendput-epo-jsonld';
-    s.setAttribute('data-legacy-id', 'sendput-signalforge-jsonld');
     s.text = ${JSON.stringify(jsonLd)};
     document.head.appendChild(s);
-    /* sendput-signalforge-jsonld backward compatibility alias */
 
     var links = [
       { rel: 'llms-txt', type: 'text/markdown', href: '${hostUrl}/v1/tenants/${entity.slug}/llms.txt' },
@@ -1354,7 +1332,6 @@ app.all('/mcp/:slug/sse', async (req, res) => {
     result: {
       business_name: entity.business_name,
       verified_by: 'SendPut EPO Engine',
-      verified_by_legacy: 'SendPut SignalForge 3.0',
       phone: entity.phone,
       opening_hours: entity.opening_hours,
       bilingual_es_en: entity.bilingual_es_enabled,

@@ -1,0 +1,252 @@
+</div>
+
+<!-- Hover State Callout -->
+<div
+    class="absolute inset-0 bg-brand-green/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
+    <span
+        class="px-3 py-1 rounded-full bg-brand-bg/90 border border-brand-green text-brand-green font-mono text-xs shadow-lg">
+        Click to simulate live verification ledger &rarr;
+    </span>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- Badge Variant 2 & 3: Circular Metallic Seal & Compact Footer Badge -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+    <!-- Metallic Circular Seal -->
+    <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between">
+        <div class="flex justify-between items-start">
+            <div>
+                <h4 class="text-xs font-mono font-bold text-white uppercase">2. Certified Trust Seal</h4>
+                <p class="text-[11px] text-brand-textSecondary">Round metallic / neon edge badge.</p>
+            </div>
+            <span
+                class="text-[9px] font-mono text-brand-orange border border-brand-orange/30 bg-brand-orange/10 px-1.5 py-0.5 rounded">EMBLEM</span>
+        </div>
+
+        <!-- Interactive Seal Demo -->
+        <div class="py-6 flex justify-center items-center">
+            <div class="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-[#1E293B] via-[#0F172A] to-[#334155] border-2 border-brand-green shadow-2xl relative group cursor-pointer"
+                onclick="testVerificationModal('client-store.com')">
+                <!-- Circular Text Simulator -->
+                <div
+                    class="w-full h-full rounded-full bg-[#080D18] flex flex-col items-center justify-center text-center p-2 relative overflow-hidden">
+                    <div class="absolute inset-0 border border-brand-green/30 rounded-full"></div>
+                    <span class="text-[8px] font-mono font-bold tracking-widest text-brand-green uppercase">SENDPUT
+                        AI</span>
+                    <div class="my-1">
+                        <svg class="w-8 h-8 mx-auto" viewBox="0 0 100 100" fill="none">
+                            <path d="M26 22 H14 V78 H26" stroke="#FF6B00" stroke-width="9" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M74 22 H86 V78 H74" stroke="#FF6B00" stroke-width="9" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M34 50 L46 64 L68 36" stroke="#00FF66" stroke-width="9" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <span class="text-[7px] font-mono text-white tracking-widest font-bold uppercase">5-LAYER
+                        VERIFIED</span>
+                </div>
+                <!-- Ping Glow -->
+                <div
+                    class="absolute -inset-1 rounded-full bg-brand-green/10 -z-10 blur-sm group-hover:bg-brand-green/30 transition-all">
+                </div>
+            </div>
+        </div>
+
+        <p class="text-[10px] text-center font-mono text-brand-textMuted">Click seal to test verification check</p>
+    </div>
+
+    <!-- Compact Minimal Footer Pill -->
+    <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between">
+        <div class="flex justify-between items-start">
+            <div>
+                <h4 class="text-xs font-mono font-bold text-white uppercase">3. Compact Inline Pill</h4>
+                <p class="text-[11px] text-brand-textSecondary">Sleek minimal footer component.</p>
+            </div>
+            <span
+                class="text-[9px] font-mono text-blue-400 border border-blue-400/30 bg-blue-400/10 px-1.5 py-0.5 rounded">FOOTER</span>
+        </div>
+
+        <!-- Interactive Pill Demo -->
+        <div class="py-8 flex justify-center items-center">
+            <div class="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-full bg-[#070B13] border border-brand-borderLight hover:border-brand-green transition-all cursor-pointer group shadow-lg"
+                onclick="testVerificationModal('client-app.io')">
+                <div class="w-5 h-5 rounded-full bg-brand-green/20 flex items-center justify-center">
+                    <svg class="w-3 h-3 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <div class="flex items-center text-xs font-mono">
+                    <span class="text-white font-semibold">Sendput</span>
+                    <span class="text-brand-orange font-bold">[AI]</span>
+                    <span class="text-brand-textMuted mx-1.5">|</span>
+                    <span class="text-brand-green font-medium">Verified Active</span>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-[10px] text-center font-mono text-brand-textMuted">Ideal for compact SaaS footers</p>
+    </div>
+
+</div>
+
+</div>
+
+<!-- Configuration, Whitelisting & Embed Code (5 cols) -->
+<div class="lg:col-span-5 space-y-6">
+
+    <!-- Embed Generator Card -->
+    <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border">
+        <div class="flex items-center justify-between pb-3 border-b border-brand-border">
+            <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider">Embed Code Generator</h3>
+            <span class="text-[10px] font-mono text-brand-green">JS SDK v3.0</span>
+        </div>
+
+        <!-- Controls -->
+        <div class="mt-4 space-y-3">
+            <div>
+                <label class="block text-xs font-mono text-brand-textSecondary mb-1">Badge Format</label>
+                <select id="embed-format-select" onchange="updateEmbedSnippet()"
+                    class="w-full bg-[#05080E] border border-brand-border rounded-lg p-2 text-xs font-mono text-white focus:outline-none focus:border-brand-green">
+                    <option value="banner">Master Verified Banner (800x150)</option>
+                    <option value="seal">Certified Circular Trust Seal</option>
+                    <option value="pill">Compact Footer Trust Pill</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-mono text-brand-textSecondary mb-1">Color Theme</label>
+                <select id="embed-theme-select" onchange="updateEmbedSnippet()"
+                    class="w-full bg-[#05080E] border border-brand-border rounded-lg p-2 text-xs font-mono text-white focus:outline-none focus:border-brand-green">
+                    <option value="dark">Titanium Matrix (Dark High-Tech)</option>
+                    <option value="minimal">Minimal Transparent (Adaptive)</option>
+                    <option value="contrast">High Contrast Cyber</option>
+                </select>
+            </div>
+
+            <!-- Output Code Snippet -->
+            <div>
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-[11px] font-mono text-brand-textMuted">One-Line Partner Snippet</span>
+                    <button onclick="copyEmbedSnippet()"
+                        class="text-[11px] font-mono text-brand-green hover:underline">Copy Code</button>
+                </div>
+                <textarea id="embed-code-area" readonly
+                    class="w-full h-28 bg-[#05080E] border border-brand-border rounded-lg p-3 text-[11px] font-mono text-brand-textPrimary focus:outline-none resize-none leading-relaxed">&lt;!-- Sendput AI Verified Badge --&gt;
+<div id="sendput-badge" data-partner="sendput.com" data-theme="dark" data-variant="banner"></div>
+<script async src="https://assets.sendput.com/v3/verified.js"></script>
+
+      <!-- Live Domain Whitelist & Gateway Tester -->
+      <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border">
+        <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider pb-3 border-b border-brand-border">
+          Domain Whitelist & SSL Status
+        </h3>
+        
+        <div class="mt-4 space-y-3">
+          <div class="flex space-x-2">
+            <input id="test-domain-input" type="text" value="acme-corp.com" class="flex-1 bg-[#05080E] border border-brand-border rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-brand-green" placeholder="domain.com" />
+            <button onclick="verifyPartnerDomain()" class="px-3 py-2 rounded-lg bg-brand-blue hover:bg-blue-600 text-xs font-mono text-white transition-all">
+              Test Gateway
+            </button>
+          </div>
+
+          <!-- Live Verification Result List -->
+          <div id="domain-verification-box" class="p-3 rounded-lg bg-brand-card border border-brand-border space-y-2 text-xs font-mono">
+            <div class="flex justify-between items-center">
+              <span class="text-brand-textSecondary">Domain Authority:</span>
+              <span class="text-brand-green">APPROVED PARTNER</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-brand-textSecondary">5-Layer Compiler:</span>
+              <span class="text-brand-green">SYNCED (0.04s)</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-brand-textSecondary">Verification Ledger:</span>
+              <span class="text-brand-orange">HASH #8812B</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+  <!-- Modal Header -->
+  <div class="p-5 border-b border-brand-border bg-[#05080E] flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 rounded-lg bg-brand-green/20 border border-brand-green/40 flex items-center justify-center">
+        <svg class="w-5 h-5 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h3 class="text-sm font-bold text-white uppercase font-mono tracking-tight">Active Gateway Status: ACTIVE [ONLINE]</h3>
+        </div>
+        <p class="text-[11px] font-mono text-brand-green">Verified by SendPut EPO Engine Protocol (RFC-2026-GEO-01)</p>
+      </div>
+    </div>
+    <button onclick="closeVerificationModal()" class="text-brand-textMuted hover:text-white transition-colors p-1">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="p-6 space-y-5">
+    
+    <!-- Verification Ledger Target Domain Details -->
+    <div class="p-4 rounded-xl bg-brand-card border border-brand-border flex items-center justify-between">
+      <div>
+        <span class="text-[10px] font-mono text-brand-textMuted uppercase">Target Verified Domain</span>
+        <h4 id="modal-target-domain" class="text-lg font-bold font-mono text-white">acme-corp.com</h4>
+      </div>
+      <span class="px-2.5 py-1 bg-brand-green/20 text-brand-green border border-brand-green/40 rounded text-xs font-mono font-bold">100% SECURE &amp; COMPLIANT</span>
+    </div>
+
+    <!-- 5-Component Live Health Checks -->
+    <div class="space-y-2.5 font-mono text-xs">
+      <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#05080E] border border-brand-border/60">
+        <span class="text-brand-textSecondary">LIVE EDGE COMPILER</span>
+        <span class="text-brand-green font-bold">[ONLINE · 38ms]</span>
+      </div>
+      <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#05080E] border border-brand-border/60">
+        <span class="text-brand-textSecondary">KNOWLEDGE GRAPH INJECTION</span>
+        <span class="text-brand-green font-bold">[VERIFIED JSON-LD]</span>
+      </div>
+      <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#05080E] border border-brand-border/60">
+        <span class="text-brand-textSecondary">MODEL CONTEXT PROTOCOL (MCP)</span>
+        <span class="text-brand-blue font-bold">[JSON-RPC ROUTED]</span>
+      </div>
+      <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#05080E] border border-brand-border/60">
+        <span class="text-brand-textSecondary">ZERO-EVASION AUDIT</span>
+        <span class="text-emerald-400 font-bold">[PASS 100%]</span>
+      </div>
+      <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#05080E] border border-brand-border/60">
+        <span class="text-brand-textSecondary">CRYPTOGRAPHIC SIGNATURE</span>
+        <span class="text-brand-orange font-bold">SHA256: 4bf9...18d2</span>
+      </div>
+    </div>
+
+    <div class="p-3 bg-brand-green/10 border border-brand-green/20 rounded-xl text-xs text-brand-textSecondary flex items-start space-x-2">
+      <svg class="w-4 h-4 text-brand-green flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <p>
+        This website is certified with the active Sendput AI Search Compliant mark. All knowledge representations are directly grounded and verified against first-party authenticated sources.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="p-4 bg-[#05080E] border-t border-brand-border flex items-center justify-between">
+    <span class="text-[11px] font-mono text-brand-textMuted">[verification.sendput.com/site/acme-corp.com](https://verification.sendput.com/site/acme-corp.com)</span>
+    <button onclick="closeVerificationModal()" class="px-4 py-2 bg-brand-surface hover:bg-brand-border text-white text-xs font-mono rounded-lg border border-brand-border transition-colors">
+      Dismiss Verification Modal
+    </button>
+  </div>
+
+</div>

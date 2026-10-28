@@ -87,7 +87,7 @@ async function runTests() {
   console.log('\n[TEST 4] GET /sf-edge.js?tenant=myiad-insurance-ai');
   try {
     const res = await request('/sf-edge.js?tenant=myiad-insurance-ai');
-    const pass = res.status === 200 && res.contentType.includes('javascript') && res.text.includes('sendput-signalforge-jsonld') && res.text.includes('SoftwareApplication');
+    const pass = res.status === 200 && res.contentType.includes('javascript') && res.text.includes('sendput-epo-jsonld') && res.text.includes('SoftwareApplication');
     results.push({ name: 'GET /sf-edge.js', pass, details: `Content-Type=${res.contentType}, size=${res.text.length}` });
   } catch (err) {
     results.push({ name: 'GET /sf-edge.js', pass: false, error: err.message });
@@ -164,7 +164,7 @@ async function runTests() {
   try {
     const res = await request('/api/audit', {
       method: 'POST',
-      headers: { 'x-forwarded-host': 'audit.signalforgepartners.com' },
+      headers: { 'x-forwarded-host': 'audit.epopartners.com' },
       body: {
         business_name: 'Metro Dental Care',
         website_url: 'https://metrodental.example.com',
@@ -172,7 +172,7 @@ async function runTests() {
       }
     });
     const json = JSON.parse(res.text);
-    const pass = res.status === 200 && json.agency?.agency_name === 'SignalForge Growth Partners' && json.proposal_markdown?.includes('SignalForge Growth Partners');
+    const pass = res.status === 200 && json.agency?.agency_name === 'SendPut EPO Growth Partners' && json.proposal_markdown?.includes('SendPut EPO Growth Partners');
     results.push({ name: 'POST /api/audit (Agency CNAME)', pass, details: `proposalAgency=${json.agency?.agency_name}, markdownLen=${json.proposal_markdown?.length}` });
   } catch (err) {
     results.push({ name: 'POST /api/audit (Agency CNAME)', pass: false, error: err.message });

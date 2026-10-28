@@ -101,15 +101,14 @@ class SendPut_AI_Visibility_Plugin {
         if (empty($code)) {
             return false;
         }
-        // Valid prefixes: SP-PRO-, SP-STARTER-, SP-GROWTH-, SP-AGENCY-, SP-EPO-, EPO-, SIGNALFORGE-
+        // Valid prefixes: SP-PRO-, SP-STARTER-, SP-GROWTH-, SP-AGENCY-, SP-EPO-, EPO-
         return (
             strpos($code, 'SP-PRO-') === 0 ||
             strpos($code, 'SP-STARTER-') === 0 ||
             strpos($code, 'SP-GROWTH-') === 0 ||
             strpos($code, 'SP-AGENCY-') === 0 ||
             strpos($code, 'SP-EPO-') === 0 ||
-            strpos($code, 'EPO-') === 0 ||
-            strpos($code, 'SIGNALFORGE-') === 0
+            strpos($code, 'EPO-') === 0
         );
     }
 
@@ -672,7 +671,7 @@ class SendPut_AI_Visibility_Plugin {
                                 <td>
                                     <select name="edge_host" id="edge_host">
                                         <option value="sendput.com" <?php selected($settings['edge_host'], 'sendput.com'); ?>>sendput.com (Official SendPut AI Directory)</option>
-                                        <option value="cdn.signalput.com" <?php selected($settings['edge_host'], 'cdn.signalput.com'); ?>>cdn.signalput.com (Stealth White-Label Agency CDN)</option>
+                                        <option value="cdn.getepo.com" <?php selected($settings['edge_host'], 'cdn.getepo.com'); ?>>cdn.getepo.com (Stealth White-Label Agency CDN)</option>
                                         <option value="cdn.citeput.com" <?php selected($settings['edge_host'], 'cdn.citeput.com'); ?>>cdn.citeput.com (Citation Spoke CDN)</option>
                                     </select>
                                 </td>

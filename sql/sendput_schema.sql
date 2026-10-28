@@ -199,22 +199,3 @@ INSERT INTO agency_workspaces (
   497.00
 ) ON CONFLICT (slug) DO NOTHING;
 
--- Legacy Agency Slug Backward Compatibility Alias
-INSERT INTO agency_workspaces (
-  agency_name, slug, custom_domain, brand_color, logo_url,
-  plan_tier, included_seats, active_seats, extra_seat_price_usd,
-  reseller_retail_price_starter_usd, reseller_retail_price_growth_usd
-) VALUES (
-  'SignalForge Growth Partners',
-  'signalforge-partners',
-  'audit.signalforgepartners.com',
-  '#4F46E5',
-  'https://sendput.com/assets/agency-logo-demo.png',
-  'agency_command_299',
-  10,
-  2,
-  19.00,
-  197.00,
-  497.00
-) ON CONFLICT (slug) DO NOTHING;
-

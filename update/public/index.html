@@ -96,7 +96,7 @@
           SendPut EPO Engine (Active Entity Presence Optimization)
         </span>
         <span class="text-slate-400 hidden sm:inline">Schema: <code class="mono text-indigo-300">vault_app_angelburgosrosado</code></span>
-        <span class="text-slate-400 hidden md:inline">Edge Node: <code class="mono text-cyan-300">cdn.sendput.com / cdn.signalput.com</code></span>
+        <span class="text-slate-400 hidden md:inline">Edge Node: <code class="mono text-cyan-300">cdn.sendput.com / cdn.getepo.com</code></span>
       </div>
       <div class="flex items-center gap-4">
         <span class="text-slate-400">Protocols: <strong class="text-white">JSON-LD + IndexNow + llms.txt + OpenAPI + MCP</strong></span>
@@ -557,7 +557,7 @@ Standing Seam Metal Roof Installation | From $16,500 (Hurricane Rated)
               <div>
                 <label for="wl-edge-domain" class="block text-xs font-semibold text-slate-300 mb-1">Neutral Script Spoke Domain</label>
                 <select id="wl-edge-domain" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white mono">
-                  <option value="cdn.signalput.com">cdn.signalput.com (Stealth)</option>
+                  <option value="cdn.getepo.com">cdn.getepo.com (Stealth)</option>
                   <option value="cdn.citeput.com">cdn.citeput.com (Stealth)</option>
                   <option value="cdn.sendput.com">cdn.sendput.com (Standard)</option>
                 </select>
@@ -1458,7 +1458,7 @@ Standing Seam Metal Roof Installation | From $16,500 (Hurricane Rated)
       const descEn = document.getElementById('eng-desc-en').value.trim();
       const descEs = document.getElementById('eng-desc-es').value.trim();
       const bilingual = document.getElementById('eng-bilingual').checked;
-      const edgeDomain = document.getElementById('wl-edge-domain') ? document.getElementById('wl-edge-domain').value : 'cdn.signalput.com';
+      const edgeDomain = document.getElementById('wl-edge-domain') ? document.getElementById('wl-edge-domain').value : 'cdn.getepo.com';
       const rawServices = document.getElementById('eng-services').value.trim().split('\n').filter(Boolean);
       const services = rawServices.map((line, idx) => {
         const parts = line.split('|');
@@ -1803,10 +1803,7 @@ Our multi-engine AI scan across ChatGPT Search, Perplexity, Google Gemini, Claud
       };
 
       // Backward-compatible legacy aliases
-      window.runSignalForgeSync = window.runEpoSync;
-      window.signalForgeStatus = window.epoEngineStatus;
-      window.useSignalForgeStore = window.useEpoStore;
-
+                  
       // 1-Click Fix All Button
       document.getElementById('btn-one-click-fix').addEventListener('click', () => {
         window.runEpoSync();
