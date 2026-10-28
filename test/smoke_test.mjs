@@ -59,7 +59,7 @@ async function runTests() {
   console.log('\n[TEST 2] GET /');
   try {
     const res = await request('/');
-    const pass = res.status === 200 && (res.text.includes('SendPut EPO Engine') || res.text.includes('SendPut AI (SignalForge 3.0)')) && res.text.includes('id="tab-grader"') && res.text.includes('id="tab-engine"');
+    const pass = res.status === 200 && res.text.includes('SendPut EPO Engine') && res.text.includes('id="tab-grader"') && res.text.includes('id="tab-engine"');
     results.push({ name: 'GET / (SendPut EPO Engine 4-Tab UI)', pass, details: `HTML length=${res.text.length}` });
   } catch (err) {
     results.push({ name: 'GET /', pass: false, error: err.message });

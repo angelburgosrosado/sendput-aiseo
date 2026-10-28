@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "sendput-ai-signalforge-3",
+      "name": "sendput-epo-engine",
       "dependencies": {
         "cors": "^2.8.5",
         "express": "^4.19.2",
