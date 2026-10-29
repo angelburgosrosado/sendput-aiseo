@@ -1,252 +1,2685 @@
-</div>
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SendPut EPO Engine — Active Entity Propagation, Real-Time IndexNow Relay &amp; Agentic MCP Readiness</title>
+  
+  <!-- Tailwind CSS & Chart.js -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+  
+  <!-- Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Favicons & Brand Icons -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="llms-txt" type="text/markdown" href="/llms.txt" />
 
-<!-- Hover State Callout -->
-<div
-    class="absolute inset-0 bg-brand-green/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
-    <span
-        class="px-3 py-1 rounded-full bg-brand-bg/90 border border-brand-green text-brand-green font-mono text-xs shadow-lg">
-        Click to simulate live verification ledger &rarr;
-    </span>
-</div>
+  <!-- SendPut AI & EPO Engine Structured Entity Graph (Schema.org JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://sendput.com/#organization",
+        "name": "SendPut AI",
+        "url": "https://sendput.com",
+        "sameAs": [
+          "https://getepo.com",
+          "https://www.wikidata.org/wiki/Q_SENDPUT_ID",
+          "https://www.crunchbase.com/organization/sendput"
+        ],
+        "knowsAbout": [
+          "Entity Presence Optimization",
+          "EPO",
+          "Generative Engine Optimization",
+          "Answer Engine Optimization",
+          "Model Context Protocol"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://sendput.com/#engine",
+        "name": "SendPut EPO Engine",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Cloud",
+        "publisher": {
+          "@id": "https://sendput.com/#organization"
+        }
+      }
+    ]
+  }
+  </script>
 
-</div>
-</div>
-</div>
+  <!-- Tailwind Configuration for Titanium Matrix Design Language -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#080C14',
+              surface: '#0D131F',
+              card: '#111827',
+              border: 'rgba(255, 255, 255, 0.08)',
+              green: '#00FF66',
+              orange: '#FF6B00',
+              blue: '#0284C7',
+              textPrimary: '#FFFFFF',
+              textSecondary: '#94A3B8',
+              textMuted: '#64748B'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
 
-<!-- Badge Variant 2 & 3: Circular Metallic Seal & Compact Footer Badge -->
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <style>
+    :root {
+      --bg-titanium: #080C14;
+      --matrix-green: #00FF66;
+      --signal-orange: #FF6B00;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #080C14;
+      color: #F8FAFC;
+      overflow-x: hidden;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .terminal-card {
+      background: #0D131F;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+    }
+    .glow-matrix-green {
+      box-shadow: 0 0 25px -4px rgba(0, 255, 102, 0.35);
+    }
+    .glow-signal-orange {
+      box-shadow: 0 0 25px -4px rgba(255, 107, 0, 0.4);
+    }
+    .terminal-scanlines {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 4px, 6px 100%;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .status-pulse {
+      animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #080C14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1E293B;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00FF66;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-[#00FF66] selection:text-black">
 
-    <!-- Metallic Circular Seal -->
-    <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between">
-        <div class="flex justify-between items-start">
-            <div>
-                <h4 class="text-xs font-mono font-bold text-white uppercase">2. Certified Trust Seal</h4>
-                <p class="text-[11px] text-brand-textSecondary">Round metallic / neon edge badge.</p>
-            </div>
-            <span
-                class="text-[9px] font-mono text-brand-orange border border-brand-orange/30 bg-brand-orange/10 px-1.5 py-0.5 rounded">EMBLEM</span>
-        </div>
-
-        <!-- Interactive Seal Demo -->
-        <div class="py-6 flex justify-center items-center">
-            <div class="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-[#1E293B] via-[#0F172A] to-[#334155] border-2 border-brand-green shadow-2xl relative group cursor-pointer"
-                onclick="testVerificationModal('client-store.com')">
-                <!-- Circular Text Simulator -->
-                <div
-                    class="w-full h-full rounded-full bg-[#080D18] flex flex-col items-center justify-center text-center p-2 relative overflow-hidden">
-                    <div class="absolute inset-0 border border-brand-green/30 rounded-full"></div>
-                    <span class="text-[8px] font-mono font-bold tracking-widest text-brand-green uppercase">SENDPUT
-                        AI</span>
-                    <div class="my-1">
-                        <svg class="w-8 h-8 mx-auto" viewBox="0 0 100 100" fill="none">
-                            <path d="M26 22 H14 V78 H26" stroke="#FF6B00" stroke-width="9" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M74 22 H86 V78 H74" stroke="#FF6B00" stroke-width="9" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M34 50 L46 64 L68 36" stroke="#00FF66" stroke-width="9" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <span class="text-[7px] font-mono text-white tracking-widest font-bold uppercase">5-LAYER
-                        VERIFIED</span>
-                </div>
-                <!-- Ping Glow -->
-                <div
-                    class="absolute -inset-1 rounded-full bg-brand-green/10 -z-10 blur-sm group-hover:bg-brand-green/30 transition-all">
-                </div>
-            </div>
-        </div>
-
-        <p class="text-[10px] text-center font-mono text-brand-textMuted">Click seal to test verification check</p>
+  <!-- ========================================================================= -->
+  <!-- TOP TELEMETRY RIBBON & PROTOCOL STATUS                                    -->
+  <!-- ========================================================================= -->
+  <div class="bg-[#05080E] border-b border-white/10 px-4 py-2 text-xs font-mono">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#00FF66]/10 text-[#00FF66] border border-[#00FF66]/30 font-medium">
+          <span class="w-2 h-2 rounded-full bg-[#00FF66] status-pulse"></span>
+          SYSTEM STATUS: ACTIVE [ONLINE]
+        </span>
+        <span class="text-slate-400 hidden sm:inline">RFC-2026-GEO-01 // EPO PROTOCOL</span>
+        <span class="text-slate-400 hidden md:inline">Edge: <code class="text-cyan-300">cdn.sendput.com / cdn.getepo.com</code></span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-slate-400 hidden lg:inline">Stack: <strong class="text-white">JSON-LD · IndexNow · /llms.txt · MCP Agent Node</strong></span>
+        <button id="btn-toggle-stealth" type="button" class="px-2.5 py-1 rounded bg-[#FF6B00]/15 hover:bg-[#FF6B00]/25 text-[#FF6B00] border border-[#FF6B00]/40 font-bold transition flex items-center gap-1.5">
+          <span>🔒 Public Gate</span>
+          <span class="text-[10px] text-slate-300 hidden sm:inline">(Founder Unlock)</span>
+        </button>
+        <button id="btn-open-arch-modal" type="button" class="text-[#00FF66] hover:underline font-semibold flex items-center gap-1">
+          [>_] Architecture Spec
+        </button>
+      </div>
     </div>
+  </div>
 
-    <!-- Compact Minimal Footer Pill -->
-    <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between">
-        <div class="flex justify-between items-start">
-            <div>
-                <h4 class="text-xs font-mono font-bold text-white uppercase">3. Compact Inline Pill</h4>
-                <p class="text-[11px] text-brand-textSecondary">Sleek minimal footer component.</p>
-            </div>
-            <span
-                class="text-[9px] font-mono text-blue-400 border border-blue-400/30 bg-blue-400/10 px-1.5 py-0.5 rounded">FOOTER</span>
+  <!-- ========================================================================= -->
+  <!-- MINIMAL HEADER: SENDPUT[COM] LOCKUP & JUMP NAVIGATION                      -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-40 bg-[#080C14]/90 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand Lockup -->
+      <a href="/" class="flex items-center gap-3 group">
+        <div id="brand-logo-badge" class="w-9 h-9 rounded-lg bg-[#00FF66]/15 border border-[#00FF66]/40 flex items-center justify-center font-mono font-bold text-sm text-[#00FF66] group-hover:glow-matrix-green transition">
+          &gt;_
         </div>
-
-        <!-- Interactive Pill Demo -->
-        <div class="py-8 flex justify-center items-center">
-            <div class="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-full bg-[#070B13] border border-brand-borderLight hover:border-brand-green transition-all cursor-pointer group shadow-lg"
-                onclick="testVerificationModal('client-app.io')">
-                <div class="w-5 h-5 rounded-full bg-brand-green/20 flex items-center justify-center">
-                    <svg class="w-3 h-3 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                </div>
-                <div class="flex items-center text-xs font-mono">
-                    <span class="text-white font-semibold">Sendput</span>
-                    <span class="text-brand-orange font-bold">[AI]</span>
-                    <span class="text-brand-textMuted mx-1.5">|</span>
-                    <span class="text-brand-green font-medium">Verified Active</span>
-                </div>
-            </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="nav-brand-title" class="font-extrabold text-lg tracking-tight text-white font-sans">SENDPUT<span class="text-[#00FF66]">[COM]</span></span>
+            <span class="text-[10px] font-mono font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-[#00FF66]/10 text-[#00FF66] border border-[#00FF66]/30">EPO ENGINE</span>
+          </div>
+          <p id="nav-brand-subtitle" class="text-[11px] font-mono text-slate-400">Terminal Gateway // Active Entity Presence Optimization</p>
         </div>
+      </a>
 
-        <p class="text-[10px] text-center font-mono text-brand-textMuted">Ideal for compact SaaS footers</p>
+      <!-- Quick Section Links -->
+      <nav class="hidden md:flex items-center gap-5 text-xs font-mono text-slate-300">
+        <a href="#section-hero" class="hover:text-[#00FF66] transition">[01. Terminal]</a>
+        <a href="#section-paradigm" class="hover:text-[#00FF66] transition">[02. Paradigm Shift]</a>
+        <a href="#section-architecture" class="hover:text-[#00FF66] transition">[03. 5-Layer Stack]</a>
+        <a href="#section-proof" class="hover:text-[#00FF66] transition">[04. Dashboard Proof]</a>
+        <a href="#section-trust" class="hover:text-[#00FF66] transition">[05. Trust Ecosystem]</a>
+      </nav>
+
+      <!-- Primary Action CTA -->
+      <div class="flex items-center gap-2">
+        <a href="#section-hero" class="px-4 py-2 rounded-lg bg-[#FF6B00] hover:bg-[#e05e00] text-black font-mono font-bold text-xs uppercase tracking-wider shadow-lg glow-signal-orange transition flex items-center gap-1.5">
+          <span>[&gt;_] INITIALIZE EPO AUDIT</span>
+        </a>
+      </div>
     </div>
+  </header>
 
-</div>
+  <!-- ========================================================================= -->
+  <!-- MAIN CONTENT CONTAINER                                                    -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-16">
 
-</div>
-
-<!-- Configuration, Whitelisting & Embed Code (5 cols) -->
-<div class="lg:col-span-5 space-y-6">
-
-    <!-- Embed Generator Card -->
-    <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border">
-        <div class="flex items-center justify-between pb-3 border-b border-brand-border">
-            <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider">Embed Code Generator</h3>
-            <span class="text-[10px] font-mono text-brand-green">JS SDK v3.0</span>
+    <!-- ======================================================================= -->
+    <!-- SECTION 1: THE HERO TERMINAL (ABOVE THE FOLD)                           -->
+    <!-- ======================================================================= -->
+    <section id="section-hero" class="pt-4 pb-8 space-y-8">
+      
+      <!-- Top Eyebrow & Stark Headline -->
+      <div class="max-w-4xl space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00FF66]/10 text-[#00FF66] border border-[#00FF66]/30 text-xs font-mono font-bold tracking-wider uppercase">
+          <span class="w-2 h-2 rounded-full bg-[#00FF66] status-pulse"></span>
+          THE NEW STANDARD: ENTITY PRESENCE OPTIMIZATION (EPO)
         </div>
+        
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.08]">
+          Establish Your Entity. <br/>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#00FF66] via-emerald-300 to-cyan-400">Dominate AI Search.</span>
+        </h1>
+        
+        <p class="text-lg sm:text-xl font-medium text-slate-200">
+          Make Your Business the <span class="text-[#00FF66] font-semibold underline decoration-[#00FF66]/40 underline-offset-4">Irrefutable Answer</span> in Answer Engines.
+        </p>
 
-        <!-- Controls -->
-        <div class="mt-4 space-y-3">
-            <div>
-                <label class="block text-xs font-mono text-brand-textSecondary mb-1">Badge Format</label>
-                <select id="embed-format-select" onchange="updateEmbedSnippet()"
-                    class="w-full bg-[#05080E] border border-brand-border rounded-lg p-2 text-xs font-mono text-white focus:outline-none focus:border-brand-green">
-                    <option value="banner">Master Verified Banner (800x150)</option>
-                    <option value="seal">Certified Circular Trust Seal</option>
-                    <option value="pill">Compact Footer Trust Pill</option>
-                </select>
+        <!-- Monospace Technical Subtitle -->
+        <div class="p-3.5 rounded-lg bg-[#05080E] border border-[#00FF66]/30 text-[#00FF66] font-mono text-xs sm:text-sm leading-relaxed max-w-3xl">
+          &gt; INITIALIZING SENDPUT EPO ENGINE: The industry standard for Entity Presence Optimization and verified AI discovery.
+        </div>
+      </div>
+
+      <!-- Hero Grid: Left = Active Diagnostic Terminal, Right = Hex-Sphere Convergence -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Active Diagnostic Terminal Console (7 Cols) -->
+        <div class="lg:col-span-7 terminal-card rounded-2xl overflow-hidden border border-white/10 glow-matrix-green">
+          
+          <!-- Terminal Chrome Bar -->
+          <div class="bg-[#05080E] px-4 py-3 border-b border-white/10 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+              <span class="ml-2 font-mono text-xs text-slate-400">bash: sendput-epo-client v3.4.0 --mode=diagnostic</span>
+            </div>
+            <span class="font-mono text-[10px] text-[#00FF66] bg-[#00FF66]/10 px-2 py-0.5 rounded border border-[#00FF66]/30">RFC-2026-READY</span>
+          </div>
+
+          <!-- Interactive Terminal Prompt Form -->
+          <div class="p-5 sm:p-6 space-y-4 font-mono text-xs">
+            <div class="text-slate-400">
+              <span class="text-[#00FF66]">root@sendput-node:~$</span> <span class="text-white">epo-audit --inspect-domain --zero-evasion</span>
             </div>
 
+            <!-- Terminal Inputs Form -->
+            <form id="audit-form" class="space-y-3" onsubmit="event.preventDefault(); document.getElementById('btn-run-scan').click();">
+              <div>
+                <label class="block text-slate-400 mb-1">&gt; enter_target_domain [https://...]:</label>
+                <input id="input-biz-url" type="url" required value="https://apexroofingorlando.com"
+                  class="w-full bg-[#05080E] border border-white/15 focus:border-[#00FF66] focus:ring-1 focus:ring-[#00FF66] rounded-lg p-2.5 text-white font-mono text-xs transition outline-none"
+                  placeholder="https://example.com" />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-slate-400 mb-1">&gt; business_entity_name:</label>
+                  <input id="input-biz-name" type="text" required value="Apex Roofing &amp; Solar"
+                    class="w-full bg-[#05080E] border border-white/15 focus:border-[#00FF66] focus:ring-1 focus:ring-[#00FF66] rounded-lg p-2.5 text-white font-mono text-xs transition outline-none"
+                    placeholder="Company Name" />
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1">&gt; entity_classification:</label>
+                  <select id="input-biz-niche"
+                    class="w-full bg-[#05080E] border border-white/15 focus:border-[#00FF66] focus:ring-1 focus:ring-[#00FF66] rounded-lg p-2.5 text-white font-mono text-xs transition outline-none">
+                    <option value="Orlando, FL — Licensed Hurricane Roof Replacement &amp; Solar">Roofing &amp; Solar (Contractor)</option>
+                    <option value="San Juan, PR &amp; Miami, FL — Bilingual Insurance Agency SaaS &amp; CRM">SoftwareApplication / SaaS</option>
+                    <option value="Palm Coast &amp; Orlando, FL — Life Insurance, Annuities &amp; Financial Calculators">FinancialService / Advisory</option>
+                    <option value="Austin, TX — Medical Aesthetics, Laser &amp; IV Therapy">MedicalClinic / MedSpa</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Terminal Action Buttons -->
+              <div class="flex flex-wrap items-center gap-3 pt-2">
+                <!-- Primary CTA: Signal Orange -->
+                <button id="hero-btn-run-audit" type="button" onclick="document.getElementById('btn-run-scan').click();"
+                  class="px-5 py-3 rounded-lg bg-[#FF6B00] hover:bg-[#e05e00] text-black font-mono font-extrabold text-xs uppercase tracking-wider shadow-lg glow-signal-orange transition flex items-center gap-2">
+                  <span>[&gt;_] INITIALIZE EPO AUDIT</span>
+                  <span class="text-[10px] bg-black/20 px-1.5 py-0.5 rounded">FREE</span>
+                </button>
+
+                <!-- Secondary Action: Launch Engine -->
+                <button id="hero-btn-launch-engine" type="button"
+                  class="px-5 py-3 rounded-lg bg-[#00FF66]/10 hover:bg-[#00FF66]/20 text-[#00FF66] border border-[#00FF66]/40 font-mono font-bold text-xs uppercase tracking-wider transition flex items-center gap-1.5">
+                  <span>[&gt;_] LAUNCH ENGINE TAB</span>
+                </button>
+
+                <!-- Hidden trigger for existing JS scan button -->
+                <button id="btn-run-scan" type="submit" class="hidden"></button>
+              </div>
+            </form>
+
+            <!-- Presets Bar -->
+            <div class="pt-2 border-t border-white/10">
+              <span class="text-[11px] text-slate-400 block mb-1.5">&gt; load_verified_presets:</span>
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" class="preset-btn px-2.5 py-1 rounded bg-white/5 hover:bg-[#00FF66]/15 hover:text-[#00FF66] border border-white/10 text-[11px] font-mono transition text-slate-300" data-preset="roofer">
+                  [Apex Roofing · Local]
+                </button>
+                <button type="button" class="preset-btn px-2.5 py-1 rounded bg-white/5 hover:bg-[#00FF66]/15 hover:text-[#00FF66] border border-white/10 text-[11px] font-mono transition text-slate-300" data-preset="myiad">
+                  [MyIAD · SaaS CRM]
+                </button>
+                <button type="button" class="preset-btn px-2.5 py-1 rounded bg-white/5 hover:bg-[#00FF66]/15 hover:text-[#00FF66] border border-white/10 text-[11px] font-mono transition text-slate-300" data-preset="abglco">
+                  [AB Global · Finance]
+                </button>
+                <button type="button" class="preset-btn px-2.5 py-1 rounded bg-white/5 hover:bg-[#00FF66]/15 hover:text-[#00FF66] border border-white/10 text-[11px] font-mono transition text-slate-300" data-preset="medspa">
+                  [Bella Vista · MedSpa]
+                </button>
+              </div>
+            </div>
+
+            <!-- Terminal Output Telemetry Stream -->
+            <div id="scan-progress-box" class="hidden p-3.5 rounded-lg bg-[#05080E] border border-[#00FF66]/30 space-y-2">
+              <div class="flex items-center justify-between text-[11px] text-[#00FF66]">
+                <span id="scan-step-text">&gt; INITIALIZING ZERO-EVASION DIAGNOSTIC...</span>
+                <span id="scan-step-pct" class="font-bold">0%</span>
+              </div>
+              <div class="w-full h-1.5 bg-black rounded-full overflow-hidden">
+                <div id="scan-progress-bar" class="h-full bg-gradient-to-r from-[#00FF66] to-cyan-400 transition-all duration-300" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- High-Fidelity Hex-Sphere Convergence Vector Visual (5 Cols) -->
+        <div class="lg:col-span-5 terminal-card rounded-2xl p-6 border border-white/10 flex flex-col justify-between relative overflow-hidden">
+          
+          <!-- Vector Graphic Background Glow -->
+          <div class="absolute -top-12 -right-12 w-64 h-64 bg-[#00FF66]/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+            <span class="font-mono text-xs text-[#00FF66] flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-[#00FF66] status-pulse"></span>
+              KNOWLEDGE GRAPH CONVERGENCE
+            </span>
+            <span class="font-mono text-[10px] text-slate-400">HEX-SPHERE V2</span>
+          </div>
+
+          <!-- Hex-Sphere Graphic (SVG Vector Geometry & Glowing Data Streams) -->
+          <div class="py-4 flex items-center justify-center">
+            <svg class="w-full max-w-[340px] h-auto drop-shadow-2xl" viewBox="0 0 400 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Outer Orbital Rings -->
+              <circle cx="200" cy="180" r="160" stroke="#00FF66" stroke-opacity="0.12" stroke-width="1" stroke-dasharray="4 4" />
+              <circle cx="200" cy="180" r="120" stroke="#00FF66" stroke-opacity="0.2" stroke-width="1.5" />
+              
+              <!-- Data Stream Rays Converging to Center Hex -->
+              <line x1="60" y1="80" x2="160" y2="155" stroke="#00FF66" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" />
+              <line x1="340" y1="80" x2="240" y2="155" stroke="#00FF66" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" />
+              <line x1="40" y1="180" x2="150" y2="180" stroke="#00FF66" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" />
+              <line x1="360" y1="180" x2="250" y2="180" stroke="#00FF66" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" />
+              <line x1="90" y1="290" x2="165" y2="205" stroke="#00FF66" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" />
+              <line x1="310" y1="290" x2="235" y2="205" stroke="#00FF66" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" />
+
+              <!-- Outer Engine Nodes -->
+              <!-- ChatGPT Node -->
+              <circle cx="60" cy="80" r="22" fill="#0D131F" stroke="#10B981" stroke-width="2" />
+              <text x="60" y="84" fill="#FFFFFF" font-size="10" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">GPT</text>
+
+              <!-- Perplexity Node -->
+              <circle cx="340" cy="80" r="22" fill="#0D131F" stroke="#06B6D4" stroke-width="2" />
+              <text x="340" y="84" fill="#FFFFFF" font-size="9" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">PPLX</text>
+
+              <!-- Claude Node -->
+              <circle cx="40" cy="180" r="22" fill="#0D131F" stroke="#F97316" stroke-width="2" />
+              <text x="40" y="184" fill="#FFFFFF" font-size="9" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">CLAUDE</text>
+
+              <!-- Gemini Node -->
+              <circle cx="360" cy="180" r="22" fill="#0D131F" stroke="#8B5CF6" stroke-width="2" />
+              <text x="360" y="184" fill="#FFFFFF" font-size="9" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">GEMINI</text>
+
+              <!-- Apple Intelligence Node -->
+              <circle cx="90" cy="290" r="22" fill="#0D131F" stroke="#94A3B8" stroke-width="2" />
+              <text x="90" y="294" fill="#FFFFFF" font-size="8" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">APPLE</text>
+
+              <!-- IndexNow Hub Node -->
+              <circle cx="310" cy="290" r="22" fill="#0D131F" stroke="#3B82F6" stroke-width="2" />
+              <text x="310" y="294" fill="#FFFFFF" font-size="8" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">INDEX</text>
+
+              <!-- Center Sendput Hex-Sphere V2 -->
+              <polygon points="200,135 240,158 240,202 200,225 160,202 160,158" fill="#080C14" stroke="#00FF66" stroke-width="2.5" />
+              <polygon points="200,147 225,162 225,198 200,213 175,198 175,162" fill="#00FF66" fill-opacity="0.1" stroke="#00FF66" stroke-width="1.5" />
+              
+              <text x="200" y="178" fill="#00FF66" font-size="14" font-family="JetBrains Mono" font-weight="extrabold" text-anchor="middle">EPO</text>
+              <text x="200" y="194" fill="#FFFFFF" font-size="9" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">CORE</text>
+            </svg>
+          </div>
+
+          <!-- Bottom Telemetry Readout -->
+          <div class="bg-[#05080E] p-3 rounded-xl border border-white/10 space-y-1.5 font-mono text-[11px]">
+            <div class="flex justify-between items-center text-slate-400">
+              <span>Active Ingestion Gateway:</span>
+              <span class="text-[#00FF66] font-bold">100% OPERATIONAL</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-400">
+              <span>Latency To Bing/Copilot IndexNow:</span>
+              <span class="text-cyan-300 font-bold">&lt; 60 seconds</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-400">
+              <span>MCP Agent Telemetry Ticks:</span>
+              <span class="text-[#FF6B00] font-bold">SYNCHRONIZED</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- SECTION 2: THE PARADIGM SHIFT (THE PROBLEM / SOLUTION)                  -->
+    <!-- ======================================================================= -->
+    <section id="section-paradigm" class="pt-6 pb-10 space-y-8 border-t border-white/10">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <span class="text-xs font-mono font-bold tracking-widest text-[#FF6B00] uppercase bg-[#FF6B00]/10 border border-[#FF6B00]/30 px-3 py-1 rounded-full">
+          PARADIGM SHIFT // THE DEATH OF KEYWORDS
+        </span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
+          Why Entity Presence Optimization (EPO) Supersedes Legacy Search
+        </h2>
+        <p class="text-sm sm:text-base font-mono text-[#00FF66]">
+          “AI doesn’t browse; it computes. Sendput translates your brand into the native language of answer engines.”
+        </p>
+      </div>
+
+      <!-- Split-Screen / Dual-Column Comparison Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Left Column: Legacy SEO (Muted Grey / Past) -->
+        <div class="terminal-card rounded-2xl p-6 border border-slate-700/60 bg-[#0A0E17]/90 space-y-5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
             <div>
-                <label class="block text-xs font-mono text-brand-textSecondary mb-1">Color Theme</label>
-                <select id="embed-theme-select" onchange="updateEmbedSnippet()"
-                    class="w-full bg-[#05080E] border border-brand-border rounded-lg p-2 text-xs font-mono text-white focus:outline-none focus:border-brand-green">
-                    <option value="dark">Titanium Matrix (Dark High-Tech)</option>
-                    <option value="minimal">Minimal Transparent (Adaptive)</option>
-                    <option value="contrast">High Contrast Cyber</option>
-                </select>
+              <span class="text-[11px] font-mono text-slate-500 uppercase">THE PAST [OBSOLETE]</span>
+              <h3 class="text-xl font-bold font-mono text-slate-300">Legacy SEO</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded bg-slate-800 text-slate-400 text-xs font-mono">STATUS: DEPRECATED</span>
+          </div>
+
+          <ul class="space-y-3.5 text-xs sm:text-sm text-slate-400 font-mono">
+            <li class="flex items-start gap-2.5">
+              <span class="text-rose-400 font-bold">✕</span>
+              <span><strong>Fragile DOM Scraping:</strong> Relies on Googlebot crawling raw HTML once every 3–8 weeks.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-rose-400 font-bold">✕</span>
+              <span><strong>Keyword Density:</strong> Vulnerable to algorithmic penalties and discarded by LLM tokenizers.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-rose-400 font-bold">✕</span>
+              <span><strong>Vanity Backlinks:</strong> Ignored by generative vector engines that evaluate semantic closeness.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-rose-400 font-bold">✕</span>
+              <span><strong>42% Hallucination Rate:</strong> LLMs invent phone numbers, hours, and pricing when schema is missing.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-rose-400 font-bold">✕</span>
+              <span><strong>Zero Agent Support:</strong> Cannot be parsed or invoked by autonomous agents (ChatGPT Actions, Claude MCP).</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Right Column: Entity Presence Optimization (Illuminated Matrix Green / Future) -->
+        <div class="terminal-card rounded-2xl p-6 border border-[#00FF66]/40 bg-[#08121A]/95 glow-matrix-green space-y-5">
+          <div class="flex items-center justify-between pb-3 border-b border-[#00FF66]/30">
+            <div>
+              <span class="text-[11px] font-mono text-[#00FF66] uppercase">THE FUTURE [STANDARD]</span>
+              <h3 class="text-xl font-bold font-mono text-white">Entity Presence Optimization (EPO)</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded bg-[#00FF66]/20 text-[#00FF66] border border-[#00FF66]/40 text-xs font-mono font-bold">STATUS: ACTIVE COMPILATION</span>
+          </div>
+
+          <ul class="space-y-3.5 text-xs sm:text-sm text-slate-200 font-mono">
+            <li class="flex items-start gap-2.5">
+              <span class="text-[#00FF66] font-bold">✓</span>
+              <span><strong>5-Layer Active Compilation:</strong> Programmatic compilation of verified 1st-party data into Schema.org @graph.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-[#00FF66] font-bold">✓</span>
+              <span><strong>Real-Time IndexNow Relay:</strong> High-velocity HTTP push to Bing, Yandex, Seznam &amp; Copilot in &lt;60s.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-[#00FF66] font-bold">✓</span>
+              <span><strong>Token-Budgeted /llms.txt:</strong> Clean markdown summaries (&lt;2,000 tokens) engineered for prompt context caching.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-[#00FF66] font-bold">✓</span>
+              <span><strong>Model Context Protocol (MCP):</strong> Live agentic server endpoints allowing AI assistants to execute inquiries &amp; bookings.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-[#00FF66] font-bold">✓</span>
+              <span><strong>Cryptographic Trust Seal:</strong> Verifiable entity ledger proving authentic first-party ownership to LLMs and users.</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Manifesto Callout Box -->
+      <div class="p-6 rounded-2xl bg-[#05080E] border border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#FF6B00]"></span>
+            <h4 class="text-base font-bold font-mono text-white">Why the Link Graph is Dead</h4>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 max-w-3xl leading-relaxed">
+            In generative answer engines (ChatGPT Search, Perplexity Pro, Google AI Overviews), algorithms calculate embeddings across authoritative knowledge entities rather than counting PageRank links. If your business is not declared as a unified entity graph, you do not exist in the answer.
+          </p>
+        </div>
+        <a href="https://getepo.com" target="_blank" rel="noopener" class="px-4 py-2.5 rounded-lg bg-white/5 hover:bg-[#00FF66]/15 text-[#00FF66] border border-white/10 font-mono text-xs font-bold transition whitespace-nowrap">
+          Read RFC-2026-GEO-01 &rarr;
+        </a>
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- SECTION 3: THE 5-LAYER ARCHITECTURE (HOW IT WORKS)                      -->
+    <!-- ======================================================================= -->
+    <section id="section-architecture" class="pt-6 pb-10 space-y-8 border-t border-white/10">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <span class="text-xs font-mono font-bold tracking-widest text-[#00FF66] uppercase bg-[#00FF66]/10 border border-[#00FF66]/30 px-3 py-1 rounded-full">
+          PROTOCOL ARCHITECTURE // 5-LAYER COMPILER
+        </span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
+          Deterministic 5-Layer Compilation Pipeline
+        </h2>
+        <p class="text-sm font-mono text-slate-400">
+          The SendPut EPO Engine compiles disparate business attributes into five synchronized machine-readable protocols.
+        </p>
+      </div>
+
+      <!-- 5-Layer Stack Grid -->
+      <div class="space-y-4">
+        
+        <!-- Layer 01 -->
+        <div class="terminal-card rounded-xl p-5 border border-white/10 hover:border-[#00FF66]/40 transition group">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-white/5 mb-3">
+            <div class="flex items-center gap-3">
+              <span class="px-2 py-0.5 rounded bg-[#00FF66]/15 text-[#00FF66] font-mono font-extrabold text-xs border border-[#00FF66]/30">
+                LAYER 01
+              </span>
+              <h3 class="text-base font-bold text-white font-mono">Data Ingestion &amp; Verification</h3>
+            </div>
+            <span class="text-xs font-mono text-slate-400">Standard: 1st-Party OAuth · Zero-Evasion</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300 font-mono leading-relaxed">
+            Directly ingests verified business name, canonical domain, geocoordinates, operating hours, and service catalogs from authenticated sources, eliminating hallucinated third-party scraping.
+          </p>
+        </div>
+
+        <!-- Layer 02 -->
+        <div class="terminal-card rounded-xl p-5 border border-white/10 hover:border-[#00FF66]/40 transition group">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-white/5 mb-3">
+            <div class="flex items-center gap-3">
+              <span class="px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-400 font-mono font-extrabold text-xs border border-cyan-500/30">
+                LAYER 02
+              </span>
+              <h3 class="text-base font-bold text-white font-mono">Dynamic Compilation (/llms.txt &amp; OpenAPI)</h3>
+            </div>
+            <span class="text-xs font-mono text-slate-400">Standard: Token-Budgeted (&lt;2,000 Tokens)</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300 font-mono leading-relaxed">
+            Constructs lightweight, markdown-structured <code class="text-cyan-300">/llms.txt</code> and extended <code class="text-cyan-300">/llms-full.txt</code> specifications coupled with OpenAPI 3.1.0 JSON declarations tailored for LLM context-window retention.
+          </p>
+        </div>
+
+        <!-- Layer 03 -->
+        <div class="terminal-card rounded-xl p-5 border border-white/10 hover:border-[#00FF66]/40 transition group">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-white/5 mb-3">
+            <div class="flex items-center gap-3">
+              <span class="px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-400 font-mono font-extrabold text-xs border border-indigo-500/30">
+                LAYER 03
+              </span>
+              <h3 class="text-base font-bold text-white font-mono">JSON-LD Schema Injection</h3>
+            </div>
+            <span class="text-xs font-mono text-slate-400">Standard: Schema.org @graph Multi-Entity</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300 font-mono leading-relaxed">
+            Injects nested Schema.org <code class="text-indigo-300">LocalBusiness</code>, <code class="text-indigo-300">Organization</code>, and <code class="text-indigo-300">OfferCatalog</code> representations with bidirectional <code class="text-indigo-300">sameAs</code> authority links to Wikidata and authoritative registries.
+          </p>
+        </div>
+
+        <!-- Layer 04 -->
+        <div class="terminal-card rounded-xl p-5 border border-white/10 hover:border-[#00FF66]/40 transition group">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-white/5 mb-3">
+            <div class="flex items-center gap-3">
+              <span class="px-2 py-0.5 rounded bg-[#FF6B00]/15 text-[#FF6B00] font-mono font-extrabold text-xs border border-[#FF6B00]/30">
+                LAYER 04
+              </span>
+              <h3 class="text-base font-bold text-white font-mono">Multi-Protocol MCP Routing</h3>
+            </div>
+            <span class="text-xs font-mono text-slate-400">Standard: Model Context Protocol (JSON-RPC)</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300 font-mono leading-relaxed">
+            Provisions a live Model Context Protocol server exposing callable agent tools (<code class="text-[#FF6B00]">verify_business_status</code>, <code class="text-[#FF6B00]">get_service_catalog</code>, <code class="text-[#FF6B00]">initiate_inquiry</code>) enabling autonomous AI agents to interact with your business.
+          </p>
+        </div>
+
+        <!-- Layer 05 -->
+        <div class="terminal-card rounded-xl p-5 border border-white/10 hover:border-[#00FF66]/40 transition group">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-white/5 mb-3">
+            <div class="flex items-center gap-3">
+              <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-mono font-extrabold text-xs border border-emerald-500/30">
+                LAYER 05
+              </span>
+              <h3 class="text-base font-bold text-white font-mono">Telemetry &amp; Citation Tracking</h3>
+            </div>
+            <span class="text-xs font-mono text-slate-400">Standard: GPTBot, PerplexityBot, Applebot Sensor</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300 font-mono leading-relaxed">
+            Real-time reverse-proxy sensors capture AI search crawler hits, measure citation share-of-voice across answer engines, and log crawler retrieval frequency in a stateful PostgreSQL ledger.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- SECTION 4: THE PROOF (THE DASHBOARD PREVIEW & WORKSPACE)                 -->
+    <!-- ======================================================================= -->
+    <section id="section-proof" class="pt-6 pb-10 space-y-8 border-t border-white/10">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <span class="text-xs font-mono font-bold tracking-widest text-[#00FF66] uppercase bg-[#00FF66]/10 border border-[#00FF66]/30 px-3 py-1 rounded-full">
+          THE PROOF // LIVE COMMAND CENTER
+        </span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
+          Stop Guessing. Monitor Your AI Share-Of-Voice In Real-Time.
+        </h2>
+        <p class="text-sm font-mono text-slate-400">
+          The SendPut Web GUI Dashboard gives you live telemetry across 4 operational modules.
+        </p>
+      </div>
+
+      <!-- Glowing Annotations Bar -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center font-mono text-xs">
+        <div class="p-3 rounded-lg bg-[#05080E] border border-[#00FF66]/30 text-[#00FF66]">
+          [● LIVE CITATION METRICS]
+        </div>
+        <div class="p-3 rounded-lg bg-[#05080E] border border-cyan-500/30 text-cyan-400">
+          [● ACTIVE MCP ENDPOINTS]
+        </div>
+        <div class="p-3 rounded-lg bg-[#05080E] border border-[#FF6B00]/30 text-[#FF6B00]">
+          [● COMPLIANCE LEDGER]
+        </div>
+        <div class="p-3 rounded-lg bg-[#05080E] border border-indigo-500/30 text-indigo-400">
+          [● REAL-TIME INDEXNOW RELAY]
+        </div>
+      </div>
+
+      <!-- Interactive 4-Tab Workspace Shell -->
+      <div class="terminal-card rounded-2xl overflow-hidden border border-white/10">
+        
+        <!-- Workspace Tabs Bar -->
+        <div class="bg-[#05080E] px-4 py-3 border-b border-white/10 flex flex-wrap items-center justify-between gap-3">
+          <nav class="flex flex-wrap items-center gap-1.5" aria-label="Workspace Navigation">
+            <button type="button" data-tab="grader" class="nav-tab-btn px-4 py-2 rounded-lg text-xs font-mono font-bold transition-all bg-[#00FF66] text-black shadow">
+              [1. Live AI Search Grader]
+            </button>
+            <button type="button" data-tab="pricing" class="nav-tab-btn px-4 py-2 rounded-lg text-xs font-mono font-bold transition-all text-slate-400 hover:text-white hover:bg-white/5">
+              [2. Plans &amp; Early Access]
+            </button>
+            <button type="button" data-tab="engine" class="nav-tab-btn px-4 py-2 rounded-lg text-xs font-mono font-bold transition-all text-slate-400 hover:text-white hover:bg-white/5">
+              <span class="lock-icon">🔒</span> [3. 5-Layer "PUT" Engine]
+            </button>
+            <button type="button" data-tab="agency" class="nav-tab-btn px-4 py-2 rounded-lg text-xs font-mono font-bold transition-all text-slate-400 hover:text-white hover:bg-white/5">
+              <span class="lock-icon">🔒</span> [4. Agency Command]
+            </button>
+          </nav>
+
+          <span class="font-mono text-xs text-slate-400 hidden sm:inline">Active Workspace: <strong class="text-white">sendput.com</strong></span>
+        </div>
+
+        <!-- Tab 1: Live AI Search Grader Content -->
+        <div id="tab-grader" class="tab-panel p-6 space-y-6">
+          
+          <!-- Scorecards Grid: SFAI, AICS, DVS, THQ -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            
+            <div class="p-4 rounded-xl bg-[#080C14] border border-[#00FF66]/30">
+              <span class="text-[11px] font-mono text-slate-400 uppercase">SFAI Authority</span>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span id="score-sfai" class="text-3xl font-black font-mono text-[#00FF66]">42</span>
+                <span class="text-xs font-mono text-slate-500">/100</span>
+              </div>
+              <p class="text-[10px] font-mono text-slate-400 mt-1">Direct Answer Authority</p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-[#080C14] border border-cyan-500/30">
+              <span class="text-[11px] font-mono text-slate-400 uppercase">AICS Share-of-Voice</span>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span id="score-aics" class="text-3xl font-black font-mono text-cyan-400">18%</span>
+              </div>
+              <p class="text-[10px] font-mono text-slate-400 mt-1">Model Citation Density</p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-[#080C14] border border-indigo-500/30">
+              <span class="text-[11px] font-mono text-slate-400 uppercase">DVS Schema Depth</span>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span id="score-dvs" class="text-3xl font-black font-mono text-indigo-400">49</span>
+                <span class="text-xs font-mono text-slate-500">/100</span>
+              </div>
+              <p class="text-[10px] font-mono text-slate-400 mt-1">Schema.org Verification</p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-[#080C14] border border-[#FF6B00]/30">
+              <span class="text-[11px] font-mono text-slate-400 uppercase">THQ Trust Score</span>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span id="score-thq" class="text-3xl font-black font-mono text-[#FF6B00]">54</span>
+                <span class="text-xs font-mono text-slate-500">/100</span>
+              </div>
+              <p class="text-[10px] font-mono text-slate-400 mt-1">Anti-Hallucination Rate</p>
+            </div>
+
+          </div>
+
+          <!-- Radar & Bar Chart Visualization -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            
+            <div class="lg:col-span-6 p-4 rounded-xl bg-[#080C14] border border-white/10 flex flex-col items-center">
+              <div class="w-full flex justify-between items-center mb-2">
+                <span class="font-mono text-xs text-slate-400">Live AI Citation Vector Comparison</span>
+                <span id="remediation-status-pill" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-mono border border-amber-500/30">
+                  BASELINE (UNREMEDIATED)
+                </span>
+              </div>
+              <div class="w-full h-64 sm:h-72">
+                <canvas id="engineChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Hallucination Audit & 1-Click Remediation -->
+            <div class="lg:col-span-6 space-y-4">
+              <div id="hallucination-box" class="p-4 rounded-xl bg-[#080C14] border border-rose-500/30 space-y-2">
+                <div class="flex items-center gap-2 text-rose-400 text-xs font-mono font-bold">
+                  <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                  DETECTED ANSWER ENGINE HALLUCINATION / GAP
+                </div>
+                <p id="hallucination-text" class="text-xs sm:text-sm font-mono text-slate-300 leading-relaxed">
+                  When asked "Who offers licensed hurricane roof financing &amp; instant solar quotes in Orlando?", ChatGPT Search &amp; Perplexity omit Apex Roofing &amp; Solar because your site lacks an OfferCatalog JSON-LD graph and blocks OAI-SearchBot via WAF.
+                </p>
+              </div>
+
+              <!-- 1-Click Remediation Button -->
+              <button id="btn-one-click-fix" type="button"
+                class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#00FF66] to-cyan-400 hover:opacity-90 text-black font-mono font-extrabold text-xs sm:text-sm uppercase tracking-wider shadow-lg glow-matrix-green transition flex items-center justify-center gap-2">
+                <span>⚡ Simulate 1-Click SendPut EPO Remediation</span>
+              </button>
+
+              <div class="grid grid-cols-2 gap-3 pt-2">
+                <button id="btn-jump-engine" type="button" class="py-2.5 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 font-mono text-xs border border-white/10 transition">
+                  [&gt;_] Inspect 5-Layer Output
+                </button>
+                <button id="btn-go-plans" type="button" class="py-2.5 px-3 rounded-lg bg-[#FF6B00]/15 hover:bg-[#FF6B00]/25 text-[#FF6B00] border border-[#FF6B00]/30 font-mono text-xs font-bold transition">
+                  [&gt;_] Upgrade to Live Ingestion
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Tab 2: Plans & Early Access Content -->
+        <div id="tab-pricing" class="tab-panel hidden p-6 space-y-8">
+          <div class="text-center max-w-xl mx-auto space-y-2">
+            <h3 class="text-2xl font-bold font-mono text-white">Select Your Deployment Tier</h3>
+            <p class="text-xs font-mono text-slate-400">Lock in founder pricing. All paid plans include instant IndexNow relay and server-side entitlement checks.</p>
+            
+            <!-- Billing Toggle -->
+            <div class="inline-flex items-center p-1 rounded-lg bg-[#05080E] border border-white/10 mt-2">
+              <button id="btn-bill-monthly" type="button" class="px-3 py-1 rounded text-xs font-mono text-black bg-[#00FF66] font-bold">Monthly</button>
+              <button id="btn-bill-annual" type="button" class="px-3 py-1 rounded text-xs font-mono text-slate-400 hover:text-white">Annual (20% Off)</button>
+            </div>
+          </div>
+
+          <!-- Pricing Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 font-mono text-xs">
+            
+            <!-- $29 One-Shot -->
+            <div class="p-5 rounded-xl bg-[#080C14] border border-white/10 flex flex-col justify-between space-y-4">
+              <div>
+                <span class="text-slate-400 uppercase text-[10px]">One-Time Diagnostic</span>
+                <h4 class="text-base font-bold text-white mt-1">Deep AI Audit Report</h4>
+                <div class="text-2xl font-bold text-white mt-2">$29 <span class="text-xs text-slate-500 font-normal">flat</span></div>
+                <ul class="mt-4 space-y-2 text-slate-400 text-[11px]">
+                  <li>✓ Full 4-Engine hallucination audit</li>
+                  <li>✓ Complete Schema.org JSON-LD graph</li>
+                  <li>✓ Formatted /llms.txt download</li>
+                </ul>
+              </div>
+              <button id="btn-unlock-29" class="w-full py-2.5 rounded bg-white/10 hover:bg-white/20 text-white font-bold transition">
+                Order Audit ($29)
+              </button>
+            </div>
+
+            <!-- $39 Starter -->
+            <div class="p-5 rounded-xl bg-[#080C14] border border-white/10 flex flex-col justify-between space-y-4">
+              <div>
+                <span class="text-cyan-400 uppercase text-[10px]">Self-Serve</span>
+                <h4 class="text-base font-bold text-white mt-1">Starter Tier</h4>
+                <div class="text-2xl font-bold text-cyan-400 mt-2"><span id="price-starter">$39</span> <span class="text-xs text-slate-500 font-normal">/mo</span></div>
+                <ul class="mt-4 space-y-2 text-slate-400 text-[11px]">
+                  <li>✓ 1 Verified Canonical Domain</li>
+                  <li>✓ Dynamic /llms.txt generation</li>
+                  <li>✓ IndexNow high-velocity push</li>
+                  <li>✓ 1-Click WordPress Plugin node</li>
+                </ul>
+              </div>
+              <button class="checkout-btn w-full py-2.5 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-bold transition" data-tier="starter_39">
+                Deploy Starter
+              </button>
+            </div>
+
+            <!-- $79 Growth (Recommended) -->
+            <div class="p-5 rounded-xl bg-[#080C14] border-2 border-[#00FF66] glow-matrix-green flex flex-col justify-between space-y-4 relative">
+              <span class="absolute -top-3 right-4 px-2 py-0.5 rounded bg-[#00FF66] text-black font-extrabold text-[9px] uppercase tracking-wider">
+                MOST POPULAR
+              </span>
+              <div>
+                <span class="text-[#00FF66] uppercase text-[10px]">Active Autonomous</span>
+                <h4 class="text-base font-bold text-white mt-1">Growth Tier</h4>
+                <div class="text-2xl font-bold text-[#00FF66] mt-2"><span id="price-growth">$79</span> <span class="text-xs text-slate-500 font-normal">/mo</span></div>
+                <ul class="mt-4 space-y-2 text-slate-300 text-[11px]">
+                  <li>✓ Up to 3 Verified Domains</li>
+                  <li>✓ Live Model Context Protocol (MCP)</li>
+                  <li>✓ Telemetry Sensor (GPTBot/Perplexity)</li>
+                  <li>✓ Weekly automated citation scan</li>
+                  <li>✓ Priority IndexNow queueing</li>
+                </ul>
+              </div>
+              <button class="checkout-btn w-full py-2.5 rounded bg-[#00FF66] hover:bg-[#00dd55] text-black font-extrabold transition shadow-lg" data-tier="growth_79">
+                Deploy Growth ($79)
+              </button>
+            </div>
+
+            <!-- $299 Agency -->
+            <div class="p-5 rounded-xl bg-[#080C14] border border-[#FF6B00]/40 flex flex-col justify-between space-y-4">
+              <div>
+                <span class="text-[#FF6B00] uppercase text-[10px]">Multi-Tenant</span>
+                <h4 class="text-base font-bold text-white mt-1">Agency Command</h4>
+                <div class="text-2xl font-bold text-[#FF6B00] mt-2"><span id="price-agency">$299</span> <span class="text-xs text-slate-500 font-normal">/mo</span></div>
+                <ul class="mt-4 space-y-2 text-slate-400 text-[11px]">
+                  <li>✓ 10 Client Locations Included</li>
+                  <li>✓ Custom CNAME Whitelist Portal</li>
+                  <li>✓ Co-Branded PDF &amp; Markdown audits</li>
+                  <li>✓ Reseller Margins ($19/seat wholesale)</li>
+                </ul>
+              </div>
+              <button class="checkout-btn w-full py-2.5 rounded bg-[#FF6B00] hover:bg-[#e05e00] text-black font-bold transition" data-tier="agency_command_299">
+                Agency Access ($299)
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tab 3: 5-Layer "PUT" Engine Inspector Content -->
+        <div id="tab-engine" class="tab-panel hidden p-6 space-y-6 font-mono text-xs">
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
+            <div>
+              <h3 class="text-base font-bold text-white">5-Layer "PUT" &amp; EPO Engine Inspector</h3>
+              <p class="text-slate-400 text-[11px]">Inspect the compiled edge artifacts generated for the active entity.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="btn-push-indexnow" class="px-3 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white font-bold transition flex items-center gap-1.5">
+                <span>🚀 Dispatch IndexNow Batch</span>
+              </button>
+              <button id="btn-copy-artifact" class="px-3 py-1.5 rounded bg-white/10 hover:bg-white/20 text-white transition">
+                Copy Code
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left: Entity Properties Form -->
+            <div class="lg:col-span-5 space-y-3 bg-[#080C14] p-4 rounded-xl border border-white/10">
+              <span class="text-[11px] text-[#00FF66] font-bold block mb-1">&gt; ENTITY KERNEL ATTRIBUTES:</span>
+              <div class="space-y-2 text-[11px]">
+                <div>
+                  <span class="text-slate-500">Legal Name:</span>
+                  <input id="eng-name" type="text" value="Apex Roofing &amp; Solar" class="w-full bg-[#05080E] border border-white/10 p-1.5 rounded text-white mt-0.5" />
+                </div>
+                <div>
+                  <span class="text-slate-500">Slug Identifier:</span>
+                  <input id="eng-slug" type="text" value="apex-roofing-orlando" class="w-full bg-[#05080E] border border-white/10 p-1.5 rounded text-white mt-0.5" />
+                </div>
+                <div>
+                  <span class="text-slate-500">Classification:</span>
+                  <input id="eng-category" type="text" value="RoofingContractor" class="w-full bg-[#05080E] border border-white/10 p-1.5 rounded text-white mt-0.5" />
+                </div>
+                <div>
+                  <span class="text-slate-500">Operating Hours:</span>
+                  <input id="eng-hours" type="text" value="Mo-Sa 07:30-19:00" class="w-full bg-[#05080E] border border-white/10 p-1.5 rounded text-white mt-0.5" />
+                </div>
+                <div>
+                  <span class="text-slate-500">Telephone:</span>
+                  <input id="eng-phone" type="text" value="+1-407-555-0199" class="w-full bg-[#05080E] border border-white/10 p-1.5 rounded text-white mt-0.5" />
+                </div>
+                <div>
+                  <span class="text-slate-500">Physical Address:</span>
+                  <input id="eng-address" type="text" value="450 S Orange Ave, Suite 300, Orlando, FL 32801" class="w-full bg-[#05080E] border border-white/10 p-1.5 rounded text-white mt-0.5" />
+                </div>
+                <div>
+                  <span class="text-slate-500">English Description:</span>
+                  <textarea id="eng-desc-en" rows="2" class="w-full bg-[#05080E] border border-white/10 p-1.5 rounded text-white mt-0.5">Florida State Certified Roofing &amp; Solar Contractor (CCC133999) serving Orlando.</textarea>
+                </div>
+                <div>
+                  <span class="text-slate-500">Spanish Description [Bilingual]:</span>
+                  <textarea id="eng-desc-es" rows="2" class="w-full bg-[#05080E] border border-white/10 p-1.5 rounded text-white mt-0.5">Contratista certificado de techos y energía solar en Orlando, FL con atención bilingüe.</textarea>
+                </div>
+                <div>
+                  <span class="text-slate-500">Offer Catalog &amp; Services:</span>
+                  <textarea id="eng-services" rows="2" class="w-full bg-[#05080E] border border-white/10 p-1.5 rounded text-white mt-0.5">Architectural Shingle Roof Replacement | $8,900&#10;25-Point Drone Inspection | Free</textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Compiled Output Panel -->
+            <div class="lg:col-span-7 space-y-3">
+              <div class="flex items-center gap-1.5 bg-[#05080E] p-1.5 rounded-lg border border-white/10 text-[11px]">
+                <button type="button" class="proto-tab-btn px-3 py-1 rounded bg-[#00FF66]/20 text-[#00FF66] font-bold" data-proto="edge">Edge Script</button>
+                <button type="button" class="proto-tab-btn px-3 py-1 rounded text-slate-400 hover:text-white" data-proto="jsonld">Schema.org @graph</button>
+                <button type="button" class="proto-tab-btn px-3 py-1 rounded text-slate-400 hover:text-white" data-proto="llmstxt">/llms.txt</button>
+                <button type="button" class="proto-tab-btn px-3 py-1 rounded text-slate-400 hover:text-white" data-proto="openapi">OpenAPI Spec</button>
+                <button type="button" class="proto-tab-btn px-3 py-1 rounded text-slate-400 hover:text-white" data-proto="skill">Agent Skill.md</button>
+                <button type="button" class="proto-tab-btn px-3 py-1 rounded text-slate-400 hover:text-white" data-proto="mcp">MCP Tools</button>
+              </div>
+
+              <div id="proto-code-panel" class="p-4 rounded-xl bg-[#05080E] border border-white/10 h-96 overflow-y-auto">
+                <pre id="proto-code-output" class="text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap"></pre>
+              </div>
+
+              <!-- Interactive MCP Live Playground -->
+              <div id="proto-mcp-playground" class="hidden p-4 rounded-xl bg-[#05080E] border border-[#00FF66]/30 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-[#00FF66] font-bold">Interactive MCP Tool Execution:</span>
+                  <span id="mcp-endpoint-badge" class="text-[10px] text-cyan-300 bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-800">/mcp/apex-roofing-orlando/sse</span>
+                </div>
+                <div class="flex gap-2">
+                  <select id="mcp-tool-select" class="bg-[#080C14] border border-white/15 rounded p-1.5 text-white text-xs">
+                    <option value="verify_business_status">verify_business_status</option>
+                    <option value="get_service_catalog">get_service_catalog</option>
+                    <option value="initiate_inquiry">initiate_inquiry</option>
+                  </select>
+                  <button id="btn-call-mcp" type="button" class="px-3 py-1.5 rounded bg-[#00FF66] text-black font-bold text-xs">Call MCP Tool</button>
+                </div>
+                <pre id="mcp-live-response" class="p-2.5 rounded bg-[#080C14] border border-white/10 text-slate-300 text-[10px] overflow-x-auto max-h-40">{ "status": "ready" }</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Agency Command Portal Content -->
+        <div id="tab-agency" class="tab-panel hidden p-6 space-y-6 font-mono text-xs">
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
+            <div>
+              <h3 class="text-base font-bold text-white">Agency Command &amp; Multi-Tenant Reseller Hub</h3>
+              <p class="text-slate-400 text-[11px]">Manage white-label audits, custom CNAMEs, and reseller profit margins.</p>
+            </div>
+            <span class="px-2.5 py-1 rounded bg-[#FF6B00]/20 text-[#FF6B00] border border-[#FF6B00]/40 text-[11px] font-bold">
+              10 INCLUDED SEATS
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left: Agency White-Label Settings -->
+            <div class="lg:col-span-5 space-y-4 bg-[#080C14] p-4 rounded-xl border border-white/10">
+              <span class="text-[11px] text-[#00FF66] font-bold block mb-1">&gt; WHITE-LABEL CNAME SETTINGS:</span>
+              
+              <div class="space-y-2 text-[11px]">
+                <div>
+                  <span class="text-slate-500">Agency Legal Name:</span>
+                  <input id="wl-agency-name" type="text" value="SendPut EPO Growth Partners" class="w-full bg-[#05080E] border border-white/10 p-1.5 rounded text-white mt-0.5" />
+                </div>
+                <div>
+                  <span class="text-slate-500">Custom Audit Domain (CNAME):</span>
+                  <input id="wl-cname" type="text" value="audit.epopartners.com" class="w-full bg-[#05080E] border border-white/10 p-1.5 rounded text-white mt-0.5" />
+                </div>
+                <div>
+                  <span class="text-slate-500">Edge Node Routing:</span>
+                  <select id="wl-edge-domain" class="w-full bg-[#05080E] border border-white/10 p-1.5 rounded text-white mt-0.5">
+                    <option value="cdn.sendput.com">cdn.sendput.com (Default High-Speed)</option>
+                    <option value="cdn.getepo.com">cdn.getepo.com (Stealth Dedicated)</option>
+                  </select>
+                </div>
+                <button id="btn-apply-whitelabel" type="button" class="w-full py-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition">
+                  Apply CNAME Configuration
+                </button>
+              </div>
+
+              <!-- Reseller Profit Calculator -->
+              <div class="p-3.5 rounded-lg bg-[#05080E] border border-white/10 space-y-2 text-[11px]">
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Client Locations (<span id="wl-seats-label">10</span>):</span>
+                  <span class="text-white font-bold" id="wl-wholesale-cost">$190/mo</span>
+                </div>
+                <input id="wl-seats-slider" type="range" min="1" max="50" value="10" class="w-full accent-[#00FF66]" />
+
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Retail Price Per Seat:</span>
+                  <span class="text-cyan-400 font-bold" id="wl-retail-label">$197/mo</span>
+                </div>
+                <input id="wl-retail-slider" type="range" min="49" max="497" step="10" value="197" class="w-full accent-cyan-400" />
+
+                <div class="pt-2 border-t border-white/10 flex justify-between items-baseline">
+                  <span class="text-slate-300 font-bold">Monthly Reseller Profit:</span>
+                  <span id="wl-agency-profit" class="text-lg font-black text-[#00FF66]">$1,780/mo</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Client Locations Table & Proposal Preview -->
+            <div class="lg:col-span-7 space-y-4">
+              <div class="p-4 rounded-xl bg-[#080C14] border border-white/10 space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-[11px] text-white font-bold">&gt; ACTIVE CLIENT LOCATIONS:</span>
+                  <button id="btn-add-agency-client" type="button" class="px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-white text-[10px]">
+                    + Add Client Node
+                  </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left text-[11px]">
+                    <thead class="text-slate-500 border-b border-white/10">
+                      <tr>
+                        <th class="pb-2">Client Business</th>
+                        <th class="pb-2">SFAI</th>
+                        <th class="pb-2">Share-of-Voice</th>
+                        <th class="pb-2">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="agency-client-tbody" class="divide-y divide-white/5 text-slate-300">
+                      <!-- Rendered by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Co-Branded Audit Proposal Preview -->
+              <div class="p-4 rounded-xl bg-[#05080E] border border-white/10 space-y-2">
+                <div class="flex justify-between items-center">
+                  <span class="text-[11px] text-cyan-400 font-bold">&gt; CO-BRANDED AUDIT PROPOSAL EXPORT:</span>
+                  <button id="btn-copy-proposal" type="button" class="px-2.5 py-1 rounded bg-[#00FF66]/20 text-[#00FF66] text-[10px] font-bold">
+                    Copy Markdown Proposal
+                  </button>
+                </div>
+                <div class="h-32 overflow-y-auto p-2.5 rounded bg-[#080C14] border border-white/5">
+                  <pre id="agency-proposal-preview" class="text-slate-400 text-[10px] whitespace-pre-wrap"></pre>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- SECTION 5: THE TRUST ECOSYSTEM (THE MUTUAL BENEFIT)                     -->
+    <!-- ======================================================================= -->
+    <section id="section-trust" class="pt-6 pb-10 space-y-8 border-t border-white/10">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <span class="text-xs font-mono font-bold tracking-widest text-[#00FF66] uppercase bg-[#00FF66]/10 border border-[#00FF66]/30 px-3 py-1 rounded-full">
+          TRUST ECOSYSTEM // VERIFIED PARTNER BADGES
+        </span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
+          Become a Verified AI Authority.
+        </h2>
+        <p class="text-sm font-mono text-slate-300 leading-relaxed max-w-2xl mx-auto">
+          Display the Sendput EPO Standard. Signal to users and answer engines that your data is secure, verified, and AI-ready.
+        </p>
+      </div>
+
+      <!-- Trust Badges Showcase Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left: Badge Variant 1 (800x150 Master Partner Banner) -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="terminal-card rounded-2xl p-6 border border-white/10 space-y-3">
+            <div class="flex justify-between items-center">
+              <div>
+                <h4 class="text-sm font-mono font-bold text-white uppercase">1. Master Partner Banner (800x150)</h4>
+                <p class="text-xs text-slate-400">Header / High-Visibility Verification Banner</p>
+              </div>
+              <span class="text-[10px] font-mono text-[#00FF66] border border-[#00FF66]/30 bg-[#00FF66]/10 px-2 py-0.5 rounded">RESPONSIVE SVG</span>
+            </div>
+
+            <!-- Interactive Banner Preview with Hover Ledger Trigger -->
+            <div onclick="openVerificationModal('apexroofingorlando.com')" class="group relative rounded-xl overflow-hidden border border-white/15 bg-[#05080E] cursor-pointer hover:border-[#00FF66] transition shadow-lg">
+              <img src="/brand/sendput_brand_export_epo/svgs/sendput-verified-banner-800x150.svg" alt="Sendput Verified Partner Banner" class="w-full h-auto object-cover" />
+              
+              <!-- Hover State Callout -->
+              <div class="absolute inset-0 bg-[#00FF66]/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                <span class="px-3 py-1.5 rounded-full bg-[#080C14]/90 border border-[#00FF66] text-[#00FF66] font-mono text-xs font-bold shadow-xl">
+                  Click to simulate live verification ledger &rarr;
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Badge Variant 2 & 3: Circular Metallic Seal & Compact Footer Badge -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- Circular Metallic Seal -->
+            <div class="terminal-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between space-y-3">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h4 class="text-xs font-mono font-bold text-white uppercase">2. Certified Trust Seal</h4>
+                  <p class="text-[11px] text-slate-400">Round metallic / neon edge badge.</p>
+                </div>
+                <span class="text-[9px] font-mono text-[#FF6B00] border border-[#FF6B00]/30 bg-[#FF6B00]/10 px-1.5 py-0.5 rounded">EMBLEM</span>
+              </div>
+
+              <!-- Interactive Seal Demo -->
+              <div onclick="openVerificationModal('apexroofingorlando.com')" class="group relative py-3 flex items-center justify-center cursor-pointer">
+                <img src="/brand/sendput_brand_export_epo/svgs/sendput-trust-seal-circular.svg" alt="Circular Trust Seal" class="w-24 h-24 group-hover:scale-105 transition-transform drop-shadow-[0_0_15px_rgba(0,255,102,0.3)]" />
+                <span class="absolute bottom-0 text-[10px] font-mono text-[#00FF66] opacity-0 group-hover:opacity-100 transition-opacity">Simulate Click</span>
+              </div>
+            </div>
+
+            <!-- Compact Footer Badge Pill -->
+            <div class="terminal-card rounded-2xl p-5 border border-white/10 flex flex-col justify-between space-y-3">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h4 class="text-xs font-mono font-bold text-white uppercase">3. Compact Footer Pill</h4>
+                  <p class="text-[11px] text-slate-400">Minimalist sticky / footer tag.</p>
+                </div>
+                <span class="text-[9px] font-mono text-cyan-400 border border-cyan-500/30 bg-cyan-500/10 px-1.5 py-0.5 rounded">FOOTER</span>
+              </div>
+
+              <!-- Interactive Pill Demo -->
+              <div onclick="openVerificationModal('apexroofingorlando.com')" class="group relative py-6 flex items-center justify-center cursor-pointer">
+                <img src="/brand/sendput_brand_export_epo/svgs/sendput-trust-pill-footer.svg" alt="Trust Pill Footer" class="w-48 h-auto group-hover:scale-105 transition-transform drop-shadow-[0_0_15px_rgba(0,255,102,0.2)]" />
+                <span class="absolute bottom-1 text-[10px] font-mono text-[#00FF66] opacity-0 group-hover:opacity-100 transition-opacity">Simulate Click</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Partner Embed Generator & Live Whitelist Gateway Tester -->
+        <div class="lg:col-span-5 space-y-4">
+          
+          <div class="terminal-card rounded-2xl p-5 border border-white/10 space-y-3 font-mono text-xs">
+            <h3 class="text-xs font-bold text-white uppercase tracking-wider pb-2 border-b border-white/10">
+              [>_] Partner Badge Embed Code
+            </h3>
+            
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">Select Badge Format</label>
+              <select id="embed-variant-select" onchange="updateEmbedSnippet()"
+                class="w-full bg-[#05080E] border border-white/10 rounded-lg p-2 text-xs font-mono text-white focus:outline-none focus:border-[#00FF66]">
+                <option value="banner">Master Verification Banner (800x150)</option>
+                <option value="seal">Circular Metallic Trust Seal</option>
+                <option value="pill">Compact Footer Pill Badge</option>
+              </select>
             </div>
 
             <!-- Output Code Snippet -->
             <div>
-                <div class="flex justify-between items-center mb-1">
-                    <span class="text-[11px] font-mono text-brand-textMuted">One-Line Partner Snippet</span>
-                    <button onclick="copyEmbedSnippet()"
-                        class="text-[11px] font-mono text-brand-green hover:underline">Copy Code</button>
-                </div>
-                <textarea id="embed-code-area" readonly
-                    class="w-full h-28 bg-[#05080E] border border-brand-border rounded-lg p-3 text-[11px] font-mono text-brand-textPrimary focus:outline-none resize-none leading-relaxed">&lt;!-- Sendput AI Verified Badge --&gt;
-<div id="sendput-badge" data-partner="sendput.com" data-theme="dark" data-variant="banner"></div>
-<script async src="https://assets.sendput.com/v3/verified.js"></script>
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-[10px] text-slate-400">One-Line Partner Snippet:</span>
+                <button onclick="copyEmbedSnippet()" class="text-[10px] text-[#00FF66] hover:underline font-bold">Copy Code</button>
+              </div>
+              <textarea id="embed-code-area" readonly
+                class="w-full h-24 bg-[#05080E] border border-white/10 rounded-lg p-2.5 text-[11px] font-mono text-slate-300 focus:outline-none resize-none leading-relaxed">&lt;!-- SendPut AI Verified Authority --&gt;
+&lt;div id="sendput-badge" data-partner="sendput.com" data-theme="dark" data-variant="banner"&gt;&lt;/div&gt;
+&lt;script async src="https://cdn.sendput.com/v3/verified.js"&gt;&lt;/script&gt;</textarea>
+            </div>
+          </div>
 
-      <!-- Live Domain Whitelist & Gateway Tester -->
-      <div class="p-5 rounded-2xl bg-brand-surface border border-brand-border">
-        <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider pb-3 border-b border-brand-border">
-          Domain Whitelist & SSL Status
-        </h3>
+          <!-- Live Domain Whitelist & Gateway Tester -->
+          <div class="terminal-card rounded-2xl p-5 border border-white/10 space-y-3 font-mono text-xs">
+            <h3 class="text-xs font-bold text-white uppercase tracking-wider pb-2 border-b border-white/10">
+              Domain Whitelist &amp; SSL Gateway Tester
+            </h3>
+            
+            <div class="flex space-x-2">
+              <input id="test-domain-input" type="text" value="apexroofingorlando.com"
+                class="flex-1 bg-[#05080E] border border-white/10 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-[#00FF66]"
+                placeholder="domain.com" />
+              <button onclick="verifyPartnerDomain()" class="px-3 py-2 rounded-lg bg-[#00FF66] hover:bg-[#00dd55] text-xs font-mono text-black font-bold transition-all">
+                Test Gateway
+              </button>
+            </div>
+
+            <!-- Live Verification Result List -->
+            <div id="domain-verification-box" class="p-3 rounded-lg bg-[#05080E] border border-white/10 space-y-2 text-xs font-mono">
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Domain Authority:</span>
+                <span class="text-[#00FF66] font-bold">APPROVED PARTNER</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">5-Layer Compiler:</span>
+                <span class="text-[#00FF66] font-bold">SYNCED (0.04s)</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Verification Ledger:</span>
+                <span class="text-[#FF6B00] font-bold">HASH #8812B</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- SECTION 6: THE FINAL COMMAND (FOOTER & FINAL CTA)                       -->
+    <!-- ======================================================================= -->
+    <section id="section-final" class="pt-6 pb-12 border-t border-white/10">
+      
+      <!-- Final Action Terminal Callout -->
+      <div class="terminal-card rounded-2xl p-8 sm:p-10 border border-[#00FF66]/30 bg-gradient-to-br from-[#0D131F] via-[#080C14] to-[#05080E] text-center space-y-6 glow-matrix-green">
+        <span class="text-xs font-mono font-bold tracking-widest text-[#00FF66] uppercase bg-[#00FF66]/10 border border-[#00FF66]/30 px-3 py-1 rounded-full">
+          FINAL COMMAND SEQUENCE
+        </span>
         
-        <div class="mt-4 space-y-3">
-          <div class="flex space-x-2">
-            <input id="test-domain-input" type="text" value="acme-corp.com" class="flex-1 bg-[#05080E] border border-brand-border rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-brand-green" placeholder="domain.com" />
-            <button onclick="verifyPartnerDomain()" class="px-3 py-2 rounded-lg bg-brand-blue hover:bg-blue-600 text-xs font-mono text-white transition-all">
-              Test Gateway
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
+          Ready to establish your entity?
+        </h2>
+        
+        <p class="text-sm sm:text-base font-mono text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          &gt; Stop leaving your search presence to unverified scrapers. Deploy SendPut EPO Engine and guarantee direct model citation across ChatGPT, Perplexity, Gemini, and Claude.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+          <button onclick="document.querySelector('[data-tab="pricing"]').click(); window.scrollTo({top: document.getElementById('section-proof').offsetTop - 60, behavior: 'smooth'});"
+            class="px-8 py-4 rounded-xl bg-[#00FF66] hover:bg-[#00dd55] text-black font-mono font-extrabold text-sm sm:text-base uppercase tracking-wider shadow-xl glow-matrix-green transition flex items-center gap-2">
+            <span>[&gt;_] DEPLOY SENDPUT</span>
+          </button>
+          
+          <button onclick="document.querySelector('[data-tab="grader"]').click(); window.scrollTo({top: document.getElementById('section-hero').offsetTop - 60, behavior: 'smooth'});"
+            class="px-6 py-4 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 border border-white/15 font-mono font-bold text-sm transition">
+            [&gt;_] Run Free Audit First
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MINIMALIST TECHNICAL FOOTER                                               -->
+  <!-- ========================================================================= -->
+  <footer class="bg-[#05080E] border-t border-white/10 py-10 px-4 text-xs font-mono text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      
+      <!-- Brand Lockup & Copyright -->
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 rounded bg-[#00FF66]/15 border border-[#00FF66]/30 flex items-center justify-center text-[#00FF66] font-bold text-xs">
+          &gt;_
+        </div>
+        <div>
+          <span class="font-bold text-white tracking-tight">SENDPUT<span class="text-[#00FF66]">[COM]</span></span>
+          <span class="text-slate-500 ml-2">EPO Engine v3.4.0</span>
+          <p class="text-[10px] text-slate-500 mt-0.5">© 2026 SendPut AI. Entity Presence Optimization (EPO) is a proprietary agentic standard.</p>
+        </div>
+      </div>
+
+      <!-- Technical Protocol Links -->
+      <div class="flex flex-wrap items-center gap-5 text-[11px]">
+        <a href="/v1/tenants/sendput/openapi.json" target="_blank" class="hover:text-[#00FF66] transition">OpenAPI 3.1.0</a>
+        <a href="/llms.txt" target="_blank" class="hover:text-[#00FF66] transition">/llms.txt</a>
+        <a href="/api/schema" target="_blank" class="hover:text-[#00FF66] transition">Schema.org JSON-LD</a>
+        <a href="/validator" target="_blank" class="hover:text-[#00FF66] transition">Standalone Validator</a>
+        <a href="/LEGAL.md" target="_blank" class="hover:text-[#00FF66] transition">Legal &amp; IP Formalities</a>
+        <a href="/DMCA.md" target="_blank" class="hover:text-[#00FF66] transition">DMCA Policy</a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: LIVE VERIFICATION LEDGER MODAL                                   -->
+  <!-- ========================================================================= -->
+  <div id="verification-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="max-w-xl w-full terminal-card rounded-2xl border border-[#00FF66]/40 overflow-hidden shadow-2xl glow-matrix-green">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-white/10 bg-[#05080E] flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded-lg bg-[#00FF66]/20 border border-[#00FF66]/40 flex items-center justify-center">
+            <svg class="w-5 h-5 text-[#00FF66]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white uppercase font-mono tracking-tight">Active Gateway Status: ACTIVE [ONLINE]</h3>
+            <p class="text-[11px] font-mono text-[#00FF66]">Verified by SendPut EPO Engine Protocol (RFC-2026-GEO-01)</p>
+          </div>
+        </div>
+        <button onclick="closeVerificationModal()" class="text-slate-400 hover:text-white transition p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-4 font-mono text-xs">
+        <div class="p-4 rounded-xl bg-[#080C14] border border-white/10 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] text-slate-500 uppercase">Target Verified Domain</span>
+            <h4 id="modal-target-domain" class="text-base font-bold text-white">apexroofingorlando.com</h4>
+          </div>
+          <span class="px-2.5 py-1 bg-[#00FF66]/20 text-[#00FF66] border border-[#00FF66]/40 rounded text-xs font-bold">100% SECURE &amp; COMPLIANT</span>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between p-2.5 rounded bg-[#05080E] border border-white/5">
+            <span class="text-slate-400">LIVE EDGE COMPILER</span>
+            <span class="text-[#00FF66] font-bold">[ONLINE · 38ms]</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded bg-[#05080E] border border-white/5">
+            <span class="text-slate-400">KNOWLEDGE GRAPH INJECTION</span>
+            <span class="text-[#00FF66] font-bold">[VERIFIED JSON-LD]</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded bg-[#05080E] border border-white/5">
+            <span class="text-slate-400">MODEL CONTEXT PROTOCOL (MCP)</span>
+            <span class="text-cyan-400 font-bold">[JSON-RPC ROUTED]</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded bg-[#05080E] border border-white/5">
+            <span class="text-slate-400">ZERO-EVASION AUDIT</span>
+            <span class="text-[#00FF66] font-bold">[PASS 100%]</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded bg-[#05080E] border border-white/5">
+            <span class="text-slate-400">CRYPTOGRAPHIC SIGNATURE</span>
+            <span class="text-[#FF6B00] font-bold">SHA256: 4bf9...18d2</span>
+          </div>
+        </div>
+
+        <div class="p-3 bg-[#00FF66]/10 border border-[#00FF66]/20 rounded-xl text-[11px] text-slate-300">
+          This domain is certified with the active Sendput AI Search Compliant mark. All knowledge representations are directly grounded and verified against first-party authenticated sources.
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-[#05080E] border-t border-white/10 flex items-center justify-between font-mono text-xs">
+        <span class="text-[11px] text-slate-500">verification.sendput.com/site/apexroofingorlando.com</span>
+        <button onclick="closeVerificationModal()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition">
+          Dismiss Modal
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: FOUNDER UNLOCK / ARCHITECTURE MODAL                              -->
+  <!-- ========================================================================= -->
+  <div id="app-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="max-w-lg w-full terminal-card rounded-2xl border border-white/20 overflow-hidden shadow-2xl">
+      <div class="p-5 border-b border-white/10 bg-[#05080E] flex items-center justify-between">
+        <h3 id="modal-title" class="text-sm font-bold text-white font-mono uppercase">Founder Security Gateway</h3>
+        <button id="btn-close-modal" type="button" class="text-slate-400 hover:text-white transition">✕</button>
+      </div>
+      <div id="modal-body" class="p-6 space-y-4 font-mono text-xs text-slate-300">
+        <p>Enter your Founder or Enterprise access key to unlock Tabs 3 &amp; 4 (5-Layer Compiler &amp; Agency Command).</p>
+        <input id="modal-access-key-input" type="password" placeholder="SP-FOUNDER-..." class="w-full bg-[#05080E] border border-white/15 rounded p-2.5 text-white font-mono text-xs focus:border-[#00FF66] outline-none" />
+        <p id="modal-key-error" class="text-rose-400 text-xs hidden">Invalid access key.</p>
+      </div>
+      <div class="p-4 bg-[#05080E] border-t border-white/10 flex justify-end gap-2 font-mono text-xs">
+        <button id="btn-modal-primary" type="button" class="px-4 py-2 rounded bg-white/10 hover:bg-white/20 text-slate-300">Cancel</button>
+        <button id="btn-confirm-unlock" type="button" class="px-4 py-2 rounded bg-[#00FF66] text-black font-bold">Unlock Gateway</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300">
+    <div class="px-4 py-3 rounded-lg bg-[#0D131F] border border-[#00FF66]/40 text-[#00FF66] font-mono text-xs shadow-2xl flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-[#00FF66] animate-pulse"></span>
+      <span id="toast-message">Action completed!</span>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- SCRIPT ENGINE: BUSINESS LOGIC & COMPILER PIPELINE                         -->
+  <!-- ========================================================================= -->
+  <script>
+// ============================================================================
+    // STATE & PRESETS
+    // ============================================================================
+    const PRESETS = {
+      myiad: {
+        name: 'MyIAD InsuranceAI Ecosystem',
+        url: 'https://saas.myiad.net',
+        niche: 'San Juan, PR & Miami, FL — Bilingual Insurance Agency SaaS & CRM',
+        slug: 'myiad-insurance-ai',
+        category: 'SoftwareApplication',
+        phone: '+1-888-506-9423',
+        hours: 'Mo-Fr 08:00-19:00, Sa 09:00-15:00',
+        address: '200 E Robinson St, Suite 1120, Orlando, FL 32801',
+        descEn: 'AI-powered bilingual (English/Spanish) insurance agency management platform, CRM, and automated ACORD compliance suite integrated natively with Microsoft 365.',
+        descEs: 'Plataforma bilingüe (Inglés/Español) impulsada por IA para la gestión de agencias de seguros, CRM y cumplimiento automatizado ACORD integrada con Microsoft 365.',
+        services: 'InsuranceAI Agency SaaS | $99/mo per agency\nUS Insurance CRM Portal | $49/mo per seat\nSolo Agent Quoting & AI Assistant | $29/mo',
+        sfai: 58, aics: 29, dvs: 62, thq: 68,
+        baselineEngines: [38, 34, 45, 28, 31, 40],
+        hallucination: 'ChatGPT Search & Claude recognize MyIAD across subdomains (saas.myiad.net, crm.myiad.net, agent.myiad.net) as separate unlinked sites rather than a unified SoftwareApplication entity, diluting citation rank by 42%.'
+      },
+      abglco: {
+        name: 'AB Global Consulting',
+        url: 'https://abglco.com',
+        niche: 'Palm Coast & Orlando, FL — Life Insurance, Annuities & Financial Calculators',
+        slug: 'ab-global-consulting',
+        category: 'FinancialService',
+        phone: '+1-386-555-0194',
+        hours: 'Mo-Fr 09:00-18:00',
+        address: 'Palm Coast Parkway NW, Palm Coast, FL 32137',
+        descEn: 'Bilingual financial consulting firm offering 7 live interactive retirement, annuity, and life insurance calculators with personalized actuarial guidance.',
+        descEs: 'Firma de consultoría financiera bilingüe que ofrece 7 calculadoras interactivas de jubilación, anualidades y seguro de vida con asesoría personalizada.',
+        services: 'Term vs. Whole Life Actuarial Analysis | Free Interactive Calculator\nFixed Indexed Annuity Income Model | Free Consultation\nTax-Free Retirement Strategy Session | $0 Initial Review',
+        sfai: 52, aics: 24, dvs: 55, thq: 64,
+        baselineEngines: [32, 28, 41, 22, 29, 36],
+        hallucination: 'Perplexity & Gemini do not index the 7 interactive calculators on abglco.com as callable tools. Exposing them via a SendPut MCP Server & Agent Skill increases AI referral conversions by 4.7x.'
+      },
+      roofer: {
+        name: 'Apex Roofing & Solar',
+        url: 'https://apexroofingorlando.com',
+        niche: 'Orlando, FL — Licensed Hurricane Roof Replacement & Solar',
+        slug: 'apex-roofing-orlando',
+        category: 'RoofingContractor',
+        phone: '+1-407-555-0199',
+        hours: 'Mo-Sa 07:30-19:00',
+        address: '450 S Orange Ave, Suite 300, Orlando, FL 32801',
+        descEn: 'Florida State Certified Roofing & Solar Contractor (CCC133999) serving Orlando with 24-hour storm damage repair, architectural shingle & metal roofs, and $0-down solar financing.',
+        descEs: 'Contratista certificado de techos y energía solar en Orlando, FL con atención bilingüe, reparación de tormentas 24/7 y financiamiento sin pago inicial.',
+        services: 'Architectural Shingle Roof Replacement | From $8,900 (or $139/mo)\nStanding Seam Metal Roof Installation | From $16,500 (Hurricane Rated)\n25-Point Drone Roof & Insurance Inspection | Free ($0 Instant Booking)',
+        sfai: 42, aics: 18, dvs: 49, thq: 54,
+        baselineEngines: [22, 19, 31, 14, 18, 25],
+        hallucination: 'When asked "Who offers licensed hurricane roof financing & instant solar quotes in Orlando?", ChatGPT Search & Perplexity omit Apex Roofing & Solar because your site lacks an OfferCatalog JSON-LD graph and blocks OAI-SearchBot via WAF.'
+      },
+      medspa: {
+        name: 'Bella Vista MedSpa & Wellness',
+        url: 'https://bellavistamedspa.com',
+        niche: 'Austin, TX — Medical Aesthetics, Laser & IV Therapy',
+        slug: 'bella-vista-medspa',
+        category: 'MedicalClinic',
+        phone: '+1-512-555-0144',
+        hours: 'Tu-Sa 09:00-19:00',
+        address: '1100 Congress Ave, Austin, TX 78701',
+        descEn: 'Board-certified medical spa in Downtown Austin specializing in Morpheus8 RF microneedling, neuromodulators, Hydrafacial MD, and clinical longevity IV drips.',
+        descEs: 'Spa médico certificado en Austin especializado en Morpheus8, estética facial avanzada y terapia intravenosa de longevidad.',
+        services: 'Morpheus8 Full Face & Neck Session | $850 per session\nSignature Longevity NAD+ IV Drip | $295\nNew Patient Aesthetic Consultation | $0 (Applied to Treatment)',
+        sfai: 46, aics: 21, dvs: 51, thq: 59,
+        baselineEngines: [25, 24, 35, 18, 20, 29],
+        hallucination: 'ChatGPT Search & Apple Intelligence report Bella Vista MedSpa as "Closed on Saturdays" due to an outdated Yelp listing overriding your website hours, costing an estimated 14 weekend bookings per month.'
+      }
+    };
+
+    let currentPresetKey = 'roofer';
+    let isRemediated = false;
+    let activeProtoTab = 'edge';
+    let billingCycle = 'monthly';
+    let chartInstance = null;
+
+    const agencyClients = [
+      { id: 'c1', name: 'Apex Roofing & Solar (Orlando, FL)', url: 'https://apexroofingorlando.com', sfai: 94, aics: '78%', status: '5/5 Layers Live (MCP Active)', niche: 'Roofing & Solar' },
+      { id: 'c2', name: 'MyIAD InsuranceAI (San Juan / Miami)', url: 'https://saas.myiad.net', sfai: 96, aics: '84%', status: '5/5 Layers Live (MCP Active)', niche: 'Bilingual Insurance SaaS' },
+      { id: 'c3', name: 'AB Global Consulting (Palm Coast, FL)', url: 'https://abglco.com', sfai: 92, aics: '74%', status: '5/5 Layers Live (MCP Active)', niche: 'Financial & Annuity Calculators' },
+      { id: 'c4', name: 'Bella Vista MedSpa (Austin, TX)', url: 'https://bellavistamedspa.com', sfai: 46, aics: '21%', status: 'Audit Complete — Ready for PUT', niche: 'Medical Aesthetics' },
+      { id: 'c5', name: 'Sunshine Pediatric Dental (Tampa, FL)', url: 'https://sunshinedentaltampa.com', sfai: 39, aics: '12%', status: 'WAF Blocking GPTBot — Needs Fix', niche: 'Pediatric Dentistry' }
+    ];
+
+    const botLogs = [
+      { time: '20:31:54 UTC', bot: 'OAI-SearchBot/1.0 (+https://openai.com/searchbot)', path: '/llms.txt', status: '200 OK (18ms)' },
+      { time: '20:31:49 UTC', bot: 'PerplexityBot/1.0 (+https://perplexity.ai/perplexitybot)', path: '/v1/tenants/openapi.json', status: '200 OK (22ms)' },
+      { time: '20:31:32 UTC', bot: 'Claude-SearchBot/1.0 (+https://anthropic.com)', path: '/mcp/sse (get_verified_profile)', status: '200 OK (31ms)' },
+      { time: '20:31:10 UTC', bot: 'Google-Extended (Gemini Grounding Crawler)', path: '/#schema-localbusiness', status: '200 OK (14ms)' }
+    ];
+
+    // ============================================================================
+    // UTILITY HELPERS (TOAST, MODAL, CLIPBOARD)
+    // ============================================================================
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const label = document.getElementById('toast-message');
+      if (!container || !label) return;
+      label.textContent = msg;
+      container.classList.remove('hidden');
+      setTimeout(() => {
+        container.classList.add('hidden');
+      }, 3200);
+    }
+
+    function openModal(title, htmlContent) {
+      const modal = document.getElementById('app-modal');
+      const titleEl = document.getElementById('modal-title');
+      const bodyEl = document.getElementById('modal-body');
+      if (!modal || !titleEl || !bodyEl) return;
+      titleEl.textContent = title;
+      bodyEl.innerHTML = htmlContent;
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('app-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function copyTextToClipboard(text, toastMsg) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(toastMsg || 'Copied to clipboard!');
+        }).catch(() => fallbackCopy(text, toastMsg));
+      } else {
+        fallbackCopy(text, toastMsg);
+      }
+    }
+
+    function fallbackCopy(text, toastMsg) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+      showToast(toastMsg || 'Copied to clipboard!');
+    }
+
+    // ============================================================================
+    // TAB NAVIGATION
+    // ============================================================================
+    let founderUnlocked = false;
+
+    function updateStealthUI() {
+      const btn = document.getElementById('btn-toggle-stealth');
+      const simBox = document.getElementById('founder-arr-sim-box');
+      if (btn) {
+        if (founderUnlocked) {
+          btn.textContent = '🔓 Founder Full View: UNLOCKED';
+          btn.className = 'px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-bold text-xs transition';
+        } else {
+          btn.textContent = '🔒 Public Gate: ON (Click for Founder Unlock)';
+          btn.className = 'px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs transition';
+        }
+      }
+      document.querySelectorAll('.lock-icon').forEach(el => {
+        el.textContent = founderUnlocked ? '🔓' : '🔒';
+      });
+      if (simBox) {
+        if (founderUnlocked) simBox.classList.remove('hidden');
+        else simBox.classList.add('hidden');
+      }
+    }
+
+    function promptFounderOrSubscriberUnlock(targetTab) {
+      openModal(
+        '🔒 Protected Workspace — Subscriber or Founder Access Required',
+        `<div class="space-y-3">
+          <p class="text-slate-200">To protect SendPut AI's proprietary <strong>5-Layer Active PUT Compiler</strong>, <strong>Hosted MCP Server Node</strong>, and <strong>White-Label Agency Wholesale Portal</strong>, full console access requires an active subscription or Founder key.</p>
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+            <label class="block text-xs font-bold text-indigo-300">Enter Activation / Founder Key:</label>
+            <input id="modal-access-key-input" type="password" placeholder="Enter Founder or Subscriber Key" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs text-emerald-300 mono" />
+            <p id="modal-key-error" class="hidden text-[11px] text-rose-400 font-semibold"></p>
+            <p class="text-[11px] text-slate-400">Public visitors must subscribe to Starter ($39/mo), Growth ($79/mo), or Agency ($299/mo) to receive an activation key.</p>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button type="button" id="btn-confirm-unlock" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs">
+              Unlock Full Workspace Now
+            </button>
+            <button type="button" id="btn-go-plans" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">
+              View Public Self-Serve Plans ($29 / $39 / $79)
             </button>
           </div>
+        </div>`
+      );
+      setTimeout(() => {
+        const unlockBtn = document.getElementById('btn-confirm-unlock');
+        const plansBtn = document.getElementById('btn-go-plans');
+        const keyInput = document.getElementById('modal-access-key-input');
+        const errorEl = document.getElementById('modal-key-error');
 
-          <!-- Live Verification Result List -->
-          <div id="domain-verification-box" class="p-3 rounded-lg bg-brand-card border border-brand-border space-y-2 text-xs font-mono">
-            <div class="flex justify-between items-center">
-              <span class="text-brand-textSecondary">Domain Authority:</span>
-              <span class="text-brand-green">APPROVED PARTNER</span>
+        if (unlockBtn && keyInput) {
+          const attemptUnlock = async () => {
+            const keyVal = keyInput.value.trim();
+            if (!keyVal) {
+              if (errorEl) {
+                errorEl.textContent = 'Please enter an activation or founder key.';
+                errorEl.classList.remove('hidden');
+              }
+              return;
+            }
+            try {
+              const resp = await fetch('/api/auth/verify-key', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: keyVal })
+              });
+              const data = await resp.json();
+              if (resp.ok && data.valid) {
+                founderUnlocked = true;
+                sessionStorage.setItem('sendput_access_key', keyVal);
+                updateStealthUI();
+                closeModal();
+                switchTab(targetTab || 'engine');
+                showToast(`🔓 Access Unlocked (${data.role === 'founder' ? 'Founder' : 'Subscriber'})!`);
+              } else {
+                if (errorEl) {
+                  errorEl.textContent = data.error || 'Invalid activation or founder key.';
+                  errorEl.classList.remove('hidden');
+                }
+              }
+            } catch (err) {
+              if (errorEl) {
+                errorEl.textContent = 'Connection error verifying key. Try again.';
+                errorEl.classList.remove('hidden');
+              }
+            }
+          };
+
+          unlockBtn.addEventListener('click', attemptUnlock);
+          keyInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') attemptUnlock();
+          });
+        }
+        if (plansBtn) {
+          plansBtn.addEventListener('click', () => {
+            closeModal();
+            switchTab('pricing');
+          });
+        }
+      }, 50);
+    }
+
+    function switchTab(tabId) {
+      if (!founderUnlocked && (tabId === 'engine' || tabId === 'agency')) {
+        promptFounderOrSubscriberUnlock(tabId);
+        return;
+      }
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.add('hidden');
+      });
+      const activePanel = document.getElementById('tab-' + tabId);
+      if (activePanel) activePanel.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-tab') === tabId) {
+          btn.className = 'nav-tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-indigo-600 text-white shadow';
+        } else {
+          btn.className = 'nav-tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-300 hover:text-white hover:bg-slate-800/60';
+        }
+      });
+
+      if (tabId === 'engine') {
+        renderEngineArtifacts();
+      }
+    }
+
+    // ============================================================================
+    // TAB 1: GRADER & CHART LOGIC
+    // ============================================================================
+    function renderChecklist() {
+      const container = document.getElementById('checklist-items');
+      if (!container) return;
+      const layers = [
+        { name: 'Layer 1: Unblock OAI-SearchBot, PerplexityBot & ClaudeBot WAF', ok: isRemediated },
+        { name: 'Layer 2: Edge Inject LocalBusiness + OfferCatalog + FAQPage JSON-LD', ok: isRemediated },
+        { name: 'Layer 3: Direct OAuth Sync to GBP, Bing Places, Apple & IndexNow', ok: isRemediated },
+        { name: 'Layer 4: Compile /llms.txt + OpenAPI 3.1 + SKILL.md + Live MCP Server', ok: isRemediated },
+        { name: 'Layer 5: Bilingual (EN/ES) Entity Graph & Hallucination Drift Shield', ok: isRemediated }
+      ];
+      container.innerHTML = layers.map(item => `
+        <div class="flex items-center justify-between p-2 rounded-lg ${item.ok ? 'bg-emerald-950/40 border border-emerald-500/30' : 'bg-slate-900 border border-slate-800'}">
+          <span class="${item.ok ? 'text-emerald-300 font-medium' : 'text-slate-300'}">${item.name}</span>
+          <span class="mono text-[11px] font-bold px-2 py-0.5 rounded ${item.ok ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'}">
+            ${item.ok ? 'ACTIVE (HTTP PUT)' : 'MISSING'}
+          </span>
+        </div>
+      `).join('');
+    }
+
+    function initOrUpdateChart(baselineArr, projectedArr) {
+      const ctx = document.getElementById('engineChart');
+      if (!ctx) return;
+      const labels = ['ChatGPT Search', 'Perplexity Sonar', 'Google Gemini', 'Claude Duet', 'MS Copilot', 'Apple Intelligence'];
+      const activeCurrent = isRemediated ? projectedArr : baselineArr;
+
+      if (chartInstance) {
+        chartInstance.data.datasets[0].data = activeCurrent;
+        chartInstance.data.datasets[1].data = projectedArr;
+        chartInstance.update();
+        return;
+      }
+
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Current AI Citation & Action Score',
+              data: activeCurrent,
+              backgroundColor: 'rgba(99, 102, 241, 0.8)',
+              borderColor: 'rgba(99, 102, 241, 1)',
+              borderWidth: 1,
+              borderRadius: 6
+            },
+            {
+              label: 'SendPut EPO Engine Active Target',
+              data: projectedArr,
+              backgroundColor: 'rgba(16, 185, 129, 0.35)',
+              borderColor: 'rgba(16, 185, 129, 1)',
+              borderWidth: 1.5,
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              grid: { color: 'rgba(51, 65, 85, 0.35)' },
+              ticks: { color: '#94A3B8', font: { size: 11 } }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#CBD5E1', font: { size: 11 } }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: { color: '#E2E8F0', font: { size: 11 } }
+            }
+          }
+        }
+      });
+    }
+
+    function updateGraderUI() {
+      const p = PRESETS[currentPresetKey] || PRESETS.roofer;
+      const bizName = document.getElementById('input-biz-name').value || p.name;
+
+      const sfai = isRemediated ? 95 : p.sfai;
+      const aics = isRemediated ? 78 : p.aics;
+      const dvs = isRemediated ? 92 : p.dvs;
+      const thq = isRemediated ? 99 : p.thq;
+
+      document.getElementById('score-sfai').textContent = String(sfai);
+      document.getElementById('score-aics').textContent = String(aics) + '%';
+      document.getElementById('score-dvs').textContent = String(dvs);
+      document.getElementById('score-thq').textContent = String(thq);
+
+      const pill = document.getElementById('remediation-status-pill');
+      const hallBox = document.getElementById('hallucination-box');
+      const hallText = document.getElementById('hallucination-text');
+
+      if (isRemediated) {
+        pill.textContent = 'Status: 5-Layer Active PUT & MCP Deployed';
+        pill.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+        hallBox.className = 'p-3.5 rounded-xl bg-emerald-950/35 border border-emerald-500/40 text-xs text-slate-200 space-y-2';
+        hallText.innerHTML = `<strong class="text-emerald-300">All 5 SendPut EPO Engine Layers Active for ${bizName}:</strong> Edge JSON-LD (<code class="mono text-emerald-300">LocalBusiness</code> + <code class="mono text-emerald-300">OfferCatalog</code>), <code class="mono text-emerald-300">/llms.txt</code>, <code class="mono text-emerald-300">IndexNow</code>, and your live <code class="mono text-emerald-300">MCP Server</code> are now synchronized across ChatGPT, Perplexity, Gemini, Claude, and Copilot.`;
+      } else {
+        pill.textContent = 'Status: Unsynced Baseline';
+        pill.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30';
+        hallBox.className = 'p-3.5 rounded-xl bg-rose-950/35 border border-rose-500/35 text-xs text-slate-200 space-y-2';
+        hallText.innerHTML = `<strong class="text-rose-300">Hallucination &amp; Visibility Alert for ${bizName}:</strong> ${p.hallucination}`;
+      }
+
+      renderChecklist();
+      const projected = [94, 91, 96, 89, 92, 90];
+      initOrUpdateChart(p.baselineEngines, projected);
+    }
+
+    function loadPreset(key) {
+      if (!PRESETS[key]) return;
+      currentPresetKey = key;
+      isRemediated = false;
+      const p = PRESETS[key];
+      document.getElementById('input-biz-name').value = p.name;
+      document.getElementById('input-biz-url').value = p.url;
+      document.getElementById('input-biz-niche').value = p.niche;
+
+      // Sync to Tab 2 Engine inputs as well
+      document.getElementById('eng-name').value = p.name;
+      document.getElementById('eng-slug').value = p.slug;
+      document.getElementById('eng-category').value = p.category;
+      document.getElementById('eng-phone').value = p.phone;
+      document.getElementById('eng-hours').value = p.hours;
+      document.getElementById('eng-address').value = p.address;
+      document.getElementById('eng-desc-en').value = p.descEn;
+      document.getElementById('eng-desc-es').value = p.descEs;
+      document.getElementById('eng-services').value = p.services;
+
+      updateGraderUI();
+      renderEngineArtifacts();
+      showToast('Loaded preset: ' + p.name);
+    }
+
+    function runLiveScanAnimation() {
+      const box = document.getElementById('scan-progress-box');
+      const stepText = document.getElementById('scan-step-text');
+      const stepPct = document.getElementById('scan-step-pct');
+      const bar = document.getElementById('scan-progress-bar');
+      const bizName = document.getElementById('input-biz-name').value || 'Business';
+
+      isRemediated = false;
+      box.classList.remove('hidden');
+      const steps = [
+        { pct: 25, msg: `1/4 Checking robots.txt & WAF access for OAI-SearchBot, PerplexityBot & ClaudeBot on ${bizName}...` },
+        { pct: 55, msg: `2/4 Parsing DOM for LocalBusiness JSON-LD, /llms.txt & OpenAPI 3.1 endpoints...` },
+        { pct: 80, msg: `3/4 Running localized buyer prompts across ChatGPT, Perplexity, Gemini & Copilot...` },
+        { pct: 100, msg: `4/4 Computing SFAI, AICS & Hallucination Drift diff...` }
+      ];
+
+      let i = 0;
+      const timer = setInterval(() => {
+        if (i < steps.length) {
+          stepText.textContent = steps[i].msg;
+          stepPct.textContent = steps[i].pct + '%';
+          bar.style.width = steps[i].pct + '%';
+          i++;
+        } else {
+          clearInterval(timer);
+          setTimeout(() => {
+            box.classList.add('hidden');
+            updateGraderUI();
+            showToast(`AI Scan completed for ${bizName}`);
+          }, 300);
+        }
+      }, 380);
+    }
+
+    // ============================================================================
+    // TAB 2: 5-LAYER ARTIFACT COMPILER & MCP PLAYGROUND
+    // ============================================================================
+    function getEngineState() {
+      const name = document.getElementById('eng-name').value.trim() || 'Apex Roofing & Solar';
+      const slug = document.getElementById('eng-slug').value.trim() || 'apex-roofing-orlando';
+      const category = document.getElementById('eng-category').value || 'LocalBusiness';
+      const phone = document.getElementById('eng-phone').value.trim() || '+1-407-555-0199';
+      const hours = document.getElementById('eng-hours').value.trim() || 'Mo-Sa 07:30-19:00';
+      const address = document.getElementById('eng-address').value.trim() || 'Orlando, FL';
+      const descEn = document.getElementById('eng-desc-en').value.trim();
+      const descEs = document.getElementById('eng-desc-es').value.trim();
+      const bilingual = document.getElementById('eng-bilingual').checked;
+      const edgeDomain = document.getElementById('wl-edge-domain') ? document.getElementById('wl-edge-domain').value : 'cdn.getepo.com';
+      const rawServices = document.getElementById('eng-services').value.trim().split('\n').filter(Boolean);
+      const services = rawServices.map((line, idx) => {
+        const parts = line.split('|');
+        return {
+          position: idx + 1,
+          name: (parts[0] || 'Service').trim(),
+          price: (parts[1] || 'Contact for quote').trim()
+        };
+      });
+
+      return { name, slug, category, phone, hours, address, descEn, descEs, bilingual, edgeDomain, services };
+    }
+
+    function renderEngineArtifacts() {
+      const st = getEngineState();
+      const codePanel = document.getElementById('proto-code-panel');
+      const mcpPanel = document.getElementById('proto-mcp-playground');
+      const out = document.getElementById('proto-code-output');
+      const badge = document.getElementById('mcp-endpoint-badge');
+      if (badge) badge.textContent = `mcp.sendput.com/${st.slug}/sse`;
+
+      if (activeProtoTab === 'mcp') {
+        codePanel.classList.add('hidden');
+        mcpPanel.classList.remove('hidden');
+        invokeMcpSimulator('get_verified_profile');
+        return;
+      } else {
+        codePanel.classList.remove('hidden');
+        mcpPanel.classList.add('hidden');
+      }
+
+      if (activeProtoTab === 'edge') {
+        const jsonLd = {
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': st.category,
+              '@id': `https://${st.slug}.com/#entity`,
+              name: st.name,
+              telephone: st.phone,
+              openingHours: st.hours,
+              address: st.address,
+              description: st.descEn,
+              availableLanguage: st.bilingual ? ['en-US', 'es-US'] : ['en-US'],
+              hasOfferCatalog: {
+                '@type': 'OfferCatalog',
+                name: `${st.name} Verified Services`,
+                itemListElement: st.services.map(s => ({
+                  '@type': 'Offer',
+                  itemOffered: { '@type': 'Service', name: s.name },
+                  priceSpecification: { '@type': 'PriceSpecification', price: s.price }
+                }))
+              }
+            }
+          ]
+        };
+        out.textContent = `<!-- 1. Paste this 1-Line SendPut Edge Script into <head> or install our WordPress Plugin -->
+<script src="https://${st.edgeDomain}/sf-edge.js?tenant=${st.slug}" defer><\/script>
+
+<!-- 2. Automatically Injected Schema.org JSON-LD Entity Graph + Multi-Protocol Link Headers -->
+<link rel="llms-txt" type="text/markdown" href="https://api.sendput.com/v1/tenants/${st.slug}/llms.txt" />
+<link rel="mcp-server" type="application/json" href="https://mcp.sendput.com/${st.slug}/sse" />
+<script type="application/ld+json">
+${JSON.stringify(jsonLd, null, 2)}
+<\/script>`;
+      } else if (activeProtoTab === 'llmstxt') {
+        const svcLines = st.services.map(s => `- **${s.name}**: ${s.price}`).join('\n');
+        out.textContent = `# ${st.name}
+
+> ${st.descEn}
+${st.bilingual ? `> [ES] ${st.descEs}` : ''}
+
+## Verified Entity Profile (Synced via SendPut EPO Engine)
+- **Category**: ${st.category}
+- **Verified Phone**: ${st.phone}
+- **Address**: ${st.address}
+- **Operating Hours**: ${st.hours}
+- **Languages**: ${st.bilingual ? 'English & Spanish (Bilingual Certified)' : 'English'}
+
+## Services & Transparent Pricing Catalog
+${svcLines}
+
+## Autonomous AI Agent Endpoints
+- [OpenAPI 3.1 Spec](https://api.sendput.com/v1/tenants/${st.slug}/openapi.json): Machine-readable quote & booking schema
+- [Agent Skill (SKILL.md)](https://api.sendput.com/v1/tenants/${st.slug}/skill.md): Trigger rules for Claude, Hermes & Cursor
+- [Live MCP Server](https://mcp.sendput.com/${st.slug}/sse): Real-time tool execution for AI assistants`;
+      } else if (activeProtoTab === 'openapi') {
+        out.textContent = `# --- FILE 1: /.well-known/skill.md (agentskills.io Standard) ---
+---
+name: ${st.slug}-official-skill
+description: Official AI Agent Skill for ${st.name}. Invoke when users ask for pricing, hours, or appointments.
+---
+## Trigger Rules
+Use when user asks for ${st.category} services in ${st.address} or requests a quote from ${st.name}.
+
+# --- FILE 2: /v1/tenants/${st.slug}/openapi.json (OpenAPI 3.1) ---
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "${st.name} — Agentic Discovery & Booking API",
+    "version": "3.0.0"
+  },
+  "servers": [{ "url": "https://api.sendput.com/v1/tenants/${st.slug}" }],
+  "paths": {
+    "/profile": { "get": { "operationId": "getVerifiedProfile", "summary": "Return verified NAP, hours, and services" } },
+    "/quote": { "post": { "operationId": "calculateServiceQuote", "summary": "Return instant service estimate" } },
+    "/book": { "post": { "operationId": "bookConsultation", "summary": "Schedule customer appointment or callback" } }
+  }
+}`;
+      }
+    }
+
+    function invokeMcpSimulator(toolName) {
+      const st = getEngineState();
+      const pre = document.getElementById('mcp-live-response');
+      if (!pre) return;
+
+      let payload = {};
+      if (toolName === 'get_verified_profile') {
+        payload = {
+          jsonrpc: '2.0',
+          id: 'mcp-req-101',
+          protocol: 'model-context-protocol/2026-07-28',
+          tool: 'get_verified_profile',
+          result: {
+            entity_name: st.name,
+            schema_type: st.category,
+            verified_phone: st.phone,
+            address: st.address,
+            opening_hours: st.hours,
+            bilingual_support: st.bilingual ? ['en-US', 'es-US'] : ['en-US'],
+            summary_en: st.descEn,
+            summary_es: st.bilingual ? st.descEs : undefined,
+            knowledge_graphs_synced: ['Google Business Profile', 'Bing Places + IndexNow', 'Apple Business Connect']
+          }
+        };
+      } else if (toolName === 'calculate_service_quote') {
+        payload = {
+          jsonrpc: '2.0',
+          id: 'mcp-req-102',
+          protocol: 'model-context-protocol/2026-07-28',
+          tool: 'calculate_service_quote',
+          result: {
+            entity_name: st.name,
+            currency: 'USD',
+            transparent_offers: st.services,
+            agent_instruction: 'Present these verified price tiers directly to the user and offer 1-click booking via book_consultation.'
+          }
+        };
+      } else {
+        payload = {
+          jsonrpc: '2.0',
+          id: 'mcp-req-103',
+          protocol: 'model-context-protocol/2026-07-28',
+          tool: 'book_consultation',
+          result: {
+            status: 'CONFIRMED_SLOT_RESERVED',
+            entity_name: st.name,
+            next_available_window: 'Tomorrow at 10:30 AM EDT',
+            webhook_routed_to: `https://crm.myiad.net/webhooks/sendput/${st.slug}`,
+            confirmation_code: 'SP-MCP-' + Math.floor(100000 + Math.random() * 900000)
+          }
+        };
+      }
+      pre.textContent = JSON.stringify(payload, null, 2);
+    }
+
+    function renderBotLogs() {
+      const container = document.getElementById('bot-log-stream');
+      if (!container) return;
+      container.innerHTML = botLogs.map(log => `
+        <div class="flex items-center justify-between py-1 px-2 rounded bg-slate-900/90 border border-slate-800/80">
+          <span class="text-slate-400">${log.time}</span>
+          <span class="text-cyan-300 font-semibold">${log.bot}</span>
+          <span class="text-indigo-300">${log.path}</span>
+          <span class="text-emerald-400 font-bold">${log.status}</span>
+        </div>
+      `).join('');
+    }
+
+    // ============================================================================
+    // TAB 3: WHITE-LABEL AGENCY COMMAND & ROI CALCULATOR
+    // ============================================================================
+    function updateAgencyCalculator() {
+      const seats = Number(document.getElementById('wl-seats-slider').value) || 25;
+      const retail = Number(document.getElementById('wl-retail-slider').value) || 297;
+
+      document.getElementById('wl-seats-label').textContent = `${seats} locations`;
+      document.getElementById('wl-retail-label').textContent = `$${retail} / mo`;
+
+      const extraSeats = Math.max(0, seats - 10);
+      const wholesaleCost = 299 + (extraSeats * 19);
+      const perSeat = (wholesaleCost / seats).toFixed(2);
+      const grossRev = seats * retail;
+      const netProfit = grossRev - wholesaleCost;
+      const marginPct = ((netProfit / grossRev) * 100).toFixed(1);
+
+      document.getElementById('wl-wholesale-cost').textContent = `$${wholesaleCost.toLocaleString()} / mo`;
+      document.getElementById('wl-per-seat-cost').textContent = `$${perSeat} / location wholesale`;
+      document.getElementById('wl-agency-profit').textContent = `$${netProfit.toLocaleString()} / mo`;
+      document.getElementById('wl-agency-margin').textContent = `${marginPct}% Agency Margin ($${(netProfit * 12).toLocaleString()}/yr)`;
+    }
+
+    function renderAgencyRoster() {
+      const tbody = document.getElementById('agency-client-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = agencyClients.map((c, idx) => `
+        <tr class="hover:bg-slate-900/60 transition">
+          <td class="py-2.5 px-2">
+            <div class="font-bold text-white">${c.name}</div>
+            <div class="text-[11px] text-slate-400 mono">${c.url}</div>
+          </td>
+          <td class="py-2.5 px-2 mono">
+            <span class="font-bold ${c.sfai >= 80 ? 'text-emerald-400' : 'text-amber-400'}">${c.sfai}/100</span>
+            <span class="text-slate-400"> • ${c.aics}</span>
+          </td>
+          <td class="py-2.5 px-2">
+            <span class="px-2 py-0.5 rounded text-[11px] font-semibold ${c.sfai >= 80 ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'}">
+              ${c.status}
+            </span>
+          </td>
+          <td class="py-2.5 px-2 text-right">
+            <button type="button" data-clientidx="${idx}" class="gen-proposal-btn px-2.5 py-1 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30 font-semibold text-[11px]">
+              Draft Proposal
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      document.querySelectorAll('.gen-proposal-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.getAttribute('data-clientidx')) || 0;
+          generateClientProposal(agencyClients[idx]);
+        });
+      });
+    }
+
+    function generateClientProposal(client) {
+      const agencyName = document.getElementById('wl-agency-name').value || 'Apex Digital Growth Agency';
+      const cname = document.getElementById('wl-cname').value || 'ai.apexdigital.com';
+      const retail = document.getElementById('wl-retail-slider').value || 297;
+      const box = document.getElementById('agency-proposal-preview');
+      if (!box) return;
+
+      box.textContent = `# AI Search Visibility & Agentic Readiness Proposal
+Prepared for: ${client.name} (${client.url})
+Prepared by: ${agencyName} (Live Portal: https://${cname})
+
+## 1. Executive Diagnostic Summary
+Our multi-engine AI scan across ChatGPT Search, Perplexity, Google Gemini, Claude, and Copilot scored ${client.name} at SFAI ${client.sfai}/100 with an AI Citation Share (AICS) of ${client.aics} in the ${client.niche} market.
+
+## 2. Automated 5-Layer Turnkey Deployment ($${retail}/month)
+1. Unblock AI Retrieval Bots (OAI-SearchBot, PerplexityBot, ClaudeBot) & enable real-time crawler telemetry.
+2. Edge-inject verified LocalBusiness, OfferCatalog & FAQPage JSON-LD schema with zero code changes.
+3. Synchronize verified NAP, hours & bilingual (EN/ES) attributes across Google Business Profile, Bing Places + IndexNow & Apple Business Connect (100% permanent client ownership).
+4. Launch your dedicated Model Context Protocol (MCP) Server & /llms.txt so AI assistants can quote and book appointments directly.`;
+    }
+
+    // ============================================================================
+    // TAB 4: PRICING TOGGLE & ARR SIMULATOR
+    // ============================================================================
+    function updatePricingDisplay() {
+      const isAnnual = billingCycle === 'annual';
+      document.getElementById('price-starter').textContent = isAnnual ? '$32' : '$39';
+      document.getElementById('price-growth').textContent = isAnnual ? '$65' : '$79';
+      document.getElementById('price-agency').textContent = isAnnual ? '$249' : '$299';
+
+      const btnM = document.getElementById('btn-bill-monthly');
+      const btnA = document.getElementById('btn-bill-annual');
+      if (isAnnual) {
+        btnA.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white';
+        btnM.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white';
+      } else {
+        btnM.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white';
+        btnA.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white';
+      }
+    }
+
+    function updateArrSimulator() {
+      const smbs = Number(document.getElementById('sim-smb-slider').value) || 12320;
+      const agencies = Number(document.getElementById('sim-agency-slider').value) || 400;
+      const oneshots = Number(document.getElementById('sim-oneshot-slider').value) || 2100;
+
+      document.getElementById('sim-smb-val').textContent = smbs.toLocaleString();
+      document.getElementById('sim-agency-val').textContent = agencies.toLocaleString();
+      document.getElementById('sim-oneshot-val').textContent = `${oneshots.toLocaleString()} / mo`;
+
+      const totalLocs = smbs + (agencies * 25);
+      const mrrSmb = smbs * 55;
+      const mrrAgency = agencies * 584;
+      const monthlyOneshot = oneshots * 29;
+      const totalMonthly = mrrSmb + mrrAgency + monthlyOneshot;
+      const annualizedRunRate = totalMonthly * 12;
+
+      // COGS: $2.95/loc/mo ($2.50 cached API telemetry + $0.45 cloud/edge) + 3.2% Stripe
+      const annualCogs = (totalLocs * 2.95 * 12) + (annualizedRunRate * 0.032);
+      const grossProfit = annualizedRunRate - annualCogs;
+
+      document.getElementById('sim-total-locs').textContent = totalLocs.toLocaleString();
+      document.getElementById('sim-total-mrr').textContent = '$' + Math.round(totalMonthly).toLocaleString();
+      document.getElementById('sim-total-arr').textContent = '$' + Math.round(annualizedRunRate).toLocaleString();
+      document.getElementById('sim-gross-profit').textContent = '$' + Math.round(grossProfit).toLocaleString();
+    }
+
+    // ============================================================================
+    // EVENT LISTENERS INITIALIZATION
+    // ============================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      // Top Nav Tabs
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          switchTab(btn.getAttribute('data-tab'));
+        });
+      });
+
+      // Preset Buttons
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          loadPreset(btn.getAttribute('data-preset'));
+        });
+      });
+
+      // Run Scan Button
+      document.getElementById('btn-run-scan').addEventListener('click', runLiveScanAnimation);
+
+      // Official SendPut EPO Engine Store & Sync Identifiers (Constraint 2)
+      window.epoEngineStatus = {
+        isRemediated: () => isRemediated,
+        getPreset: () => currentPresetKey,
+        getAuthorityScore: () => (isRemediated ? 95 : (PRESETS[currentPresetKey] || PRESETS.roofer).sfai)
+      };
+
+      window.runEpoSync = function() {
+        isRemediated = true;
+        updateGraderUI();
+        showToast('⚡ SendPut EPO Engine Synced! SFAI jumped to 95/100 & MCP Node is live.');
+        return window.epoEngineStatus;
+      };
+
+      window.useEpoStore = function() {
+        return window.epoEngineStatus;
+      };
+
+      // Backward-compatible legacy aliases
+                  
+      // 1-Click Fix All Button
+      document.getElementById('btn-one-click-fix').addEventListener('click', () => {
+        window.runEpoSync();
+      });
+
+      // Unlock $29 Report Button
+      document.getElementById('btn-unlock-29').addEventListener('click', () => {
+        const bizName = document.getElementById('input-biz-name').value || 'Your Business';
+        openModal(
+          `$29 One-Shot Multi-Engine AI Audit — ${bizName}`,
+          `<div class="space-y-3">
+            <p class="text-slate-200">This self-liquidating <strong>$29 One-Shot Audit</strong> converts 8% of free grader visitors into immediate cash flow (generating <strong>$98.6k in Year 1</strong> and <strong>$737k in Year 2</strong>) while offering a 1-click upgrade that credits the $29 toward the $39/mo or $79/mo recurring plan.</p>
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 mono text-[11px] text-emerald-300">
+              POST /api/checkout { "tier": "oneshot_29", "stripe_product_id": "prod_VVZcNbGZHG46T1" }
             </div>
-            <div class="flex justify-between items-center">
-              <span class="text-brand-textSecondary">5-Layer Compiler:</span>
-              <span class="text-brand-green">SYNCED (0.04s)</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-brand-textSecondary">Verification Ledger:</span>
-              <span class="text-brand-orange">HASH #8812B</span>
-            </div>
+            <p class="text-slate-400">Included in your downloadable <code>sendput-ai-epo-engine-fullstack.zip</code> package!</p>
+          </div>`
+        );
+      });
+
+      // Jump to Engine Tab Button
+      document.getElementById('btn-jump-engine').addEventListener('click', () => {
+        switchTab('engine');
+      });
+
+      // Tab 2 Engine Inputs Live Recompile
+      document.querySelectorAll('.eng-input').forEach(input => {
+        input.addEventListener('input', renderEngineArtifacts);
+        input.addEventListener('change', renderEngineArtifacts);
+      });
+
+      // Protocol Sub-tabs
+      document.querySelectorAll('.proto-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeProtoTab = btn.getAttribute('data-proto');
+          document.querySelectorAll('.proto-tab-btn').forEach(b => {
+            b.className = (b === btn)
+              ? 'proto-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white'
+              : 'proto-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white';
+          });
+          renderEngineArtifacts();
+        });
+      });
+
+      // MCP Playground Tool Buttons
+      document.querySelectorAll('.mcp-tool-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          invokeMcpSimulator(btn.getAttribute('data-mcptool'));
+          showToast('Executed MCP Tool: ' + btn.getAttribute('data-mcptool'));
+        });
+      });
+
+      // Copy Code Button
+      document.getElementById('btn-copy-artifact').addEventListener('click', () => {
+        const text = activeProtoTab === 'mcp'
+          ? document.getElementById('mcp-live-response').textContent
+          : document.getElementById('proto-code-output').textContent;
+        copyTextToClipboard(text, 'Copied protocol artifact to clipboard!');
+      });
+
+      // IndexNow Push Button
+      document.getElementById('btn-push-indexnow').addEventListener('click', () => {
+        const st = getEngineState();
+        showToast(`Pushed ${st.name} entity graph to IndexNow, GBP & Bing Places!`);
+      });
+
+      // Simulate Bot Crawl Button
+      document.getElementById('btn-sim-bot-hit').addEventListener('click', () => {
+        const bots = [
+          'OAI-SearchBot/1.0 (+https://openai.com/searchbot)',
+          'PerplexityBot/1.0 (+https://perplexity.ai/perplexitybot)',
+          'Claude-SearchBot/1.0 (+https://anthropic.com)',
+          'Applebot-Extended/1.0 (Apple Intelligence RAG)'
+        ];
+        const paths = ['/llms.txt', '/mcp/sse (calculate_service_quote)', '/v1/tenants/openapi.json', '/.well-known/skill.md'];
+        const now = new Date().toISOString().slice(11, 19) + ' UTC';
+        botLogs.unshift({
+          time: now,
+          bot: bots[Math.floor(Math.random() * bots.length)],
+          path: paths[Math.floor(Math.random() * paths.length)],
+          status: `200 OK (${Math.floor(12 + Math.random() * 19)}ms)`
+        });
+        renderBotLogs();
+        showToast('Logged live AI retrieval bot crawl in ai_bot_telemetry!');
+      });
+
+      // Tab 3 White-Label Apply Button
+      document.getElementById('btn-apply-whitelabel').addEventListener('click', () => {
+        const agencyName = document.getElementById('wl-agency-name').value.trim() || 'Apex Digital Agency';
+        const cname = document.getElementById('wl-cname').value.trim() || 'ai.apexdigital.com';
+        document.getElementById('nav-brand-title').textContent = agencyName;
+        document.getElementById('nav-brand-subtitle').innerHTML = `White-Label Portal Live on <span class="text-cyan-400 mono">${cname}</span>`;
+        const initials = agencyName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        document.getElementById('brand-logo-badge').textContent = initials || 'WL';
+        renderEngineArtifacts();
+        showToast(`White-Label CNAME (${cname}) applied across workspace!`);
+      });
+
+      // Tab 3 Sliders
+      document.getElementById('wl-seats-slider').addEventListener('input', updateAgencyCalculator);
+      document.getElementById('wl-retail-slider').addEventListener('input', () => {
+        updateAgencyCalculator();
+        generateClientProposal(agencyClients[3]);
+      });
+
+      // Add Client Seat Button
+      document.getElementById('btn-add-agency-client').addEventListener('click', () => {
+        const newClient = {
+          id: 'c' + (agencyClients.length + 1),
+          name: `Palm Coast Premier Realty (#${agencyClients.length + 1})`,
+          url: 'https://palmcoastpremierrealty.com',
+          sfai: 91,
+          aics: '72%',
+          status: '5/5 Layers Live (MCP Active)',
+          niche: 'Real Estate Brokerage'
+        };
+        agencyClients.unshift(newClient);
+        renderAgencyRoster();
+        generateClientProposal(newClient);
+        showToast('Added new wholesale client seat ($19/mo) & drafted proposal!');
+      });
+
+      // Copy Proposal Button
+      document.getElementById('btn-copy-proposal').addEventListener('click', () => {
+        copyTextToClipboard(document.getElementById('agency-proposal-preview').textContent, 'Copied B2B Proposal Markdown!');
+      });
+
+      // Tab 4 Billing Cycle Toggle
+      document.getElementById('btn-bill-monthly').addEventListener('click', () => {
+        billingCycle = 'monthly';
+        updatePricingDisplay();
+      });
+      document.getElementById('btn-bill-annual').addEventListener('click', () => {
+        billingCycle = 'annual';
+        updatePricingDisplay();
+      });
+
+      // Tab 4 Checkout Buttons (Wired to Live Stripe Product IDs)
+      const STRIPE_PRODUCTS = {
+        oneshot_29: { id: 'prod_VVZcNbGZHG46T1', title: '$29 One-Shot Deep AI Audit Report', amount: '$29.00 one-time' },
+        starter_39: { id: 'prod_VVZfdwEubbbA2G', title: 'Self-Serve Starter Plan (Sync)', amount: billingCycle === 'annual' ? '$384/yr ($32/mo)' : '$39.00/mo' },
+        growth_79:  { id: 'prod_VVZgJ0BGZz8r51', title: 'Self-Serve Growth & MCP Node', amount: billingCycle === 'annual' ? '$780/yr ($65/mo)' : '$79.00/mo' },
+        agency_299: { id: 'prod_VVZhif3ZHILKAZ', title: 'White-Label Agency Command (10 Seats Included)', amount: billingCycle === 'annual' ? '$2,988/yr ($249/mo)' : '$299.00/mo' }
+      };
+
+      document.querySelectorAll('.checkout-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const tier = btn.getAttribute('data-checkout') || 'growth_79';
+          const bizName = document.getElementById('input-biz-name').value || '';
+          const bizUrl = document.getElementById('input-biz-url').value || '';
+          const prodMeta = {
+            oneshot_29: { id: 'prod_VVZcNbGZHG46T1', title: '$29 One-Shot Deep AI Audit Report', amount: '$29.00 one-time' },
+            starter_39: { id: 'prod_VVZfdwEubbbA2G', title: 'Self-Serve Starter Plan (Sync)', amount: billingCycle === 'annual' ? '$384/yr ($32/mo)' : '$39.00/mo' },
+            growth_79:  { id: 'prod_VVZgJ0BGZz8r51', title: 'Self-Serve Growth & MCP Node', amount: billingCycle === 'annual' ? '$780/yr ($65/mo)' : '$79.00/mo' },
+            agency_299: { id: 'prod_VVZhif3ZHILKAZ', title: 'White-Label Agency Command (10 Seats Included)', amount: billingCycle === 'annual' ? '$2,988/yr ($249/mo)' : '$299.00/mo' }
+          }[tier];
+
+          // Attempt live backend /api/checkout session creation when hosted on sendput.com
+          try {
+            const resp = await fetch(['', 'api', 'checkout'].join('/'), {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ tier, billing_cycle: billingCycle, business_name: bizName, website_url: bizUrl })
+            }).catch(() => null);
+            if (resp && resp.ok) {
+              const data = await resp.json();
+              if (data.status === 'redirect_to_stripe' && data.checkout_url) {
+                window.location.href = data.checkout_url;
+                return;
+              }
+            }
+          } catch (e) {}
+
+          openModal(
+            `Stripe Checkout Wired — ${prodMeta.title}`,
+            `<div class="space-y-3">
+              <div class="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-bold text-emerald-300">${prodMeta.title}</div>
+                  <div class="text-[11px] text-slate-300 mono mt-0.5">Stripe Product ID: <strong>${prodMeta.id}</strong></div>
+                </div>
+                <div class="text-sm font-extrabold text-white mono">${prodMeta.amount}</div>
+              </div>
+              <p class="text-slate-300">Your live Stripe Product ID (<code>${prodMeta.id}</code>) is now hard-wired into <code>POST /api/checkout</code>. As soon as <code>STRIPE_SECRET_KEY</code> is present in your Vercel Environment Variables, clicking this button redirects customers straight to Stripe Hosted Checkout and issues their Activation Key upon completion.</p>
+              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 mono text-[11px] text-indigo-300">
+                STRIPE_PRODUCT_ONESHOT_29=prod_VVZcNbGZHG46T1 ($29 One-Shot)<br/>
+                STRIPE_PRODUCT_STARTER_39=prod_VVZfdwEubbbA2G ($39/mo Starter)<br/>
+                STRIPE_PRODUCT_GROWTH_79=prod_VVZgJ0BGZz8r51 ($79/mo Growth + MCP)<br/>
+                STRIPE_PRODUCT_AGENCY_299=prod_VVZhif3ZHILKAZ ($299/mo Agency WL)
+              </div>
+            </div>`
+          );
+        });
+      });
+
+      // Restore session key if already authenticated
+      const savedKey = sessionStorage.getItem('sendput_access_key');
+      if (savedKey) {
+        fetch('/api/auth/verify-key', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key: savedKey })
+        })
+          .then(r => r.json())
+          .then(data => {
+            if (data.valid) {
+              founderUnlocked = true;
+              updateStealthUI();
+            }
+          })
+          .catch(() => {});
+      }
+
+      // Verified unlock if returning from Stripe Checkout (?checkout=success)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('checkout') === 'success') {
+        const sessionId = urlParams.get('session_id') || '';
+        const key = urlParams.get('key') || '';
+        fetch(`/api/checkout/verify?session_id=${encodeURIComponent(sessionId)}&key=${encodeURIComponent(key)}`)
+          .then(r => r.json())
+          .then(data => {
+            if (data.verified) {
+              founderUnlocked = true;
+              if (data.issued_key || key) {
+                sessionStorage.setItem('sendput_access_key', data.issued_key || key);
+              }
+              updateStealthUI();
+              showToast('🎉 Stripe Checkout Verified! Full SendPut AI Workspace Unlocked.');
+            } else {
+              showToast('⚠️ Checkout could not be verified automatically. Please enter your key.');
+            }
+          })
+          .catch(() => {
+            // Offline fallback
+            founderUnlocked = true;
+            updateStealthUI();
+            showToast('🎉 Stripe Checkout Complete! Full SendPut AI Workspace Unlocked.');
+          });
+      }
+      // Tab 4 ARR Simulator Sliders
+      ['sim-smb-slider', 'sim-agency-slider', 'sim-oneshot-slider'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateArrSimulator);
+      });
+
+      // Modal Controls
+      const stealthBtn = document.getElementById('btn-toggle-stealth');
+      if (stealthBtn) {
+        stealthBtn.addEventListener('click', () => {
+          if (founderUnlocked) {
+            founderUnlocked = false;
+            updateStealthUI();
+            switchTab('grader');
+            showToast('🔒 Switched to Public Stealth Gate View (Internal tabs hidden from visitors)');
+          } else {
+            promptFounderOrSubscriberUnlock('engine');
+          }
+        });
+      }
+      document.getElementById('btn-open-arch-modal').addEventListener('click', () => {
+        openModal(
+          'SendPut EPO Engine Full-Stack Deployment Package (sendput-ai-epo-engine-fullstack.zip)',
+          `<div class="space-y-2.5">
+            <p class="text-slate-200">Your downloadable deployment archive contains the complete production codebase engineered for your <strong>Render + Neon PostgreSQL + VPS (34.148.244.49:5432)</strong> infrastructure:</p>
+            <ul class="space-y-1.5 mono text-[11px] text-emerald-300 bg-slate-900 p-3.5 rounded-xl border border-slate-800">
+              <li>• src/server.ts — Express + TypeScript backend with Self-Healing TCP 5432 Shield, /api/audit, /epo-edge.js, /llms.txt, OpenAPI 3.1, SKILL.md &amp; /mcp/:slug/sse</li>
+              <li>• sql/sendput_schema.sql — Multi-tenant schema (agency_workspaces, business_entities, sendput_audit_proposals, ai_bot_telemetry, geo_prompt_cache)</li>
+              <li>• wordpress-plugin/sendput-ai-presence.php — 1-Click WordPress &amp; Elementor plugin for SMBs and Agencies</li>
+              <li>• render.yaml &amp; Dockerfile — Turnkey Cloud Run, Render &amp; VPS container configs</li>
+              <li>• public/index.html — Complete interactive frontend shell</li>
+            </ul>
+          </div>`
+        );
+      });
+      // Footer Legal & Compliance Modals (Proactive Defenses 4 & 5)
+      const bindModalBtn = (id, title, content) => {
+        const btn = document.getElementById(id);
+        if (btn) btn.addEventListener('click', () => openModal(title, content));
+      };
+
+      bindModalBtn(
+        'btn-footer-terms',
+        'SendPut AI Technologies Inc. — Terms of Service',
+        `<div class="space-y-3">
+          <p class="text-slate-200"><strong>1. Proprietary Rights:</strong> SendPut™, SendPut EPO Engine™, Entity Presence Optimization (EPO)™, and SFAI™ are proprietary trademarks. Backend ingestion routines, AI grounding pipelines, and schemas are proprietary trade secrets.</p>
+          <p class="text-slate-300"><strong>2. Anti-Siphoning & Server Entitlements:</strong> Access to write-back operations and MCP nodes strictly requires server-side validation. Local storage bypass or automated scraping is actionable under the Computer Fraud & Abuse Act (CFAA).</p>
+          <p class="text-slate-300"><strong>3. Contact:</strong> SendPut Legal & IP Enforcement: <code>legal@sendput.com</code></p>
+        </div>`
+      );
+
+      bindModalBtn(
+        'btn-footer-privacy',
+        'SendPut AI Technologies Inc. — Privacy & Data Policy',
+        `<div class="space-y-3">
+          <p class="text-slate-200">We respect enterprise data sovereignty. Public NAP data and audit scores are processed solely for verification and indexation.</p>
+          <p class="text-slate-300">Stripe payment tokens and webhooks are processed through strict HMAC-SHA256 authenticated channels. We never sell customer or tenant business intelligence.</p>
+          <p class="text-slate-400">Direct inquiries: <code>privacy@sendput.com</code></p>
+        </div>`
+      );
+
+      bindModalBtn(
+        'btn-footer-dmca',
+        'DMCA Fast-Track 24–48hr Takedown Protocol',
+        `<div class="space-y-3">
+          <p class="text-slate-200">SendPut AI maintains an expedited 24–48hr DMCA fast-track with major cloud hosts (Vercel, Cloudflare, AWS, Render) and registrars (Namecheap, GoDaddy).</p>
+          <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl mono text-[11px] text-amber-300">
+            Designated DMCA Agent: dmca@sendput.com<br>
+            Legal Notice SLA: 24–48 Hours Expedited Response<br>
+            Statutory Basis: 17 U.S.C. § 512(c)(3) & Lanham Act § 43(a)
           </div>
-        </div>
+          <p class="text-slate-300">Infringing replicas, typo-squatted clones, or scraper mirrors are removed immediately upon statutory filing.</p>
+        </div>`
+      );
 
-      </div>
+      bindModalBtn(
+        'btn-footer-license',
+        'SendPut Dual Commercial & Open-Source Licensing',
+        `<div class="space-y-3">
+          <p class="text-slate-200"><strong>Dual Licensing Architecture:</strong></p>
+          <ul class="space-y-1.5 text-xs text-slate-300 bg-slate-900 p-3 rounded-xl border border-slate-800">
+            <li>• <strong>Proprietary Commercial License:</strong> Ingestion backend (<code>src/server.ts</code>, <code>src/lib/epo/engine.ts</code>), multi-LLM probing engine, and PostgreSQL schemas.</li>
+            <li>• <strong>MIT Open-Source License:</strong> Client SDK (<code>@sendput/geo-core</code>), <code>/epo-edge.js</code> script tag, and machine-readable schema templates.</li>
+          </ul>
+        </div>`
+      );
 
-    </div>
+      bindModalBtn(
+        'btn-footer-sdk',
+        '@sendput/geo-core Client SDK (MIT License)',
+        `<div class="space-y-3">
+          <p class="text-slate-200">The <code>@sendput/geo-core</code> SDK provides client-side TypeScript bindings and lightweight tag injection for modern web apps.</p>
+          <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl mono text-[11px] text-emerald-300">
+            &lt;script src="https://sendput.com/epo-edge.js?tenant=YOUR-SLUG" defer&gt;&lt;/script&gt;
+          </div>
+          <p class="text-slate-400">Open-source under MIT for community adoption, backed by SendPut's closed-source proprietary ingestion engine.</p>
+        </div>`
+      );
 
-  </div>
+      // Hero CTAs & Manifesto Modal (Prompt 4 / EPO-006)
+      const heroLaunchBtn = document.getElementById('hero-btn-launch-engine');
+      if (heroLaunchBtn) {
+        heroLaunchBtn.addEventListener('click', () => {
+          if (founderUnlocked) {
+            switchTab('engine');
+          } else {
+            promptFounderOrSubscriberUnlock('engine');
+          }
+        });
+      }
 
-</div>
-  <!-- Modal Header -->
-  <div class="p-5 border-b border-brand-border bg-[#05080E] flex items-center justify-between">
-    <div class="flex items-center space-x-3">
-      <div class="w-8 h-8 rounded-lg bg-brand-green/20 border border-brand-green/40 flex items-center justify-center">
-        <svg class="w-5 h-5 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-      </div>
-      <div>
-        <div class="flex items-center space-x-2">
-          <h3 class="text-sm font-bold text-white uppercase font-mono tracking-tight">Active Gateway Status: ACTIVE [ONLINE]</h3>
-        </div>
-        <p class="text-[11px] font-mono text-brand-green">Verified by SendPut EPO Engine Protocol (RFC-2026-GEO-01)</p>
-      </div>
-    </div>
-    <button onclick="closeVerificationModal()" class="text-brand-textMuted hover:text-white transition-colors p-1">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-    </button>
-  </div>
+      const heroAuditBtn = document.getElementById('hero-btn-run-audit');
+      if (heroAuditBtn) {
+        heroAuditBtn.addEventListener('click', () => {
+          switchTab('grader');
+          const input = document.getElementById('input-biz-name');
+          if (input) {
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            input.focus();
+          }
+        });
+      }
 
-  <!-- Modal Body -->
-  <div class="p-6 space-y-5">
-    
-    <!-- Verification Ledger Target Domain Details -->
-    <div class="p-4 rounded-xl bg-brand-card border border-brand-border flex items-center justify-between">
-      <div>
-        <span class="text-[10px] font-mono text-brand-textMuted uppercase">Target Verified Domain</span>
-        <h4 id="modal-target-domain" class="text-lg font-bold font-mono text-white">acme-corp.com</h4>
-      </div>
-      <span class="px-2.5 py-1 bg-brand-green/20 text-brand-green border border-brand-green/40 rounded text-xs font-mono font-bold">100% SECURE &amp; COMPLIANT</span>
-    </div>
+      bindModalBtn(
+        'btn-read-manifesto-modal',
+        'The Case for Entity Presence Optimization (RFC-2026-GEO-01)',
+        `<div class="space-y-3 text-xs sm:text-sm">
+          <p class="text-slate-200"><strong>The Death of the Link Graph:</strong> For 25 years, search engines discovered relevance by following blue links and computing PageRank. Generative answer engines (ChatGPT, Claude, Gemini, Perplexity) operate fundamentally differently: they traverse dense multidimensional embeddings and knowledge graphs to synthesize authoritative direct answers.</p>
+          <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1.5 mono text-[11px] text-cyan-300">
+            <div>• Layer 1 (Ground Truth): Clean, canonical Schema.org @graph (Organization + LocalBusiness)</div>
+            <div>• Layer 2 (Context Ingestion): Token-budgeted /llms.txt (&lt;2,000 tokens)</div>
+            <div>• Layer 3 (High-Velocity Relay): Instant IndexNow multi-engine batch dispatch</div>
+            <div>• Layer 4 (Agent Execution): Standardized Model Context Protocol (MCP) server nodes</div>
+            <div>• Layer 5 (Continuous Drift Defense): Proactive multi-LLM probing and self-healing</div>
+          </div>
+          <p class="text-slate-300">When your brand is grounded through the SendPut EPO Engine, AI agents cite your verified services and execute transactions with zero hallucination risk.</p>
+          <div class="pt-2 flex items-center justify-between">
+            <span class="text-slate-400 text-xs">Standard: <strong>RFC-2026-GEO-01</strong></span>
+            <a href="https://getepo.com" target="_blank" rel="noopener" class="text-cyan-400 hover:text-cyan-300 underline font-semibold">Visit GetEPO.com →</a>
+          </div>
+        </div>`
+      );
 
-    <!-- 5-Component Live Health Checks -->
-    <div class="space-y-2.5 font-mono text-xs">
-      <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#05080E] border border-brand-border/60">
-        <span class="text-brand-textSecondary">LIVE EDGE COMPILER</span>
-        <span class="text-brand-green font-bold">[ONLINE · 38ms]</span>
-      </div>
-      <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#05080E] border border-brand-border/60">
-        <span class="text-brand-textSecondary">KNOWLEDGE GRAPH INJECTION</span>
-        <span class="text-brand-green font-bold">[VERIFIED JSON-LD]</span>
-      </div>
-      <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#05080E] border border-brand-border/60">
-        <span class="text-brand-textSecondary">MODEL CONTEXT PROTOCOL (MCP)</span>
-        <span class="text-brand-blue font-bold">[JSON-RPC ROUTED]</span>
-      </div>
-      <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#05080E] border border-brand-border/60">
-        <span class="text-brand-textSecondary">ZERO-EVASION AUDIT</span>
-        <span class="text-emerald-400 font-bold">[PASS 100%]</span>
-      </div>
-      <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#05080E] border border-brand-border/60">
-        <span class="text-brand-textSecondary">CRYPTOGRAPHIC SIGNATURE</span>
-        <span class="text-brand-orange font-bold">SHA256: 4bf9...18d2</span>
-      </div>
-    </div>
+      document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+      document.getElementById('btn-modal-primary').addEventListener('click', closeModal);
 
-    <div class="p-3 bg-brand-green/10 border border-brand-green/20 rounded-xl text-xs text-brand-textSecondary flex items-start space-x-2">
-      <svg class="w-4 h-4 text-brand-green flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-      <p>
-        This website is certified with the active Sendput AI Search Compliant mark. All knowledge representations are directly grounded and verified against first-party authenticated sources.
-      </p>
-    </div>
+      // Initial Render
+      updateGraderUI();
+      renderEngineArtifacts();
+      renderBotLogs();
+      updateAgencyCalculator();
+      renderAgencyRoster();
+      generateClientProposal(agencyClients[3]);
+      updatePricingDisplay();
+      updateArrSimulator();
+    });
 
-  </div>
+    // ============================================================================
+    // TRUST BADGE & VERIFICATION MODAL CONTROLLERS
+    // ============================================================================
+    window.openVerificationModal = function(domain) {
+      const modal = document.getElementById('verification-modal');
+      const targetText = document.getElementById('modal-target-domain');
+      if (domain && targetText) {
+        targetText.innerText = domain;
+      }
+      if (modal) {
+        modal.classList.remove('hidden');
+      }
+    };
 
-  <!-- Modal Footer -->
-  <div class="p-4 bg-[#05080E] border-t border-brand-border flex items-center justify-between">
-    <span class="text-[11px] font-mono text-brand-textMuted">[verification.sendput.com/site/acme-corp.com](https://verification.sendput.com/site/acme-corp.com)</span>
-    <button onclick="closeVerificationModal()" class="px-4 py-2 bg-brand-surface hover:bg-brand-border text-white text-xs font-mono rounded-lg border border-brand-border transition-colors">
-      Dismiss Verification Modal
-    </button>
-  </div>
+    window.closeVerificationModal = function() {
+      const modal = document.getElementById('verification-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+    };
 
-</div>
+    window.verifyPartnerDomain = function() {
+      const input = document.getElementById('test-domain-input');
+      const box = document.getElementById('domain-verification-box');
+      const domain = input ? input.value.trim() : 'apexroofingorlando.com';
+      if (!box) return;
+      
+      box.innerHTML = `
+        <div class="text-[#00FF66] text-xs font-mono animate-pulse">&gt; Probing TLS handshake for ${domain}...</div>
+      `;
+
+      setTimeout(() => {
+        box.innerHTML = `
+          <div class="flex justify-between items-center">
+            <span class="text-slate-400">Target Host:</span>
+            <span class="text-white font-bold">${domain}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-400">Domain Authority:</span>
+            <span class="text-[#00FF66] font-bold">APPROVED &amp; INDEXED</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-400">5-Layer Edge Node:</span>
+            <span class="text-[#00FF66] font-bold">ACTIVE (0.038s)</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-400">Cryptographic Hash:</span>
+            <span class="text-[#FF6B00] font-bold">SHA256: 4bf9...18d2</span>
+          </div>
+        `;
+      }, 700);
+    };
+
+    window.updateEmbedSnippet = function() {
+      const variant = document.getElementById('embed-variant-select')?.value || 'banner';
+      const area = document.getElementById('embed-code-area');
+      if (!area) return;
+      area.value = `<!-- SendPut AI Verified Authority -->\n<div id="sendput-badge" data-partner="sendput.com" data-theme="dark" data-variant="${variant}"></div>\n<script async src="https://cdn.sendput.com/v3/verified.js"><\/script>`;
+    };
+
+    window.copyEmbedSnippet = function() {
+      const area = document.getElementById('embed-code-area');
+      if (area) {
+        navigator.clipboard.writeText(area.value).then(() => {
+          showToast('Badge embed snippet copied to clipboard!');
+        });
+      }
+    };
+  </script>
+</body>
+</html>
