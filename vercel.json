@@ -5,7 +5,7 @@
   "outputDirectory": "public",
   "redirects": [
     {
-      "source": "/(.*)",
+      "source": "/((?!validator).*)",
       "has": [
         {
           "type": "host",
@@ -21,6 +21,8 @@
     { "source": "/api/(.*)", "destination": "/api/index.js" },
     { "source": "/epo-edge.js", "destination": "/api/index.js" },
     { "source": "/sf-edge.js", "destination": "/api/index.js" },
+    { "source": "/v3/verified.js", "destination": "/api/index.js" },
+    { "source": "/verified.js", "destination": "/api/index.js" },
     { "source": "/v1/(.*)", "destination": "/api/index.js" },
     { "source": "/mcp/(.*)", "destination": "/api/index.js" },
     { "source": "/verified/(.*)", "destination": "/api/index.js" },
@@ -29,6 +31,9 @@
     { "source": "/privacy", "destination": "/api/index.js" },
     { "source": "/dmca", "destination": "/api/index.js" },
     { "source": "/license", "destination": "/api/index.js" },
+    { "source": "/LEGAL.md", "destination": "/api/index.js" },
+    { "source": "/DMCA.md", "destination": "/api/index.js" },
+    { "source": "/sitemap.xml", "destination": "/api/index.js" },
     { "source": "/schema.json", "destination": "/api/index.js" },
     { "source": "/validator", "destination": "/validator.html" },
     { "source": "/(.*)\\.map", "destination": "/api/index.js" }

@@ -190,7 +190,7 @@ INSERT INTO agency_workspaces (
   'epo-partners',
   'audit.epopartners.com',
   '#4F46E5',
-  'https://sendput.com/assets/agency-logo-demo.png',
+  'https://sendput.com/brand/sendput_brand_export_epo/logos/sendput-logo-full.svg',
   'agency_command_299',
   10,
   2,

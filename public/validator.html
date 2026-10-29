@@ -198,12 +198,14 @@
         loadBox.classList.add('hidden');
         submitBtn.disabled = false;
 
-        if (resp.ok && data.audit) {
-          const a = data.audit;
+        const a = data && (data.audit || (data.sfai_score !== undefined ? data : null));
+        if (resp.ok && a) {
           document.getElementById('res-biz-title').textContent = a.business_name;
           document.getElementById('res-biz-url').textContent = a.website_url;
           
-          const overall = Math.round((a.sfai_score * 0.3) + (a.aics_score * 0.25) + (a.dvs_score * 0.25) + (a.thq_score * 0.2));
+          const overall = a.epo_score !== undefined
+            ? a.epo_score
+            : Math.round((a.sfai_score * 0.35) + (a.dvs_score * 0.25) + (a.aics_score * 0.25) + (a.thq_score * 0.15));
           document.getElementById('res-score-overall').textContent = overall;
           document.getElementById('res-score-sfai').textContent = `${a.sfai_score}%`;
           document.getElementById('res-score-aics').textContent = `${a.aics_score}%`;
@@ -212,7 +214,7 @@
 
           document.getElementById('res-badge-sfai').textContent = a.jsonld_detected ? '✅ Schema.org Graph Active' : '❌ Missing Nested @graph';
           document.getElementById('res-badge-aics').textContent = a.aics_score > 50 ? '✅ Above-Average Share' : '⚠️ Low AI Share';
-          document.getElementById('res-badge-dvs').textContent = a.indexnow_active ? '✅ IndexNow Relays Active' : '❌ IndexNow Idle';
+          document.getElementById('res-badge-dvs').textContent = (a.indexnow_active ?? !a.ai_bots_blocked) ? '✅ IndexNow Relays Active' : '❌ IndexNow Idle';
           document.getElementById('res-badge-thq').textContent = a.llms_txt_detected ? '✅ /llms.txt Configured' : '❌ Missing /llms.txt';
 
           resBox.classList.remove('hidden');

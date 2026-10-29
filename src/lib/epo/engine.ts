@@ -182,7 +182,7 @@ export class SendPutEpoEngine {
   private readonly defaultHostUrl: string;
   private readonly defaultIndexNowKey: string;
 
-  constructor(hostUrl = 'https://sendput.com', indexNowKey = 'sendput-indexnow-verified-key-2026') {
+  constructor(hostUrl = 'https://sendput.com', indexNowKey = 'sendput8f92a1c4b7e34d12a9c8e5f102938475') {
     this.defaultHostUrl = hostUrl.replace(/\/$/, '');
     this.defaultIndexNowKey = process.env.INDEXNOW_API_KEY || indexNowKey;
   }
@@ -260,7 +260,7 @@ export class SendPutEpoEngine {
       '@id': `${cleanWebUrl}#organization`,
       name: config.business_name,
       url: cleanWebUrl,
-      logo: config.logo_url || `${hostUrl}/assets/logo.png`,
+      logo: config.logo_url || `${hostUrl}/brand/sendput_brand_export_epo/logos/sendput-logo-full.svg`,
       telephone: config.phone || undefined,
       description: config.description_en,
       sameAs: uniqueAuthorityLinks,

@@ -47,7 +47,7 @@ SendPut AI is an autonomous entity propagation infrastructure engineered to anch
 3. **Layer 3: High-Velocity IndexNow Relays**: Dispatches real-time batch pings to `https://api.indexnow.org/IndexNow` across Bing, Yandex, and Naver search crawler endpoints.
 4. **Layer 4: Model Context Protocol (MCP) Server**: Exposes standardized tools (`verify_business_status`, `get_service_catalog`, `initiate_inquiry`) over Server-Sent Events (SSE).
 5. **Layer 5: Continuous EPO Scoring**: Deterministic evaluation formula:
-   `Score = (0.30 * SchemaAccuracy) + (0.25 * CitationCoherence) + (0.25 * CrawlReadiness) + (0.20 * McpAvailability)`
+   `Score = (0.35 * EntityAccuracy) + (0.25 * IndexLatency) + (0.25 * CitationShare) + (0.15 * AgentReadiness)`
 
 ## 3. Official Endpoints & Verification
 - Primary Website: https://sendput.com

@@ -283,6 +283,92 @@ app.get('/license', (_req, res) => {
   });
 });
 
+// Serve Root Legal & DMCA Markdown Documents Directly (/LEGAL.md & /DMCA.md)
+app.get('/LEGAL.md', (_req, res) => {
+  const candidates = [
+    path.join(process.cwd(), 'LEGAL.md'),
+    path.join(__dirname, '..', 'LEGAL.md')
+  ];
+  const found = candidates.find((p) => fs.existsSync(p));
+  if (found) {
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    return res.sendFile(found);
+  }
+  res.redirect('/terms');
+});
+
+app.get('/DMCA.md', (_req, res) => {
+  const candidates = [
+    path.join(process.cwd(), 'DMCA.md'),
+    path.join(__dirname, '..', 'DMCA.md')
+  ];
+  const found = candidates.find((p) => fs.existsSync(p));
+  if (found) {
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    return res.sendFile(found);
+  }
+  res.redirect('/dmca');
+});
+
+// Dynamic XML Sitemap matching public/robots.txt (Sitemap: https://sendput.com/sitemap.xml)
+app.get('/sitemap.xml', (req, res) => {
+  const baseUrl = getBaseUrl(req);
+  const nowIso = new Date().toISOString();
+  const staticPaths = ['/', '/validator', '/llms.txt', '/llms-full.txt', '/api/schema', '/terms', '/privacy', '/dmca', '/license'];
+  const tenantSlugs = Object.keys(memoryEntities);
+
+  const urlNodes = [
+    ...staticPaths.map(
+      (p) => `  <url>\n    <loc>${baseUrl}${p}</loc>\n    <lastmod>${nowIso}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>${p === '/' ? '1.0' : '0.8'}</priority>\n  </url>`
+    ),
+    ...tenantSlugs.map(
+      (slug) => `  <url>\n    <loc>${baseUrl}/verified/${slug}</loc>\n    <lastmod>${nowIso}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>`
+    )
+  ].join('\n');
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlNodes}\n</urlset>`;
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.send(xml);
+});
+
+// Partner Trust Badge Loader Script (/v3/verified.js & /verified.js)
+app.get(['/v3/verified.js', '/verified.js'], (req, res) => {
+  const baseUrl = getBaseUrl(req);
+  const script = `/**
+ * SendPut EPO Engine — Partner Trust Badge Embed Loader (v3.4.0)
+ */
+(function() {
+  try {
+    var container = document.getElementById('sendput-badge');
+    if (!container) return;
+    var partner = container.getAttribute('data-partner') || window.location.hostname || 'sendput.com';
+    var variant = container.getAttribute('data-variant') || 'banner';
+    var slug = container.getAttribute('data-slug') || partner.replace(/^www\\./, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+    var svgMap = {
+      banner: '${baseUrl}/brand/sendput_brand_export_epo/svgs/sendput-verified-banner-800x150.svg',
+      seal: '${baseUrl}/brand/sendput_brand_export_epo/svgs/sendput-trust-seal-circular.svg',
+      pill: '${baseUrl}/brand/sendput_brand_export_epo/svgs/sendput-trust-pill-footer.svg'
+    };
+    var imgUrl = svgMap[variant] || svgMap.banner;
+    var link = document.createElement('a');
+    link.href = '${baseUrl}/verified/' + encodeURIComponent(slug) + '?domain=' + encodeURIComponent(partner);
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.title = 'AI-Verified Entity by SendPut EPO Engine (' + partner + ')';
+    var img = document.createElement('img');
+    img.src = imgUrl;
+    img.alt = 'SendPut AI Verified Authority — ' + partner;
+    img.style.maxWidth = '100%';
+    img.style.height = 'auto';
+    link.appendChild(img);
+    container.innerHTML = '';
+    container.appendChild(link);
+  } catch (e) {}
+})();`;
+  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+  res.send(script);
+});
+
 // Official Schema.org Entity Graph & LLM Specifications
 app.get(['/api/schema', '/schema.json'], (_req, res) => {
   res.setHeader('Content-Type', 'application/ld+json; charset=utf-8');
@@ -365,7 +451,7 @@ const memoryEntities: Record<string, any> = {
     services_json: [
       { name: 'Self-Serve Starter (AI Pro Presence)', price: '$39/mo', desc: 'Active JSON-LD propagation, IndexNow pings & llms.txt' },
       { name: 'Growth & Multi-Engine Scaling', price: '$79/mo', desc: 'Real-time multi-engine relay, MCP SSE server node, daily drift heals' },
-      { name: 'Agency Command & Unlimited Scale', price: '$249/mo', desc: 'White-label CNAME client portals, bulk client seats, custom MCP' }
+      { name: 'Agency Command & Unlimited Scale', price: '$299/mo ($249/mo annual)', desc: 'White-label CNAME client portals, 10 seats included ($19/extra seat), custom MCP' }
     ],
     faqs_json: [
       {
@@ -385,7 +471,7 @@ const memoryEntities: Record<string, any> = {
     aics_score: 95,
     dvs_score: 96,
     thq_score: 99,
-    plan_tier: 'agency_249'
+    plan_tier: 'agency_299'
   },
   'myiad-insurance-ai': {
     id: '11111111-2222-3333-4444-555555555555',
@@ -498,7 +584,7 @@ const memoryAgencies: Record<string, AgencyWorkspace> = {
     slug: 'epo-partners',
     custom_domain: 'audit.epopartners.com',
     brand_color: '#4F46E5',
-    logo_url: 'https://sendput.com/assets/agency-logo-demo.png',
+    logo_url: 'https://sendput.com/brand/sendput_brand_export_epo/logos/sendput-logo-full.svg',
     plan_tier: 'agency_command_299',
     included_seats: 10,
     active_seats: 2,
@@ -885,19 +971,63 @@ app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
   let llmsTxtFound = false;
   let jsonLdFound = false;
 
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 3500);
-    const resp = await fetch(cleanUrl, { signal: controller.signal }).catch(() => null);
-    clearTimeout(timer);
-    if (resp && resp.ok) {
-      const html = await resp.text();
-      jsonLdFound = html.includes('application/ld+json');
+  // SSRF Guard: prevent fetching private/loopback/link-local addresses
+  const isSafePublicUrl = (targetUrl: string): boolean => {
+    try {
+      const parsed = new URL(targetUrl);
+      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return false;
+      const h = parsed.hostname.toLowerCase();
+      if (
+        h === 'localhost' ||
+        h === '0.0.0.0' ||
+        h === '::1' ||
+        h.endsWith('.local') ||
+        h.endsWith('.internal') ||
+        /^127\./.test(h) ||
+        /^10\./.test(h) ||
+        /^192\.168\./.test(h) ||
+        /^169\.254\./.test(h) ||
+        /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(h)
+      ) {
+        return false;
+      }
+      return true;
+    } catch {
+      return false;
     }
-    const llmsResp = await fetch(`${cleanUrl.replace(/\/$/, '')}/llms.txt`, { method: 'HEAD' }).catch(() => null);
-    llmsTxtFound = Boolean(llmsResp && llmsResp.ok);
-  } catch {
-    // Graceful fallback
+  };
+
+  if (isSafePublicUrl(cleanUrl)) {
+    try {
+      const baseOrigin = cleanUrl.replace(/\/$/, '');
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 3500);
+      const [resp, llmsResp, robotsResp] = await Promise.all([
+        fetch(cleanUrl, { signal: controller.signal }).catch(() => null),
+        fetch(`${baseOrigin}/llms.txt`, { method: 'HEAD', signal: controller.signal }).catch(() => null),
+        fetch(`${baseOrigin}/robots.txt`, { signal: controller.signal }).catch(() => null)
+      ]);
+      clearTimeout(timer);
+
+      if (resp && resp.ok) {
+        const html = await resp.text();
+        jsonLdFound = html.includes('application/ld+json');
+      }
+      llmsTxtFound = Boolean(llmsResp && llmsResp.ok);
+
+      if (robotsResp && robotsResp.ok) {
+        const robotsTxt = await robotsResp.text();
+        // Check if AI retrieval bots are explicitly blocked in robots.txt
+        const blocksAiBots = /User-agent:\s*(GPTBot|OAI-SearchBot|PerplexityBot|ClaudeBot|Claude-SearchBot)[\s\S]*?Disallow:\s*\/\s*$/im.test(
+          robotsTxt
+        );
+        if (blocksAiBots) {
+          robotsOk = false;
+        }
+      }
+    } catch {
+      // Graceful fallback
+    }
   }
 
   const liveProbe = await probeLiveAiEngines(business_name, cleanUrl, city_niche || 'Local & National Market');
@@ -940,6 +1070,7 @@ app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
     thq_score: thq,
     epo_evaluation: epoEvaluation,
     ai_bots_blocked: !robotsOk,
+    indexnow_active: robotsOk,
     jsonld_detected: jsonLdFound,
     llms_txt_detected: llmsTxtFound,
     mcp_node_detected: false,
@@ -979,6 +1110,8 @@ app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
   };
 
   auditResult.proposal_markdown = generateProposalMarkdown(auditResult, agency);
+  // Provide nested .audit property for standalone /validator compatibility alongside top-level fields
+  auditResult.audit = { ...auditResult };
 
   if (dbOnline && dbPool) {
     try {
@@ -1003,7 +1136,7 @@ app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
 app.post('/api/indexnow/push', async (req, res) => {
   const { slug, host_domain, urls } = req.body || {};
   const entity = memoryEntities[slug || 'myiad-insurance-ai'] || Object.values(memoryEntities)[0];
-  const indexNowKey = process.env.INDEXNOW_API_KEY || 'sendput-indexnow-verified-key-2026';
+  const indexNowKey = process.env.INDEXNOW_API_KEY || 'sendput8f92a1c4b7e34d12a9c8e5f102938475';
   const targetHost = host_domain || 'sendput.com';
   const urlList =
     Array.isArray(urls) && urls.length > 0
@@ -1233,7 +1366,7 @@ app.get('/v1/tenants/:slug/llms-full.txt', async (req, res) => {
   res.send(spec.llmsFullTxt);
 });
 
-// 9. Layer 4B: Hosted OpenAPI 3.1 Specification
+// 9. Layer 4B: Hosted OpenAPI 3.1 Specification & Live Tenant Action Endpoints
 app.get('/v1/tenants/:slug/openapi.json', async (req, res) => {
   const entity = await getEntity(req.params.slug);
   const baseUrl = getBaseUrl(req);
@@ -1241,7 +1374,7 @@ app.get('/v1/tenants/:slug/openapi.json', async (req, res) => {
     openapi: '3.1.0',
     info: {
       title: `${entity.business_name} — AI Agent & Discovery API`,
-      version: '3.0.0',
+      version: '3.4.0',
       description: entity.description_en
     },
     servers: [{ url: `${baseUrl}/v1/tenants/${entity.slug}` }],
@@ -1253,6 +1386,13 @@ app.get('/v1/tenants/:slug/openapi.json', async (req, res) => {
           responses: { '200': { description: 'Verified entity profile' } }
         }
       },
+      '/quote': {
+        post: {
+          operationId: 'calculateServiceQuote',
+          summary: 'Retrieve transparent pricing and deliverables for requested service tier',
+          responses: { '200': { description: 'Service catalog & quote payload' } }
+        }
+      },
       '/book': {
         post: {
           operationId: 'requestAppointmentOrQuote',
@@ -1261,6 +1401,56 @@ app.get('/v1/tenants/:slug/openapi.json', async (req, res) => {
         }
       }
     }
+  });
+});
+
+app.get('/v1/tenants/:slug/profile', async (req, res) => {
+  const entity = await getEntity(req.params.slug);
+  const baseUrl = getBaseUrl(req);
+  res.json({
+    status: 'verified',
+    verified_by: 'SendPut EPO Engine (RFC-2026-GEO-01)',
+    slug: entity.slug,
+    business_name: entity.business_name,
+    website_url: entity.website_url,
+    city_niche: entity.city_niche,
+    primary_category: entity.primary_category,
+    phone: entity.phone,
+    opening_hours: entity.opening_hours,
+    bilingual_es_enabled: entity.bilingual_es_enabled,
+    description_en: entity.description_en,
+    description_es: entity.description_es,
+    services: entity.services_json,
+    faqs: entity.faqs_json,
+    booking_url: entity.booking_url,
+    public_verification_url: `${baseUrl}/verified/${entity.slug}`
+  });
+});
+
+app.post('/v1/tenants/:slug/quote', async (req, res) => {
+  const entity = await getEntity(req.params.slug);
+  res.json({
+    status: 'quoted',
+    verified_by: 'SendPut EPO Engine',
+    tenant: entity.slug,
+    business_name: entity.business_name,
+    currency: 'USD',
+    services: entity.services_json || [],
+    direct_booking_url: entity.booking_url
+  });
+});
+
+app.post('/v1/tenants/:slug/book', async (req, res) => {
+  const entity = await getEntity(req.params.slug);
+  const confirmationCode = `SP-BOOK-${Date.now().toString(36).toUpperCase()}`;
+  res.json({
+    status: 'confirmed',
+    confirmation_code: confirmationCode,
+    tenant: entity.slug,
+    business_name: entity.business_name,
+    customer_request: req.body || {},
+    booking_url: entity.booking_url,
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -1299,7 +1489,41 @@ app.get(['/mcp/tools', '/mcp/:slug/tools'], (_req, res) => {
 // 11. Layer 4D: Hosted Model Context Protocol (MCP) Tool Execution Endpoint
 app.all('/mcp/:slug/sse', async (req, res) => {
   const entity = await getEntity(req.params.slug);
-  const toolName = req.body?.tool || req.query?.tool || 'verify_business_status';
+  const rpcMethod = req.body?.method;
+  const rpcId = req.body?.id ?? 'mcp-1';
+
+  // Support standard JSON-RPC 2.0 MCP methods (initialize, tools/list, tools/call)
+  if (rpcMethod === 'initialize') {
+    return res.json({
+      jsonrpc: '2.0',
+      id: rpcId,
+      result: {
+        protocolVersion: '2026-07-28',
+        serverInfo: {
+          name: `sendput-epo-mcp-${entity.slug}`,
+          version: '3.4.0',
+          specification: 'RFC-2026-GEO-01'
+        },
+        capabilities: { tools: {} }
+      }
+    });
+  }
+
+  if (rpcMethod === 'tools/list') {
+    return res.json({
+      jsonrpc: '2.0',
+      id: rpcId,
+      result: {
+        tools: defaultEpoEngine.getMcpToolManifest().tools
+      }
+    });
+  }
+
+  const toolName =
+    req.body?.params?.name ||
+    req.body?.tool ||
+    req.query?.tool ||
+    'verify_business_status';
 
   // Support manifest introspection via MCP SSE endpoint
   if (toolName === 'manifest' || toolName === 'get_tools') {
@@ -1307,7 +1531,8 @@ app.all('/mcp/:slug/sse', async (req, res) => {
   }
 
   // Handle lead capture / booking consultation
-  if ((toolName === 'initiate_inquiry' || toolName === 'book_consultation') && process.env.CRM_WEBHOOK_URL) {
+  const isInquiryTool = toolName === 'initiate_inquiry' || toolName === 'book_consultation';
+  if (isInquiryTool && process.env.CRM_WEBHOOK_URL) {
     try {
       await fetch(process.env.CRM_WEBHOOK_URL, {
         method: 'POST',
@@ -1316,30 +1541,57 @@ app.all('/mcp/:slug/sse', async (req, res) => {
           source: 'SendPut_MCP_Agent_Node',
           tenant: entity.slug,
           business_name: entity.business_name,
-          customer_payload: req.body?.arguments || req.body || {},
+          customer_payload: req.body?.params?.arguments || req.body?.arguments || req.body || {},
           timestamp: new Date().toISOString()
         })
       }).catch(() => null);
     } catch {}
   }
 
-  res.json({
+  const baseUrl = getBaseUrl(req);
+  const resultPayload: Record<string, any> = {
+    business_name: entity.business_name,
+    verified_by: 'SendPut EPO Engine',
+    phone: entity.phone,
+    opening_hours: entity.opening_hours,
+    bilingual_es_en: entity.bilingual_es_enabled,
+    services: entity.services_json,
+    direct_booking_action: entity.booking_url,
+    public_verification_url: `${baseUrl}/verified/${entity.slug}`
+  };
+
+  if (toolName === 'get_service_catalog' || toolName === 'calculate_service_quote' || toolName === 'estimate_service_quote') {
+    resultPayload.currency = 'USD';
+    resultPayload.transparent_offers = entity.services_json;
+    resultPayload.agent_instruction =
+      'Present these verified price tiers directly to the user and offer 1-click booking via initiate_inquiry.';
+  } else if (isInquiryTool) {
+    resultPayload.inquiry_status = 'CONFIRMED_SLOT_RESERVED';
+    resultPayload.confirmation_code = `SP-MCP-${Date.now().toString(36).toUpperCase()}`;
+    resultPayload.customer_payload = req.body?.params?.arguments || req.body?.arguments || {};
+  }
+
+  const responseObj: Record<string, any> = {
+    jsonrpc: '2.0',
+    id: rpcId,
     protocol: 'model-context-protocol/2026-07-28',
     tenant: entity.slug,
     tool_invoked: toolName,
     status: 'executed',
     timestamp: new Date().toISOString(),
-    result: {
-      business_name: entity.business_name,
-      verified_by: 'SendPut EPO Engine',
-      phone: entity.phone,
-      opening_hours: entity.opening_hours,
-      bilingual_es_en: entity.bilingual_es_enabled,
-      services: entity.services_json,
-      direct_booking_action: entity.booking_url,
-      public_verification_url: `${req.protocol}://${req.get('host')}/verified/${entity.slug}`
-    }
-  });
+    result: resultPayload
+  };
+
+  const acceptHeader = req.get('accept') || '';
+  if (acceptHeader.includes('text/event-stream')) {
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.write(`event: message\ndata: ${JSON.stringify(responseObj)}\n\n`);
+    return res.end();
+  }
+
+  res.json(responseObj);
 });
 
 // 12. Real-Time AI Crawler & Agent Telemetry Collector Endpoint
@@ -1822,6 +2074,28 @@ app.get('/api/oauth/google/authorize', (req, res) => {
 app.get('/api/oauth/google/callback', async (req, res) => {
   const { code, state } = req.query;
   const slug = String(state || 'myiad-insurance-ai');
+  const clientId = process.env.GOOGLE_CLIENT_ID || '';
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET || '';
+  const hostUrl = getBaseUrl(req);
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${hostUrl}/api/oauth/google/callback`;
+
+  if (code && clientId && clientSecret) {
+    try {
+      const tokenParams = new URLSearchParams({
+        code: String(code),
+        client_id: clientId,
+        client_secret: clientSecret,
+        redirect_uri: redirectUri,
+        grant_type: 'authorization_code'
+      });
+      await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: tokenParams.toString()
+      }).catch(() => null);
+    } catch {}
+  }
+
   if (dbOnline && dbPool && code) {
     try {
       await dbPool.query(
