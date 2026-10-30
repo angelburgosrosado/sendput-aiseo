@@ -619,75 +619,98 @@ function testTcpPort(host: string, port: number, timeoutMs = 2000): Promise<bool
 }
 
 let dbInitPromise: Promise<void> | null = null;
+let activeDbHost = 'ep-divine-wildflower-b42dfkfb.c-6.us-east-2.aws.neon.tech';
 
 async function initDbPool() {
-  const rawConn = (process.env.DATABASE_URL || process.env.VPS_POSTGRES_URL || '').trim();
-  const urlMatch = rawConn.match(/postgres(?:ql)?:\/\/[^\s'"]+/i);
-  const connStr = (urlMatch ? urlMatch[0] : rawConn.replace(/['"]/g, '').trim()).replace(/([?&])channel_binding=require(&|$)/i, '$1').replace(/[?&]$/, '');
-  if (!connStr || connStr.includes('placeholder') || connStr.includes('username:password')) {
+  const candidates = [
+    process.env.DATABASE_URL_UNPOOLED,
+    process.env.DATABASE_URL,
+    process.env.POSTGRES_URL,
+    process.env.VPS_POSTGRES_URL
+  ]
+    .map((v) => (v || '').trim())
+    .filter((v) => v && !v.includes('placeholder') && !v.includes('username:password'));
+
+  if (candidates.length === 0) {
     console.warn('[Self-Healing DB] No active DATABASE_URL configured; operating in stateful memory shield mode.');
     return;
   }
-  try {
-    dbPool = new Pool({
-      connectionString: connStr,
-      ssl: connStr.includes('localhost') ? false : { rejectUnauthorized: false },
-      connectionTimeoutMillis: 4500
-    });
-    dbPool.on('connect', (client) => {
-      client.query(`SET search_path TO ${SCHEMA_NAME}, public;`).catch(() => {});
-    });
-    const client = await dbPool.connect();
+
+  for (const rawConn of candidates) {
+    const urlMatch = rawConn.match(/postgres(?:ql)?:\/\/[^\s'"]+/i);
+    const connStr = (urlMatch ? urlMatch[0] : rawConn.replace(/['"]/g, '').trim())
+      .replace(/([?&])channel_binding=require(&|$)/i, '$1')
+      .replace(/[?&]$/, '');
+    if (!connStr) continue;
+
     try {
-      await client.query(`CREATE SCHEMA IF NOT EXISTS ${SCHEMA_NAME};`);
-      await client.query(`SET search_path TO ${SCHEMA_NAME}, public;`);
-      await client.query(`
-        CREATE TABLE IF NOT EXISTS ${SCHEMA_NAME}.agency_workspaces (
-          id SERIAL PRIMARY KEY,
-          agency_name VARCHAR(255) NOT NULL,
-          slug VARCHAR(120) UNIQUE NOT NULL,
-          custom_domain VARCHAR(255),
-          brand_color VARCHAR(32) DEFAULT '#4F46E5',
-          logo_url TEXT,
-          plan_tier VARCHAR(64) DEFAULT 'agency_command_299',
-          included_seats INT DEFAULT 10,
-          active_seats INT DEFAULT 1,
-          extra_seat_price_usd NUMERIC(10,2) DEFAULT 19.00,
-          reseller_retail_price_starter_usd NUMERIC(10,2) DEFAULT 197.00,
-          reseller_retail_price_growth_usd NUMERIC(10,2) DEFAULT 497.00,
-          team_roles_json JSONB DEFAULT '[{"role":"agency_admin","email":"admin@agency.com"}]'::jsonb,
-          created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE TABLE IF NOT EXISTS ${SCHEMA_NAME}.business_entities (
-          id SERIAL PRIMARY KEY,
-          slug VARCHAR(140) UNIQUE NOT NULL,
-          business_name VARCHAR(255) NOT NULL,
-          website_url TEXT NOT NULL,
-          city_niche VARCHAR(255) NOT NULL,
-          primary_category VARCHAR(140) DEFAULT 'LocalBusiness',
-          phone VARCHAR(64),
-          opening_hours VARCHAR(255) DEFAULT 'Mo-Fr 08:00-18:00',
-          bilingual_es_enabled BOOLEAN DEFAULT TRUE,
-          description_en TEXT,
-          description_es TEXT,
-          services_json JSONB DEFAULT '[]'::jsonb,
-          faqs_json JSONB DEFAULT '[]'::jsonb,
-          sfai_score INT DEFAULT 0,
-          aics_score INT DEFAULT 0,
-          dvs_score INT DEFAULT 0,
-          thq_score INT DEFAULT 0,
-          plan_tier VARCHAR(64) DEFAULT 'starter_39',
-          updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-        );
-      `);
-      dbOnline = true;
-      console.log(`[Self-Healing DB] Connected to PostgreSQL schema: ${SCHEMA_NAME}`);
-    } finally {
-      client.release();
+      const candidatePool = new Pool({
+        connectionString: connStr,
+        ssl: connStr.includes('localhost') ? false : { rejectUnauthorized: false },
+        connectionTimeoutMillis: 4500
+      });
+      candidatePool.on('connect', (client) => {
+        client.query(`SET search_path TO ${SCHEMA_NAME}, public;`).catch(() => {});
+      });
+      const client = await candidatePool.connect();
+      try {
+        await client.query(`CREATE SCHEMA IF NOT EXISTS ${SCHEMA_NAME};`);
+        await client.query(`SET search_path TO ${SCHEMA_NAME}, public;`);
+        await client.query(`
+          CREATE TABLE IF NOT EXISTS ${SCHEMA_NAME}.agency_workspaces (
+            id SERIAL PRIMARY KEY,
+            agency_name VARCHAR(255) NOT NULL,
+            slug VARCHAR(120) UNIQUE NOT NULL,
+            custom_domain VARCHAR(255),
+            brand_color VARCHAR(32) DEFAULT '#4F46E5',
+            logo_url TEXT,
+            plan_tier VARCHAR(64) DEFAULT 'agency_command_299',
+            included_seats INT DEFAULT 10,
+            active_seats INT DEFAULT 1,
+            extra_seat_price_usd NUMERIC(10,2) DEFAULT 19.00,
+            reseller_retail_price_starter_usd NUMERIC(10,2) DEFAULT 197.00,
+            reseller_retail_price_growth_usd NUMERIC(10,2) DEFAULT 497.00,
+            team_roles_json JSONB DEFAULT '[{"role":"agency_admin","email":"admin@agency.com"}]'::jsonb,
+            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+          );
+          CREATE TABLE IF NOT EXISTS ${SCHEMA_NAME}.business_entities (
+            id SERIAL PRIMARY KEY,
+            slug VARCHAR(140) UNIQUE NOT NULL,
+            business_name VARCHAR(255) NOT NULL,
+            website_url TEXT NOT NULL,
+            city_niche VARCHAR(255) NOT NULL,
+            primary_category VARCHAR(140) DEFAULT 'LocalBusiness',
+            phone VARCHAR(64),
+            opening_hours VARCHAR(255) DEFAULT 'Mo-Fr 08:00-18:00',
+            bilingual_es_enabled BOOLEAN DEFAULT TRUE,
+            description_en TEXT,
+            description_es TEXT,
+            services_json JSONB DEFAULT '[]'::jsonb,
+            faqs_json JSONB DEFAULT '[]'::jsonb,
+            sfai_score INT DEFAULT 0,
+            aics_score INT DEFAULT 0,
+            dvs_score INT DEFAULT 0,
+            thq_score INT DEFAULT 0,
+            plan_tier VARCHAR(64) DEFAULT 'starter_39',
+            updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+          );
+        `);
+        dbPool = candidatePool;
+        dbOnline = true;
+        try {
+          activeDbHost = new URL(connStr).hostname || activeDbHost;
+        } catch {
+          // ignore hostname parse error
+        }
+        console.log(`[Self-Healing DB] Connected to PostgreSQL schema: ${SCHEMA_NAME} (${activeDbHost})`);
+        return;
+      } finally {
+        client.release();
+      }
+    } catch (err: any) {
+      console.error('[Self-Healing DB] Candidate connection failed:', err.message);
+      dbOnline = false;
     }
-  } catch (err: any) {
-    console.error('[Self-Healing DB] Fallback to stateful memory activated:', err.message);
-    dbOnline = false;
   }
 }
 
@@ -920,7 +943,7 @@ app.get('/api/health', async (_req, res) => {
     database: {
       poolConnected: dbOnline,
       schema: SCHEMA_NAME,
-      neonHost: 'ep-winter-poetry-ae51hoth.us-east-2.aws.neon.tech',
+      neonHost: activeDbHost,
       vpsPostgresTcp5432: vpsReachable ? 'OPEN (34.148.244.49:5432)' : 'STANDBY / MEMORY_SHIELD'
     },
     stealthPublicGate: {
