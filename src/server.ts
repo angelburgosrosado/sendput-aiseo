@@ -618,6 +618,8 @@ function testTcpPort(host: string, port: number, timeoutMs = 2000): Promise<bool
   });
 }
 
+let dbInitPromise: Promise<void> | null = null;
+
 async function initDbPool() {
   const connStr = (process.env.DATABASE_URL || process.env.VPS_POSTGRES_URL || '').replace(/['"]/g, '').trim();
   if (!connStr || connStr.includes('placeholder') || connStr.includes('username:password')) {
@@ -628,12 +630,54 @@ async function initDbPool() {
     dbPool = new Pool({
       connectionString: connStr,
       ssl: connStr.includes('localhost') ? false : { rejectUnauthorized: false },
-      connectionTimeoutMillis: 4000
+      connectionTimeoutMillis: 4500
+    });
+    dbPool.on('connect', (client) => {
+      client.query(`SET search_path TO ${SCHEMA_NAME}, public;`).catch(() => {});
     });
     const client = await dbPool.connect();
     try {
       await client.query(`CREATE SCHEMA IF NOT EXISTS ${SCHEMA_NAME};`);
       await client.query(`SET search_path TO ${SCHEMA_NAME}, public;`);
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS ${SCHEMA_NAME}.agency_workspaces (
+          id SERIAL PRIMARY KEY,
+          agency_name VARCHAR(255) NOT NULL,
+          slug VARCHAR(120) UNIQUE NOT NULL,
+          custom_domain VARCHAR(255),
+          brand_color VARCHAR(32) DEFAULT '#4F46E5',
+          logo_url TEXT,
+          plan_tier VARCHAR(64) DEFAULT 'agency_command_299',
+          included_seats INT DEFAULT 10,
+          active_seats INT DEFAULT 1,
+          extra_seat_price_usd NUMERIC(10,2) DEFAULT 19.00,
+          reseller_retail_price_starter_usd NUMERIC(10,2) DEFAULT 197.00,
+          reseller_retail_price_growth_usd NUMERIC(10,2) DEFAULT 497.00,
+          team_roles_json JSONB DEFAULT '[{"role":"agency_admin","email":"admin@agency.com"}]'::jsonb,
+          created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+        );
+        CREATE TABLE IF NOT EXISTS ${SCHEMA_NAME}.business_entities (
+          id SERIAL PRIMARY KEY,
+          slug VARCHAR(140) UNIQUE NOT NULL,
+          business_name VARCHAR(255) NOT NULL,
+          website_url TEXT NOT NULL,
+          city_niche VARCHAR(255) NOT NULL,
+          primary_category VARCHAR(140) DEFAULT 'LocalBusiness',
+          phone VARCHAR(64),
+          opening_hours VARCHAR(255) DEFAULT 'Mo-Fr 08:00-18:00',
+          bilingual_es_enabled BOOLEAN DEFAULT TRUE,
+          description_en TEXT,
+          description_es TEXT,
+          services_json JSONB DEFAULT '[]'::jsonb,
+          faqs_json JSONB DEFAULT '[]'::jsonb,
+          sfai_score INT DEFAULT 0,
+          aics_score INT DEFAULT 0,
+          dvs_score INT DEFAULT 0,
+          thq_score INT DEFAULT 0,
+          plan_tier VARCHAR(64) DEFAULT 'starter_39',
+          updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
       dbOnline = true;
       console.log(`[Self-Healing DB] Connected to PostgreSQL schema: ${SCHEMA_NAME}`);
     } finally {
@@ -645,9 +689,17 @@ async function initDbPool() {
   }
 }
 
+function ensureDbPool(): Promise<void> {
+  if (!dbInitPromise) {
+    dbInitPromise = initDbPool().catch((err) => console.warn('[Self-Healing DB Init]:', err?.message));
+  }
+  return dbInitPromise;
+}
+
 // Helper: Resolve agency by CNAME custom domain or slug
 async function getAgency(identifier?: string): Promise<AgencyWorkspace | null> {
   if (!identifier) return null;
+  await ensureDbPool();
   const clean = identifier.toLowerCase().trim();
 
   if (dbOnline && dbPool) {
@@ -672,6 +724,7 @@ async function getAgency(identifier?: string): Promise<AgencyWorkspace | null> {
 
 // Asynchronously fetch business entity from PostgreSQL or fall back to memory
 async function getEntity(slug: string): Promise<any> {
+  await ensureDbPool();
   if (dbOnline && dbPool) {
     try {
       const res = await dbPool.query(`SELECT * FROM business_entities WHERE slug = $1 LIMIT 1`, [slug]);
@@ -841,6 +894,7 @@ app.get('/sendput8f92a1c4b7e34d12a9c8e5f102938475.txt', (_req, res) => {
 
 // 1. Health & Ecosystem Telemetry Endpoint
 app.get('/api/health', async (_req, res) => {
+  await ensureDbPool();
   const vpsReachable = await testTcpPort('34.148.244.49', 5432, 1200);
   res.json({
     status: 'ok',
@@ -2110,6 +2164,7 @@ app.get('/api/oauth/google/callback', async (req, res) => {
 // 19. Founder 1-Click Portfolio Seeder & IndexNow Batch Pusher (/api/seed-portfolio)
 // Seeds active portfolio brands (excluding abglco.com which is parked for Stage 2)
 app.post('/api/seed-portfolio', async (req, res) => {
+  await ensureDbPool();
   const founderKey = req.headers['x-founder-key'] || req.body?.founder_key || '';
   const expectedKey = (process.env.SP_FOUNDER_KEY || 'SP-FOUNDER-2026').trim();
 
@@ -2272,7 +2327,7 @@ app.get('*', (_req, res) => {
   res.sendFile(path.join(publicDir, 'index.html'));
 });
 
-initDbPool().catch((err) => console.warn('[Self-Healing DB Init]:', err?.message));
+ensureDbPool();
 
 if (require.main === module || !process.env.VERCEL) {
   app.listen(PORT, '0.0.0.0', () => {
