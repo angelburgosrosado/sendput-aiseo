@@ -29290,13 +29290,13 @@ async function initDbPool() {
   }
   for (const rawConn of candidates) {
     const urlMatch = rawConn.match(/postgres(?:ql)?:\/\/[^\s'"]+/i);
-    const connStr = (urlMatch ? urlMatch[0] : rawConn.replace(/['"]/g, "").trim()).replace(/([?&])channel_binding=require(&|$)/i, "$1").replace(/[?&]$/, "");
+    const connStr = (urlMatch ? urlMatch[0] : rawConn.replace(/['"]/g, "").trim()).replace(/([?&])(channel_binding|sslmode)=[^&]+(&|$)/gi, "$1").replace(/\?&+/g, "?").replace(/&&+/g, "&").replace(/[?&]+$/, "");
     if (!connStr) continue;
     try {
       const candidatePool = new Pool2({
         connectionString: connStr,
         ssl: connStr.includes("localhost") ? false : { rejectUnauthorized: false },
-        connectionTimeoutMillis: 4500
+        connectionTimeoutMillis: 1e4
       });
       candidatePool.on("connect", (client2) => {
         client2.query(`SET search_path TO ${SCHEMA_NAME}, public;`).catch(() => {
@@ -29363,8 +29363,15 @@ async function initDbPool() {
   }
 }
 function ensureDbPool() {
+  if (dbOnline && dbPool) {
+    return Promise.resolve();
+  }
   if (!dbInitPromise) {
-    dbInitPromise = initDbPool().catch((err) => console.warn("[Self-Healing DB Init]:", err?.message));
+    dbInitPromise = initDbPool().catch((err) => console.warn("[Self-Healing DB Init]:", err?.message)).finally(() => {
+      if (!dbOnline) {
+        dbInitPromise = null;
+      }
+    });
   }
   return dbInitPromise;
 }
