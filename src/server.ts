@@ -37,8 +37,8 @@ app.set('trust proxy', true);
 
 // Canonical 301 Permanent Redirect for getepo.com (EPO-002)
 app.use((req, res, next) => {
-  const host = (req.get('host') || '').toLowerCase();
-  if (host.includes('getepo.com') && !req.path.startsWith('/validator')) {
+  const host = (req.get('host') || '').toLowerCase().split(':')[0];
+  if ((host === 'getepo.com' || host === 'www.getepo.com') && !req.path.startsWith('/validator')) {
     const targetUrl = `https://sendput.com${req.originalUrl}`;
     return res.redirect(301, targetUrl);
   }
