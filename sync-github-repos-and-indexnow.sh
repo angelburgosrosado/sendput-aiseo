@@ -5,9 +5,9 @@
 # ==============================================================================
 # What this script does:
 #  1. Drops the official IndexNow verification key file (sendput8f92a1c4b7e34d12a9c8e5f102938475.txt),
-#     /llms.txt feed, AI-friendly robots.txt, and SendPut Edge Script into your
-#     GitHub repositories (sendput-aiseo, InsuranceAI-SaaS, InsuranceAI-CRM,
-#     InsuranceAI-Agency, iptv-menu-app, story-menu-app).
+#     /llms.txt + /llms-full.txt feeds, AI-friendly robots.txt, and SendPut Edge Script into your
+#     GitHub repositories (sendput-aiseo, insuranceai-saas, insuranceai-crm,
+#     insuranceai-agent, myiad-insuranceai.web, iptv-menu-app, Story-Menu-App).
 #  2. Commits and pushes the updates to GitHub (triggering Vercel/Render deploys).
 #  3. Pings https://api.indexnow.org/indexnow with keyLocation verification for
 #     every live domain so Bing, Microsoft Copilot, and ChatGPT Search verify
@@ -46,11 +46,11 @@ update_repo_geo_files() {
   local pub_dir="${repo_dir}/public"
   mkdir -p "${pub_dir}"
 
-  # 1. Write official IndexNow key file at public/<INDEXNOW_KEY>.txt
+  # 1. Write official IndexNow key file at public/<INDEXNOW_KEY>.txt and root
   echo -n "${INDEXNOW_KEY}" > "${pub_dir}/${INDEXNOW_KEY}.txt"
   echo "   ✅ Created ${pub_dir}/${INDEXNOW_KEY}.txt"
 
-  # 2. Write /llms.txt if not already managed dynamically
+  # 2. Write /llms.txt and /llms-full.txt if not already managed dynamically
   if [ "${prod_domain}" != "sendput.com" ]; then
     cat << LLMSEOF > "${pub_dir}/llms.txt"
 # ${brand_name}
@@ -60,11 +60,33 @@ update_repo_geo_files() {
 ## Verified Entity Profile (SendPut EPO Engine)
 - **Official Website**: https://${prod_domain}
 - **Public AI Verification Record**: ${SENDPUT_HOST}/verified/${tenant_slug}
+- **Full AI Knowledge Graph Feed**: https://${prod_domain}/llms-full.txt
 - **OpenAPI 3.1 Schema**: ${SENDPUT_HOST}/v1/tenants/${tenant_slug}/openapi.json
 - **Agent Skill (SKILL.md)**: ${SENDPUT_HOST}/v1/tenants/${tenant_slug}/skill.md
 - **Live MCP Server**: ${SENDPUT_HOST}/mcp/${tenant_slug}/sse
 LLMSEOF
     echo "   ✅ Created ${pub_dir}/llms.txt"
+
+    cat << LLMSFULLEOF > "${pub_dir}/llms-full.txt"
+# ${brand_name} — Full AI Knowledge Graph & Agentic Specification
+
+> ${summary_en}
+
+## Canonical Entity Metadata
+- **Entity Name**: ${brand_name}
+- **Tenant Slug**: ${tenant_slug}
+- **Primary Domain**: https://${prod_domain}
+- **Verification Authority**: SendPut EPO Engine (${SENDPUT_HOST})
+- **IndexNow Verification Key**: https://${prod_domain}/${INDEXNOW_KEY}.txt
+
+## Agentic Discovery & Machine Endpoints
+- **Public Entity Verification Badge**: ${SENDPUT_HOST}/verified/${tenant_slug}
+- **Entity Profile JSON**: ${SENDPUT_HOST}/v1/tenants/${tenant_slug}/profile
+- **OpenAPI 3.1 Specification**: ${SENDPUT_HOST}/v1/tenants/${tenant_slug}/openapi.json
+- **Agent Skill Definition**: ${SENDPUT_HOST}/v1/tenants/${tenant_slug}/skill.md
+- **Model Context Protocol (MCP) JSON-RPC 2.0 / SSE**: ${SENDPUT_HOST}/mcp/${tenant_slug}/sse
+LLMSFULLEOF
+    echo "   ✅ Created ${pub_dir}/llms-full.txt"
   fi
 
   # 3. Write / update robots.txt to unblock AI retrieval crawlers
@@ -77,6 +99,9 @@ User-agent: OAI-SearchBot
 Allow: /
 
 User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
 Allow: /
 
 User-agent: PerplexityBot
@@ -98,12 +123,22 @@ Sitemap: https://${prod_domain}/sitemap.xml
 ROBOTSEOF
   echo "   ✅ Updated ${pub_dir}/robots.txt (AI Retrieval Bots Allowed)"
 
-  # 4. Inject SendPut Edge Script into index.html if present and not yet injected
+  # 4. Inject SendPut Edge Script into index.html if present and not yet injected (cross-platform via python3)
   for html_file in "${repo_dir}/index.html" "${pub_dir}/index.html"; do
     if [ -f "${html_file}" ] && [ "${prod_domain}" != "sendput.com" ]; then
-      if ! grep -q "sf-edge.js" "${html_file}"; then
-        sed -i 's|</head>|  <script src="https://sendput.com/sf-edge.js?tenant='"${tenant_slug}"'" defer></script>\n</head>|I' "${html_file}" || true
-        echo "   ✅ Injected sf-edge.js into ${html_file}"
+      if ! grep -qE "sf-edge\.js|epo-edge\.js" "${html_file}"; then
+        python3 -c '
+import sys, re
+file_path, slug = sys.argv[1], sys.argv[2]
+with open(file_path, "r", encoding="utf-8") as f:
+    html = f.read()
+tag = f"  <script src=\"https://sendput.com/epo-edge.js?tenant={slug}\" defer></script>\n</head>"
+if re.search(r"</head>", html, re.IGNORECASE):
+    html = re.sub(r"</head>", tag, html, count=1, flags=re.IGNORECASE)
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(html)
+    print(f"   ✅ Injected epo-edge.js into {file_path}")
+' "${html_file}" "${tenant_slug}" || true
       fi
     fi
   done
@@ -112,13 +147,17 @@ ROBOTSEOF
   if [ -d "${repo_dir}/.git" ]; then
     (
       cd "${repo_dir}"
-      git add -A
+      git add "${pub_dir}/${INDEXNOW_KEY}.txt" "${pub_dir}/robots.txt" 2>/dev/null || true
+      [ -f "${pub_dir}/llms.txt" ] && git add "${pub_dir}/llms.txt" 2>/dev/null || true
+      [ -f "${pub_dir}/llms-full.txt" ] && git add "${pub_dir}/llms-full.txt" 2>/dev/null || true
+      [ -f "${repo_dir}/index.html" ] && git add "${repo_dir}/index.html" 2>/dev/null || true
+      [ -f "${pub_dir}/index.html" ] && git add "${pub_dir}/index.html" 2>/dev/null || true
       if ! git diff --cached --quiet; then
-        git commit -m "feat(geo): add SendPut EPO Engine edge schema, llms.txt & IndexNow key (${INDEXNOW_KEY})"
+        git commit -m "feat(epo): add SendPut EPO Engine edge schema, llms.txt, llms-full.txt & IndexNow key (${INDEXNOW_KEY})"
         echo "   🚀 Pushing ${brand_name} to GitHub origin..."
         git push origin HEAD || echo "   ⚠️  git push requires credentials or manual push in ${repo_dir}"
       else
-        echo "   ℹ️  No file changes to commit in ${repo_dir}"
+        echo "   ℹ️  No staged GEO file changes to commit in ${repo_dir}"
       fi
     )
   fi
@@ -142,7 +181,7 @@ verify_domain_indexnow() {
       \"urlList\": [
         \"https://${prod_domain}/\",
         \"https://${prod_domain}/llms.txt\",
-        \"${SENDPUT_HOST}/verified/${tenant_slug}\"
+        \"https://${prod_domain}/llms-full.txt\"
       ]
     }" || echo "000")
 
@@ -156,11 +195,12 @@ fi
 
 # 2. Update Sibling Portfolio Repositories (if cloned in parent directory)
 PARENT_DIR="$(dirname "${WORKSPACE_ROOT}")"
-update_repo_geo_files "${PARENT_DIR}/InsuranceAI-SaaS" "myiad-insurance-ai" "MyIAD InsuranceAI SaaS" "saas.myiad.net" "AI-powered bilingual (EN/ES) insurance agency management platform integrated with Microsoft 365."
-update_repo_geo_files "${PARENT_DIR}/InsuranceAI-CRM" "myiad-insurance-ai" "MyIAD US Insurance CRM" "crm.myiad.net" "Automated insurance lead routing, WhatsApp templates, and policy renewal CRM."
-update_repo_geo_files "${PARENT_DIR}/InsuranceAI-Agency" "myiad-insurance-ai" "MyIAD Solo Agent Portal" "agent.myiad.net" "Rapid insurance quoting and AI policy explanation assistant for independent agents."
+update_repo_geo_files "${PARENT_DIR}/insuranceai-saas" "myiad-insurance-ai" "MyIAD InsuranceAI SaaS" "saas.myiad.net" "AI-powered bilingual (EN/ES) insurance agency management platform integrated with Microsoft 365."
+update_repo_geo_files "${PARENT_DIR}/insuranceai-crm" "myiad-insurance-ai" "MyIAD US Insurance CRM" "crm.myiad.net" "Automated insurance lead routing, WhatsApp templates, and policy renewal CRM."
+update_repo_geo_files "${PARENT_DIR}/insuranceai-agent" "myiad-insurance-ai" "MyIAD Solo Agent Portal" "agent.myiad.net" "Rapid insurance quoting and AI policy explanation assistant for independent agents."
+update_repo_geo_files "${PARENT_DIR}/myiad-insuranceai.web" "myiad-insurance-ai" "MyIAD InsuranceAI Web" "myiad.net" "Bilingual (EN/ES) AI-powered insurance portal, automated carrier quoting, and policyholder hub."
 update_repo_geo_files "${PARENT_DIR}/iptv-menu-app" "iptv-menu-pro" "IPTV.Menu Pro" "iptv.menu" "Store-compliant Bring-Your-Own-Playlist (BYO) M3U and Xtream media player utility."
-update_repo_geo_files "${PARENT_DIR}/story-menu-app" "story-menu-app" "Story.Menu" "story.menu" "Interactive AI reading, Vocabulary Word Vault, and Lexile incentive platform."
+update_repo_geo_files "${PARENT_DIR}/Story-Menu-App" "story-menu-app" "Story.Menu" "story.menu" "Interactive AI reading, Vocabulary Word Vault, and Lexile incentive platform."
 
 echo ""
 echo "=================================================================="
@@ -170,6 +210,7 @@ verify_domain_indexnow "sendput.com" "myiad-insurance-ai"
 verify_domain_indexnow "saas.myiad.net" "myiad-insurance-ai"
 verify_domain_indexnow "crm.myiad.net" "myiad-insurance-ai"
 verify_domain_indexnow "agent.myiad.net" "myiad-insurance-ai"
+verify_domain_indexnow "myiad.net" "myiad-insurance-ai"
 verify_domain_indexnow "iptv.menu" "iptv-menu-pro"
 verify_domain_indexnow "story.menu" "story-menu-app"
 
