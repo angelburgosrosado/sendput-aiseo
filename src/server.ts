@@ -621,7 +621,9 @@ function testTcpPort(host: string, port: number, timeoutMs = 2000): Promise<bool
 let dbInitPromise: Promise<void> | null = null;
 
 async function initDbPool() {
-  const connStr = (process.env.DATABASE_URL || process.env.VPS_POSTGRES_URL || '').replace(/['"]/g, '').trim();
+  const rawConn = (process.env.DATABASE_URL || process.env.VPS_POSTGRES_URL || '').trim();
+  const urlMatch = rawConn.match(/postgres(?:ql)?:\/\/[^\s'"]+/i);
+  const connStr = (urlMatch ? urlMatch[0] : rawConn.replace(/['"]/g, '').trim()).replace(/([?&])channel_binding=require(&|$)/i, '$1').replace(/[?&]$/, '');
   if (!connStr || connStr.includes('placeholder') || connStr.includes('username:password')) {
     console.warn('[Self-Healing DB] No active DATABASE_URL configured; operating in stateful memory shield mode.');
     return;
@@ -1188,10 +1190,11 @@ app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
 // 3. Phase 2 Real IndexNow Search Engine Push Endpoint (/api/indexnow/push)
 // Implements deterministic IndexNow batch dispatching via SendPutEpoEngine
 app.post('/api/indexnow/push', async (req, res) => {
-  const { slug, host_domain, urls } = req.body || {};
+  const { slug, host_domain, host, urls } = req.body || {};
   const entity = memoryEntities[slug || 'myiad-insurance-ai'] || Object.values(memoryEntities)[0];
-  const indexNowKey = process.env.INDEXNOW_API_KEY || 'sendput8f92a1c4b7e34d12a9c8e5f102938475';
-  const targetHost = host_domain || 'sendput.com';
+  const rawKey = (process.env.INDEXNOW_API_KEY || '').trim();
+  const indexNowKey = /^[a-zA-Z0-9-]{8,128}$/.test(rawKey) ? rawKey : 'sendput8f92a1c4b7e34d12a9c8e5f102938475';
+  const targetHost = host || host_domain || 'sendput.com';
   const urlList =
     Array.isArray(urls) && urls.length > 0
       ? urls
@@ -1206,6 +1209,7 @@ app.post('/api/indexnow/push', async (req, res) => {
   res.json({
     status: dispatchResult.success ? 'pushed' : 'dispatched_with_warning',
     tenant: entity.slug,
+    key: dispatchResult.keyUsed,
     indexnow_gateway_status: dispatchResult.statusText,
     urls_submitted: dispatchResult.urlsSubmitted,
     dispatch_result: dispatchResult,

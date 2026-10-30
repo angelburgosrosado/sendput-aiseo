@@ -184,7 +184,8 @@ export class SendPutEpoEngine {
 
   constructor(hostUrl = 'https://sendput.com', indexNowKey = 'sendput8f92a1c4b7e34d12a9c8e5f102938475') {
     this.defaultHostUrl = hostUrl.replace(/\/$/, '');
-    this.defaultIndexNowKey = process.env.INDEXNOW_API_KEY || indexNowKey;
+    const envKey = (process.env.INDEXNOW_API_KEY || '').trim();
+    this.defaultIndexNowKey = /^[a-zA-Z0-9-]{8,128}$/.test(envKey) ? envKey : indexNowKey;
   }
 
   public static getInstance(hostUrl?: string, indexNowKey?: string): SendPutEpoEngine {
@@ -473,7 +474,8 @@ Autonomous agents (Claude Desktop, Cursor, ChatGPT Search, Perplexity) may invok
     key?: string,
     host?: string
   ): Promise<IndexNowDispatchResult> {
-    const keyToUse = key || this.defaultIndexNowKey;
+    const candidateKey = (key || '').trim();
+    const keyToUse = /^[a-zA-Z0-9-]{8,128}$/.test(candidateKey) ? candidateKey : this.defaultIndexNowKey;
     if (!urls || urls.length === 0) {
       return {
         success: false,

@@ -28216,7 +28216,8 @@ var SendPutEpoEngine = class _SendPutEpoEngine {
   defaultIndexNowKey;
   constructor(hostUrl = "https://sendput.com", indexNowKey = "sendput8f92a1c4b7e34d12a9c8e5f102938475") {
     this.defaultHostUrl = hostUrl.replace(/\/$/, "");
-    this.defaultIndexNowKey = process.env.INDEXNOW_API_KEY || indexNowKey;
+    const envKey = (process.env.INDEXNOW_API_KEY || "").trim();
+    this.defaultIndexNowKey = /^[a-zA-Z0-9-]{8,128}$/.test(envKey) ? envKey : indexNowKey;
   }
   static getInstance(hostUrl, indexNowKey) {
     if (!_SendPutEpoEngine.instance) {
@@ -28467,7 +28468,8 @@ Autonomous agents (Claude Desktop, Cursor, ChatGPT Search, Perplexity) may invok
    * Dispatches high-velocity POST payloads directly to https://api.indexnow.org/IndexNow.
    */
   async dispatchIndexNowBatch(urls, key, host) {
-    const keyToUse = key || this.defaultIndexNowKey;
+    const candidateKey = (key || "").trim();
+    const keyToUse = /^[a-zA-Z0-9-]{8,128}$/.test(candidateKey) ? candidateKey : this.defaultIndexNowKey;
     if (!urls || urls.length === 0) {
       return {
         success: false,
@@ -29275,7 +29277,9 @@ function testTcpPort(host, port, timeoutMs = 2e3) {
 }
 var dbInitPromise = null;
 async function initDbPool() {
-  const connStr = (process.env.DATABASE_URL || process.env.VPS_POSTGRES_URL || "").replace(/['"]/g, "").trim();
+  const rawConn = (process.env.DATABASE_URL || process.env.VPS_POSTGRES_URL || "").trim();
+  const urlMatch = rawConn.match(/postgres(?:ql)?:\/\/[^\s'"]+/i);
+  const connStr = (urlMatch ? urlMatch[0] : rawConn.replace(/['"]/g, "").trim()).replace(/([?&])channel_binding=require(&|$)/i, "$1").replace(/[?&]$/, "");
   if (!connStr || connStr.includes("placeholder") || connStr.includes("username:password")) {
     console.warn("[Self-Healing DB] No active DATABASE_URL configured; operating in stateful memory shield mode.");
     return;
@@ -29766,10 +29770,11 @@ app.post("/api/audit", auditRateLimitMiddleware, async (req, res) => {
   res.json(auditResult);
 });
 app.post("/api/indexnow/push", async (req, res) => {
-  const { slug, host_domain, urls } = req.body || {};
+  const { slug, host_domain, host, urls } = req.body || {};
   const entity = memoryEntities[slug || "myiad-insurance-ai"] || Object.values(memoryEntities)[0];
-  const indexNowKey = process.env.INDEXNOW_API_KEY || "sendput8f92a1c4b7e34d12a9c8e5f102938475";
-  const targetHost = host_domain || "sendput.com";
+  const rawKey = (process.env.INDEXNOW_API_KEY || "").trim();
+  const indexNowKey = /^[a-zA-Z0-9-]{8,128}$/.test(rawKey) ? rawKey : "sendput8f92a1c4b7e34d12a9c8e5f102938475";
+  const targetHost = host || host_domain || "sendput.com";
   const urlList = Array.isArray(urls) && urls.length > 0 ? urls : [
     `https://${targetHost}/verified/${entity.slug}`,
     `https://${targetHost}/v1/tenants/${entity.slug}/llms.txt`,
@@ -29779,6 +29784,7 @@ app.post("/api/indexnow/push", async (req, res) => {
   res.json({
     status: dispatchResult.success ? "pushed" : "dispatched_with_warning",
     tenant: entity.slug,
+    key: dispatchResult.keyUsed,
     indexnow_gateway_status: dispatchResult.statusText,
     urls_submitted: dispatchResult.urlsSubmitted,
     dispatch_result: dispatchResult,
