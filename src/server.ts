@@ -167,14 +167,64 @@ function requireServerEntitlement(req: express.Request, res: express.Response, n
   next();
 }
 
-// Proactive Defense 2: Sliding-Window Rate Limiter on Public Audits
-// Enforces strict IP and token rate limits on free validator endpoints with Cloudflare Turnstile verification
+// Proactive Defense 2: Multi-Dimensional Rate Limiting on Public Audits
+// Enforces strict Client IP & Target Domain token bucket limits with optional Upstash Redis & Cloudflare Turnstile verification
 interface RateLimitRecord {
   timestamps: number[];
 }
-const auditRateLimits: Map<string, RateLimitRecord> = new Map();
-const AUDIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes sliding window
-const AUDIT_MAX_REQUESTS = 10; // 10 free audits per 10-minute window per IP
+const auditIpRateLimits: Map<string, RateLimitRecord> = new Map();
+const auditDomainRateLimits: Map<string, RateLimitRecord> = new Map();
+
+const AUDIT_IP_WINDOW_MS = 10 * 60 * 1000; // 10 minutes sliding window
+const AUDIT_IP_MAX_REQUESTS = 5; // 5 audits per 10-minute window per IP (Blueprint Spec)
+
+const AUDIT_DOMAIN_WINDOW_MS = 60 * 60 * 1000; // 1 hour sliding window
+const AUDIT_DOMAIN_MAX_REQUESTS = 2; // 2 audits per 1 hour per target domain (Blueprint Spec)
+
+// Helper: Query Upstash Redis via REST API if configured
+async function checkUpstashRateLimit(key: string, limit: number, windowSec: number): Promise<{ success: boolean; remaining: number; reset: number } | null> {
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) return null;
+
+  try {
+    const cleanKey = `ratelimit:${key.replace(/[^a-zA-Z0-9_:-]/g, '_')}`;
+    const pipelineReq = await fetch(`${url}/pipeline`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify([
+        ['INCR', cleanKey],
+        ['TTL', cleanKey]
+      ])
+    });
+
+    if (!pipelineReq.ok) return null;
+    const [incrRes, ttlRes]: any = await pipelineReq.json();
+    const count = Number(incrRes?.result || 1);
+    let ttl = Number(ttlRes?.result || -1);
+
+    if (ttl === -1) {
+      await fetch(`${url}/expire/${cleanKey}/${windowSec}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      ttl = windowSec;
+    }
+
+    const reset = Math.floor(Date.now() / 1000) + Math.max(1, ttl);
+    const remaining = Math.max(0, limit - count);
+    return {
+      success: count <= limit,
+      remaining,
+      reset
+    };
+  } catch (e: any) {
+    console.warn('[Upstash Redis RateLimit Error]:', e.message);
+    return null;
+  }
+}
 
 async function auditRateLimitMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
   const candidateKey =
@@ -194,65 +244,133 @@ async function auditRateLimitMiddleware(req: express.Request, res: express.Respo
   const turnstileToken =
     (req.headers['cf-turnstile-response'] as string) ||
     (req.headers['x-turnstile-token'] as string) ||
-    req.body?.turnstile_token;
+    req.body?.turnstile_token ||
+    req.body?.cfToken;
 
-  if (turnstileToken && process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY) {
+  const turnstileSecret = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
+  if (turnstileSecret) {
+    if (!turnstileToken) {
+      return res.status(403).json({
+        error: 'Missing security verification token (Cloudflare Turnstile required).',
+        code: 'MISSING_SECURITY_TOKEN',
+        turnstile_required: true
+      });
+    }
+
     try {
       const turnstileResp = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          secret: process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          secret: turnstileSecret,
           response: turnstileToken,
           remoteip: getClientIp(req)
         })
       });
       const turnstileData: any = await turnstileResp.json();
-      if (turnstileData?.success) {
-        res.setHeader('X-Turnstile-Verified', 'true');
-        return next();
+      if (!turnstileData?.success) {
+        return res.status(403).json({
+          error: 'Bot verification failed. Please complete the security check and try again.',
+          code: 'BOT_VERIFICATION_FAILED'
+        });
       }
+      res.setHeader('X-Turnstile-Verified', 'true');
     } catch (e: any) {
       console.warn('[Turnstile Verify Error]:', e.message);
     }
   }
 
   const clientIp = getClientIp(req);
-  const now = Date.now();
-  let record = auditRateLimits.get(clientIp);
-
-  if (!record) {
-    record = { timestamps: [] };
-    auditRateLimits.set(clientIp, record);
+  const rawTarget = String(req.body?.website_url || req.body?.targetUrl || req.query?.url || '').trim();
+  let targetDomain = '';
+  try {
+    if (rawTarget) {
+      targetDomain = new URL(rawTarget.startsWith('http') ? rawTarget : `https://${rawTarget}`).hostname.toLowerCase();
+    }
+  } catch {
+    targetDomain = rawTarget.toLowerCase().replace(/[^a-z0-9.-]/g, '');
   }
 
-  // Purge timestamps older than sliding window
-  record.timestamps = record.timestamps.filter((ts) => now - ts < AUDIT_WINDOW_MS);
-
-  if (record.timestamps.length >= AUDIT_MAX_REQUESTS) {
-    const oldestTs = record.timestamps[0];
-    const retryAfterSeconds = Math.max(1, Math.ceil((oldestTs + AUDIT_WINDOW_MS - now) / 1000));
-
-    res.setHeader('Retry-After', String(retryAfterSeconds));
-    res.setHeader('X-RateLimit-Limit', String(AUDIT_MAX_REQUESTS));
+  // 1. Check Upstash Redis Edge Rate Limiting if credentials present
+  const upstashIp = await checkUpstashRateLimit(`ip:${clientIp}`, AUDIT_IP_MAX_REQUESTS, 600);
+  if (upstashIp && !upstashIp.success) {
+    res.setHeader('X-RateLimit-Limit', String(AUDIT_IP_MAX_REQUESTS));
     res.setHeader('X-RateLimit-Remaining', '0');
-    res.setHeader('X-RateLimit-Reset', String(Math.floor((oldestTs + AUDIT_WINDOW_MS) / 1000)));
-
+    res.setHeader('X-RateLimit-Reset', String(upstashIp.reset));
     return res.status(429).json({
-      error: 'Rate limit exceeded. To protect server compute, public audits are limited to 10 requests per 10 minutes per IP.',
-      code: 'RATE_LIMIT_EXCEEDED',
-      limit: AUDIT_MAX_REQUESTS,
-      window_minutes: 10,
-      retry_after_seconds: retryAfterSeconds,
-      solution: 'Upgrade to SendPut Pro / Agency tier for unlimited automated audits or pass Cloudflare Turnstile token.'
+      error: 'Audit rate limit exceeded for your IP (5 requests / 10 minutes). Please wait a few minutes or upgrade for unlimited audits.',
+      code: 'IP_RATE_LIMIT_EXCEEDED',
+      limit: AUDIT_IP_MAX_REQUESTS,
+      window_minutes: 10
     });
   }
 
-  record.timestamps.push(now);
-  const remaining = AUDIT_MAX_REQUESTS - record.timestamps.length;
-  res.setHeader('X-RateLimit-Limit', String(AUDIT_MAX_REQUESTS));
-  res.setHeader('X-RateLimit-Remaining', String(remaining));
-  res.setHeader('X-RateLimit-Reset', String(Math.floor((now + AUDIT_WINDOW_MS) / 1000)));
+  if (targetDomain) {
+    const upstashDomain = await checkUpstashRateLimit(`domain:${targetDomain}`, AUDIT_DOMAIN_MAX_REQUESTS, 3600);
+    if (upstashDomain && !upstashDomain.success) {
+      res.setHeader('X-RateLimit-Limit', String(AUDIT_DOMAIN_MAX_REQUESTS));
+      res.setHeader('X-RateLimit-Remaining', '0');
+      res.setHeader('X-RateLimit-Reset', String(upstashDomain.reset));
+      return res.status(429).json({
+        error: `Audit rate limit exceeded for target domain ${targetDomain} (2 requests / 1 hour). A cached audit is available.`,
+        code: 'DOMAIN_RATE_LIMIT_EXCEEDED',
+        limit: AUDIT_DOMAIN_MAX_REQUESTS,
+        window_minutes: 60,
+        cached_audit_url: `https://getepo.com/?url=https://${targetDomain}`
+      });
+    }
+  }
+
+  // 2. Fallback / Defense-in-Depth: In-Memory Sliding-Window Rate Limiter
+  const now = Date.now();
+
+  // Check IP limit
+  let ipRecord = auditIpRateLimits.get(clientIp);
+  if (!ipRecord) {
+    ipRecord = { timestamps: [] };
+    auditIpRateLimits.set(clientIp, ipRecord);
+  }
+  ipRecord.timestamps = ipRecord.timestamps.filter((ts) => now - ts < AUDIT_IP_WINDOW_MS);
+
+  if (ipRecord.timestamps.length >= AUDIT_IP_MAX_REQUESTS) {
+    const oldestTs = ipRecord.timestamps[0];
+    const retryAfter = Math.max(1, Math.ceil((oldestTs + AUDIT_IP_WINDOW_MS - now) / 1000));
+    res.setHeader('Retry-After', String(retryAfter));
+    res.setHeader('X-RateLimit-Limit', String(AUDIT_IP_MAX_REQUESTS));
+    res.setHeader('X-RateLimit-Remaining', '0');
+    return res.status(429).json({
+      error: 'Audit rate limit exceeded for your IP. Public audits are limited to 5 requests per 10 minutes.',
+      code: 'RATE_LIMIT_EXCEEDED',
+      limit: AUDIT_IP_MAX_REQUESTS,
+      retry_after_seconds: retryAfter
+    });
+  }
+
+  // Check Target Domain limit
+  if (targetDomain) {
+    let domainRecord = auditDomainRateLimits.get(targetDomain);
+    if (!domainRecord) {
+      domainRecord = { timestamps: [] };
+      auditDomainRateLimits.set(targetDomain, domainRecord);
+    }
+    domainRecord.timestamps = domainRecord.timestamps.filter((ts) => now - ts < AUDIT_DOMAIN_WINDOW_MS);
+
+    if (domainRecord.timestamps.length >= AUDIT_DOMAIN_MAX_REQUESTS) {
+      const oldestDomainTs = domainRecord.timestamps[0];
+      const retryDomainAfter = Math.max(1, Math.ceil((oldestDomainTs + AUDIT_DOMAIN_WINDOW_MS - now) / 1000));
+      return res.status(429).json({
+        error: `Domain rate limit exceeded for ${targetDomain}. Maximum 2 audits per 1 hour to prevent compute exhaustion.`,
+        code: 'DOMAIN_RATE_LIMIT_EXCEEDED',
+        limit: AUDIT_DOMAIN_MAX_REQUESTS,
+        retry_after_seconds: retryDomainAfter
+      });
+    }
+    domainRecord.timestamps.push(now);
+  }
+
+  ipRecord.timestamps.push(now);
+  res.setHeader('X-RateLimit-Limit', String(AUDIT_IP_MAX_REQUESTS));
+  res.setHeader('X-RateLimit-Remaining', String(Math.max(0, AUDIT_IP_MAX_REQUESTS - ipRecord.timestamps.length)));
   next();
 }
 
@@ -2058,12 +2176,23 @@ async function runDeepDomainInspection(businessName: string, rawUrl: string, cit
   };
 }
 
-// 2. Phase 2 Live AI Search Grader & Surround-Sound Citation Engine (/api/audit)
-// Protected by Proactive Defense 2: Sliding-Window IP/Token Rate Limiting & Turnstile Support
-app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
-  const { business_name, website_url, city_niche, agency_slug, lang: reqLang } = req.body || {};
-  if (!business_name || !website_url) {
-    return res.status(400).json({ error: 'business_name and website_url are required' });
+// 2. Phase 2 Live AI Search Grader & Surround-Sound Citation Engine (/api/audit & /api/validate alias)
+// Protected by Proactive Defense 2: Multi-Dimensional Rate Limiting & Turnstile Support
+app.post(['/api/audit', '/api/validate'], auditRateLimitMiddleware, async (req, res) => {
+  const { business_name, website_url, targetUrl, city_niche, agency_slug, lang: reqLang } = req.body || {};
+  const effectiveUrl = String(website_url || targetUrl || '').trim();
+  let defaultDomainName = '';
+  try {
+    if (effectiveUrl) {
+      defaultDomainName = new URL(effectiveUrl.startsWith('http') ? effectiveUrl : `https://${effectiveUrl}`).hostname;
+    }
+  } catch {
+    defaultDomainName = 'Domain Audit';
+  }
+  const effectiveName = String(business_name || defaultDomainName || 'Domain Audit').trim();
+
+  if (!effectiveUrl) {
+    return res.status(400).json({ error: 'business_name and website_url (or targetUrl) are required' });
   }
 
   const lang = String(reqLang || req.query?.lang || 'en').trim().toLowerCase() === 'es' ? 'es' : 'en';
@@ -2073,18 +2202,18 @@ app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
   const agency = await getAgency(agency_slug || reqHost);
 
   const inspection = await runDeepDomainInspection(
-    business_name,
-    website_url,
+    effectiveName,
+    effectiveUrl,
     city_niche || 'Local & National Market'
   );
   const cacheKey = `${(city_niche || 'general').toLowerCase().trim()}::${inspection.cleanUrl.toLowerCase()}`;
 
-  const proposalMdEn = generateProposalMarkdown({ business_name, website_url: inspection.cleanUrl, epo_evaluation: inspection.epoEvaluation, sfai_score: inspection.sfai, aics_score: inspection.aics, dvs_score: inspection.dvs, thq_score: inspection.thq, bot_matrix: inspection.botMatrix, recommended_tier: inspection.recommendedTier }, agency, 'en');
-  const proposalMdEs = generateProposalMarkdown({ business_name, website_url: inspection.cleanUrl, epo_evaluation: inspection.epoEvaluation, sfai_score: inspection.sfai, aics_score: inspection.aics, dvs_score: inspection.dvs, thq_score: inspection.thq, bot_matrix: inspection.botMatrix, recommended_tier: inspection.recommendedTier }, agency, 'es');
+  const proposalMdEn = generateProposalMarkdown({ business_name: effectiveName, website_url: inspection.cleanUrl, epo_evaluation: inspection.epoEvaluation, sfai_score: inspection.sfai, aics_score: inspection.aics, dvs_score: inspection.dvs, thq_score: inspection.thq, bot_matrix: inspection.botMatrix, recommended_tier: inspection.recommendedTier }, agency, 'en');
+  const proposalMdEs = generateProposalMarkdown({ business_name: effectiveName, website_url: inspection.cleanUrl, epo_evaluation: inspection.epoEvaluation, sfai_score: inspection.sfai, aics_score: inspection.aics, dvs_score: inspection.dvs, thq_score: inspection.thq, bot_matrix: inspection.botMatrix, recommended_tier: inspection.recommendedTier }, agency, 'es');
 
   const auditResult: any = {
     id: `prop-${Date.now()}`,
-    business_name,
+    business_name: effectiveName,
     website_url: inspection.cleanUrl,
     hostname: inspection.hostname,
     slug: inspection.slug,
@@ -2172,7 +2301,7 @@ app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
         `INSERT INTO sendput_audit_proposals (business_name, website_url, city_niche, sfai_score, aics_score, dvs_score, thq_score, jsonld_detected, llms_txt_detected, recommended_tier, proposal_markdown)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`,
         [
-          business_name,
+          effectiveName,
           inspection.cleanUrl,
           auditResult.city_niche,
           inspection.sfai,
