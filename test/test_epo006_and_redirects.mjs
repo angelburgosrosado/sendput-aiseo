@@ -104,6 +104,52 @@ async function run() {
     assert(Array.isArray(lbJson.verified_leaders) && lbJson.verified_leaders.length >= 7);
     console.log('✅ PASS [Tier-2 APIs: /api/epo-score, /api/epo-badge SVG Shield, and /api/leaderboard verified]');
 
+    // Test 6: Trust & Viable-Result Components (Cert SHA-256, Closed-Loop Upsert, Telemetry & Cron Drift Sync)
+    const certRes = await fetch(`${BASE_URL}/api/cert/${auditVerified.id || 1}?format=json`);
+    assert.strictEqual(certRes.status, 200);
+    const certJson = await certRes.json();
+    assert.strictEqual(certJson.verified, true);
+    assert(typeof certJson.sha256_signature === 'string' && certJson.sha256_signature.length >= 32);
+
+    // Provision an unoptimized SMB domain via POST /api/entities/upsert and verify closed-loop Grade A+ upgrade
+    const upsertRes = await fetch(`${BASE_URL}/api/entities/upsert`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'Apex Roofing Orlando',
+        website_url: 'https://apexroofingorlando.com',
+        category: 'Emergency Roof Repair • Orlando, FL'
+      })
+    });
+    assert.strictEqual(upsertRes.status, 200);
+    const upsertJson = await upsertRes.json();
+    assert.strictEqual(upsertJson.status, 'PROVISIONED');
+
+    const reAuditRes = await fetch(`${BASE_URL}/api/audit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        business_name: 'Apex Roofing Orlando',
+        website_url: 'https://apexroofingorlando.com',
+        city_niche: 'Emergency Roof Repair • Orlando, FL'
+      })
+    });
+    assert.strictEqual(reAuditRes.status, 200);
+    const reAuditJson = await reAuditRes.json();
+    assert(reAuditJson.epo_score >= 95, `Provisioned entity must upgrade to >= 95, got ${reAuditJson.epo_score}`);
+    assert.strictEqual(reAuditJson.grade, 'A+');
+
+    const telRes = await fetch(`${BASE_URL}/api/telemetry/apex-roofing-orlando`);
+    assert.strictEqual(telRes.status, 200);
+    const telJson = await telRes.json();
+    assert(typeof telJson.total_bot_hits === 'number' && telJson.total_bot_hits >= 1);
+
+    const cronRes = await fetch(`${BASE_URL}/api/cron/epo-sync`);
+    assert.strictEqual(cronRes.status, 200);
+    const cronJson = await cronRes.json();
+    assert.strictEqual(cronJson.status, 'HEALTHY');
+    console.log('✅ PASS [Tier-3 Trust & Viable Results: Signed SHA-256 Cert, Closed-Loop Upsert (F -> A+), Bot Telemetry & Drift Sync]');
+
     console.log('\n================ ALL CHECKS PASSED ================');
   } finally {
     server.kill('SIGTERM');
