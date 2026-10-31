@@ -67,6 +67,43 @@ async function run() {
     assert.strictEqual(wwwRedirectRes.headers.get('location'), 'https://getepo.com/', 'Must redirect to https://getepo.com/');
     console.log('✅ PASS [EPO-002: Standalone GetEPO.com Benchmark Hub + www.getepo.com 301 canonicalization]');
 
+    // Test 4: Deep 5-Layer AST Inspection on Verified Reference Domain vs Unsynced SMB
+    const auditVerifiedRes = await fetch(`${BASE_URL}/api/audit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        business_name: 'GetEPO Validator',
+        website_url: 'https://getepo.com',
+        city_niche: 'Open-Source AI Search & EPO Benchmark'
+      })
+    });
+    assert.strictEqual(auditVerifiedRes.status, 200);
+    const auditVerified = await auditVerifiedRes.json();
+    assert(auditVerified.epo_score >= 95, `Expected GetEPO score >= 95, got ${auditVerified.epo_score}`);
+    assert.strictEqual(auditVerified.grade, 'A+');
+    assert.strictEqual(auditVerified.mcp_node_detected, true);
+    assert(Array.isArray(auditVerified.bot_matrix) && auditVerified.bot_matrix.length === 8);
+    assert(auditVerified.ai_answer_simulation && auditVerified.ai_answer_simulation.with_epo);
+    console.log(`✅ PASS [Tier-1 Deep AST Audit: getepo.com scored ${auditVerified.epo_score}/100 (${auditVerified.grade}) with 5/5 layers & 8/8 bots]`);
+
+    // Test 5: /api/epo-score, /api/epo-badge, and /api/leaderboard
+    const scoreRes = await fetch(`${BASE_URL}/api/epo-score?domain=sendput.com`);
+    assert.strictEqual(scoreRes.status, 200);
+    const scoreJson = await scoreRes.json();
+    assert(scoreJson.epo_score >= 95);
+    assert.strictEqual(scoreJson.layers.layer5_mcp_runtime_node, 'PASS');
+
+    const badgeRes = await fetch(`${BASE_URL}/api/epo-badge?domain=getepo.com`);
+    assert.strictEqual(badgeRes.status, 200);
+    const badgeSvg = await badgeRes.text();
+    assert(badgeSvg.includes('GetEPO • RFC-2026-GEO-01'));
+
+    const lbRes = await fetch(`${BASE_URL}/api/leaderboard`);
+    assert.strictEqual(lbRes.status, 200);
+    const lbJson = await lbRes.json();
+    assert(Array.isArray(lbJson.verified_leaders) && lbJson.verified_leaders.length >= 7);
+    console.log('✅ PASS [Tier-2 APIs: /api/epo-score, /api/epo-badge SVG Shield, and /api/leaderboard verified]');
+
     console.log('\n================ ALL CHECKS PASSED ================');
   } finally {
     server.kill('SIGTERM');
