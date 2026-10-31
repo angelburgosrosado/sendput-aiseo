@@ -155,8 +155,11 @@
         <span class="text-slate-400 hidden sm:inline">RFC-2026-GEO-01 // EPO PROTOCOL</span>
         <span class="text-slate-400 hidden md:inline">Edge: <code class="text-cyan-300">cdn.sendput.com / cdn.getepo.com</code></span>
       </div>
-      <div class="flex items-center gap-4">
-        <span class="text-slate-400 hidden lg:inline">Stack: <strong class="text-white">JSON-LD · IndexNow · /llms.txt · MCP Agent Node</strong></span>
+      <div class="flex items-center gap-3">
+        <a href="/guide" class="text-[#00FF66] hover:underline font-semibold hidden md:inline">📘 Setup Guide</a>
+        <a href="/global-local" class="text-cyan-400 hover:underline font-semibold hidden sm:inline">🌍 Local &amp; Abroad</a>
+        <a href="/spec" class="text-purple-400 hover:underline font-semibold hidden lg:inline">📐 v4.0 Spec</a>
+        <a href="https://getepo.com" target="_blank" rel="noopener" class="text-amber-300 hover:underline font-bold hidden xl:inline">⚡ GetEPO Validator ↗</a>
         <button id="btn-toggle-stealth" type="button" class="px-2.5 py-1 rounded bg-[#FF6B00]/15 hover:bg-[#FF6B00]/25 text-[#FF6B00] border border-[#FF6B00]/40 font-bold transition flex items-center gap-1.5">
           <span>🔒 Public Gate</span>
           <span class="text-[10px] text-slate-300 hidden sm:inline">(Founder Unlock)</span>
@@ -189,16 +192,21 @@
       </a>
 
       <!-- Quick Section Links -->
-      <nav class="hidden md:flex items-center gap-5 text-xs font-mono text-slate-300">
+      <nav class="hidden lg:flex items-center gap-4 text-xs font-mono text-slate-300">
         <a href="#section-hero" class="hover:text-[#00FF66] transition">[01. Terminal]</a>
         <a href="#section-paradigm" class="hover:text-[#00FF66] transition">[02. Paradigm Shift]</a>
         <a href="#section-architecture" class="hover:text-[#00FF66] transition">[03. 5-Layer Stack]</a>
-        <a href="#section-proof" class="hover:text-[#00FF66] transition">[04. Dashboard Proof]</a>
-        <a href="#section-trust" class="hover:text-[#00FF66] transition">[05. Trust Ecosystem]</a>
+        <a href="#section-proof" class="hover:text-[#00FF66] transition">[04. Dashboard]</a>
+        <a href="/guide" class="text-emerald-400 hover:underline font-bold transition">[Setup Guide]</a>
+        <a href="/global-local" class="text-cyan-400 hover:underline font-bold transition">[Local &amp; Abroad]</a>
+        <a href="/spec" class="text-purple-400 hover:underline font-bold transition">[v4.0 Spec]</a>
       </nav>
 
       <!-- Primary Action CTA -->
       <div class="flex items-center gap-2">
+        <a href="https://getepo.com" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 font-mono font-bold text-xs uppercase tracking-wider transition hidden sm:inline-flex items-center gap-1">
+          <span>⚡ GetEPO ↗</span>
+        </a>
         <a href="#section-hero" class="px-4 py-2 rounded-lg bg-[#FF6B00] hover:bg-[#e05e00] text-black font-mono font-bold text-xs uppercase tracking-wider shadow-lg glow-signal-orange transition flex items-center gap-1.5">
           <span>[&gt;_] INITIALIZE EPO AUDIT</span>
         </a>
@@ -528,11 +536,48 @@
           </p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
-          <button id="btn-read-manifesto-modal" type="button" class="px-4 py-2.5 rounded-lg bg-white/5 hover:bg-[#00FF66]/15 text-[#00FF66] border border-white/10 font-mono text-xs font-bold transition whitespace-nowrap">
-            Read RFC-2026-GEO-01 &rarr;
-          </button>
-          <a href="/validator" target="_blank" rel="noopener" class="px-4 py-2.5 rounded-lg bg-[#00FF66]/10 hover:bg-[#00FF66]/20 text-white border border-[#00FF66]/30 font-mono text-xs font-bold transition whitespace-nowrap">
+          <a href="/guide" class="px-4 py-2.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 font-mono text-xs font-bold transition whitespace-nowrap">
+            Setup Guide (60s) &rarr;
+          </a>
+          <a href="/global-local" class="px-4 py-2.5 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 font-mono text-xs font-bold transition whitespace-nowrap">
+            Local &amp; Abroad Playbook &rarr;
+          </a>
+          <a href="/spec" class="px-4 py-2.5 rounded-lg bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 font-mono text-xs font-bold transition whitespace-nowrap">
+            RFC Spec &amp; v4.0 Roadmap &rarr;
+          </a>
+          <a href="https://getepo.com" target="_blank" rel="noopener" class="px-4 py-2.5 rounded-lg bg-[#00FF66]/10 hover:bg-[#00FF66]/20 text-white border border-[#00FF66]/30 font-mono text-xs font-bold transition whitespace-nowrap">
             Open Validator &rarr;
+          </a>
+        </div>
+      </div>
+
+      <!-- Local & Global Dual-Horizon Visibility Card -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+        <div class="p-5 rounded-2xl bg-[#09121E] border border-emerald-500/30 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] mono font-bold uppercase text-emerald-400">HORIZON 1 • LOCAL VISIBILITY</span>
+            <span class="text-[10px] mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300">GeoCoordinates + GBP Sync</span>
+          </div>
+          <h4 class="text-base font-bold text-white font-mono">Dominate City &amp; "Near Me" Answer Prompts</h4>
+          <p class="text-xs text-slate-300 font-mono leading-relaxed">
+            Eliminate lead leaks to directory aggregators (Yelp, Angi, Thumbtack). Direct GeoCoordinates, radius boundaries, and live MCP tools let AI assistants quote prices and book appointments natively.
+          </p>
+          <a href="/global-local" class="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:underline font-mono font-bold pt-1">
+            Read Local Playbook &rarr;
+          </a>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[#09121E] border border-cyan-500/30 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] mono font-bold uppercase text-cyan-400">HORIZON 2 • INTERNATIONAL ABROAD</span>
+            <span class="text-[10px] mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300">Multilingual @graph + IndexNow</span>
+          </div>
+          <h4 class="text-base font-bold text-white font-mono">Capture Cross-Border AI Inquiries Abroad</h4>
+          <p class="text-xs text-slate-300 font-mono leading-relaxed">
+            Deploy bilingual/multilingual <code class="text-cyan-300">inLanguage</code> graphs, international country code coverage, and multi-currency OfferCatalogs. Broadcast simultaneously to Bing, Copilot, Naver &amp; Yandex.
+          </p>
+          <a href="/global-local" class="inline-flex items-center gap-1.5 text-xs text-cyan-400 hover:underline font-mono font-bold pt-1">
+            Read Global Playbook &rarr;
           </a>
         </div>
       </div>
@@ -1374,6 +1419,9 @@
 
         <!-- Technical Protocol Links -->
         <div class="flex flex-wrap items-center gap-5 text-[11px]">
+          <a href="/guide" class="text-emerald-400 hover:underline font-bold transition">Setup Guide</a>
+          <a href="/global-local" class="text-cyan-400 hover:underline font-bold transition">Local &amp; Abroad Playbook</a>
+          <a href="/spec" class="text-purple-400 hover:underline font-bold transition">v4.0 Spec &amp; Roadmap</a>
           <a href="/v1/tenants/sendput/openapi.json" target="_blank" class="hover:text-[#00FF66] transition">OpenAPI 3.1.0</a>
           <a href="/llms.txt" target="_blank" class="hover:text-[#00FF66] transition">/llms.txt</a>
           <a href="/api/schema" target="_blank" class="hover:text-[#00FF66] transition">Schema.org JSON-LD</a>

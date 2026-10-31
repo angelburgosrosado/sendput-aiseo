@@ -93,9 +93,11 @@
           <button id="btn-lang-en" type="button" class="px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition">EN</button>
           <button id="btn-lang-es" type="button" class="px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition">ES</button>
         </div>
+        <a href="/guide" class="text-slate-300 hover:text-emerald-300 font-semibold transition hidden sm:inline">Guide</a>
+        <a href="/global-local" class="text-slate-300 hover:text-cyan-300 font-semibold transition hidden md:inline">Local &amp; Abroad</a>
+        <a href="/spec" class="text-slate-300 hover:text-purple-300 font-semibold transition hidden lg:inline">v4.0 Spec</a>
         <a href="#leaderboard-section" class="text-slate-300 hover:text-cyan-300 font-semibold transition hidden sm:inline">Leaderboard</a>
-        <a href="/llms.txt" target="_blank" rel="noopener" class="text-slate-400 hover:text-white transition mono hidden md:inline">/llms.txt</a>
-        <a href="/schema.json" target="_blank" rel="noopener" class="text-slate-400 hover:text-white transition mono hidden lg:inline">/schema.json</a>
+        <a href="/llms.txt" target="_blank" rel="noopener" class="text-slate-400 hover:text-white transition mono hidden xl:inline">/llms.txt</a>
         <a id="header-enterprise-cta" href="https://sendput.com" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-bold transition shadow">
           Full Enterprise Engine →
         </a>
@@ -118,6 +120,19 @@
       <p id="hero-subtitle" class="text-slate-300 text-sm sm:text-base max-w-3xl mx-auto leading-relaxed">
         Run a live 5-Layer Entity Presence Optimization (EPO) AST diagnostic across 8 AI crawler rules in <code class="mono text-cyan-300">robots.txt</code>, Schema.org <code class="mono text-cyan-300">@graph</code> disambiguation, IndexNow velocity, <code class="mono text-cyan-300">/llms.txt</code> token budgets, and Model Context Protocol (MCP) nodes.
       </p>
+
+      <!-- Support Documentation & Playbook Badges Ribbon -->
+      <div class="flex flex-wrap items-center justify-center gap-2.5 pt-1 text-xs">
+        <a href="/guide" class="px-3 py-1 rounded-full bg-slate-900/90 hover:bg-slate-800 text-emerald-300 border border-emerald-500/30 transition flex items-center gap-1.5 font-medium shadow-sm">
+          <span>📘 5-Step Setup Guide</span>
+        </a>
+        <a href="/global-local" class="px-3 py-1 rounded-full bg-slate-900/90 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 transition flex items-center gap-1.5 font-medium shadow-sm">
+          <span>🌍 Local &amp; Abroad Playbook</span>
+        </a>
+        <a href="/spec" class="px-3 py-1 rounded-full bg-slate-900/90 hover:bg-slate-800 text-purple-300 border border-purple-500/30 transition flex items-center gap-1.5 font-medium shadow-sm">
+          <span>📐 RFC Spec &amp; v4.0 Roadmap</span>
+        </a>
+      </div>
     </div>
 
     <!-- Audit Input Card -->
@@ -476,7 +491,10 @@
   <footer class="border-t border-slate-800/80 bg-slate-950 py-6 text-center text-xs text-slate-500 mt-10">
     <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
       <p>© 2026 SendPut AI Technologies Inc. — Open-Source GetEPO Validator under MIT License.</p>
-      <div class="flex items-center gap-4">
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="/guide" class="text-emerald-400 hover:underline font-semibold">Setup Guide</a>
+        <a href="/global-local" class="text-cyan-400 hover:underline font-semibold">Local &amp; Abroad</a>
+        <a href="/spec" class="text-purple-400 hover:underline font-semibold">v4.0 Spec</a>
         <a href="https://sendput.com" class="text-cyan-400 hover:underline font-semibold">SendPut.com Cloud Engine</a>
         <a href="/llms-full.txt" target="_blank" rel="noopener" class="text-slate-400 hover:text-white mono">/llms-full.txt</a>
         <a href="/api/epo-score?domain=getepo.com" target="_blank" rel="noopener" class="text-slate-400 hover:text-white mono">/api/epo-score</a>

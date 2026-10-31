@@ -341,7 +341,20 @@ app.get('/DMCA.md', (_req, res) => {
 app.get('/sitemap.xml', (req, res) => {
   const baseUrl = getBaseUrl(req);
   const nowIso = new Date().toISOString();
-  const staticPaths = ['/', '/validator', '/llms.txt', '/llms-full.txt', '/api/schema', '/terms', '/privacy', '/dmca', '/license'];
+  const staticPaths = [
+    '/',
+    '/validator',
+    '/guide',
+    '/global-local',
+    '/spec',
+    '/llms.txt',
+    '/llms-full.txt',
+    '/api/schema',
+    '/terms',
+    '/privacy',
+    '/dmca',
+    '/license'
+  ];
   const tenantSlugs = Object.keys(memoryEntities);
 
   const urlNodes = [
@@ -531,6 +544,39 @@ app.get('/llms-full.txt', async (req, res) => {
 app.get('/validator', (_req, res) => {
   const primaryPath = path.join(__dirname, '..', 'public', 'validator.html');
   const fallbackPath = path.join(process.cwd(), 'public', 'validator.html');
+  const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
+  if (fs.existsSync(targetPath)) {
+    return res.sendFile(targetPath);
+  }
+  res.redirect('/');
+});
+
+// Step-by-Step 5-Layer Implementation Guide (/guide)
+app.get(['/guide', '/guide.html'], (_req, res) => {
+  const primaryPath = path.join(__dirname, '..', 'public', 'guide.html');
+  const fallbackPath = path.join(process.cwd(), 'public', 'guide.html');
+  const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
+  if (fs.existsSync(targetPath)) {
+    return res.sendFile(targetPath);
+  }
+  res.redirect('/');
+});
+
+// Local & International (Abroad) AI Visibility Playbook (/global-local)
+app.get(['/global-local', '/global-local.html', '/local-global'], (_req, res) => {
+  const primaryPath = path.join(__dirname, '..', 'public', 'global-local.html');
+  const fallbackPath = path.join(process.cwd(), 'public', 'global-local.html');
+  const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
+  if (fs.existsSync(targetPath)) {
+    return res.sendFile(targetPath);
+  }
+  res.redirect('/');
+});
+
+// RFC-2026-GEO-01 Specification, Trust Center & v4.0 Roadmap (/spec)
+app.get(['/spec', '/spec.html', '/roadmap'], (_req, res) => {
+  const primaryPath = path.join(__dirname, '..', 'public', 'spec.html');
+  const fallbackPath = path.join(process.cwd(), 'public', 'spec.html');
   const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
   if (fs.existsSync(targetPath)) {
     return res.sendFile(targetPath);

@@ -67,6 +67,23 @@ async function run() {
     assert.strictEqual(wwwRedirectRes.headers.get('location'), 'https://getepo.com/', 'Must redirect to https://getepo.com/');
     console.log('✅ PASS [EPO-002: Standalone GetEPO.com Benchmark Hub + www.getepo.com 301 canonicalization]');
 
+    // Test 3C: Verify New Support Pages (/guide, /global-local, /spec) serve HTTP 200
+    const guideRes = await fetch(`${BASE_URL}/guide`);
+    assert.strictEqual(guideRes.status, 200, '/guide must return HTTP 200');
+    const guideHtml = await guideRes.text();
+    assert(guideHtml.includes('Step-by-Step Implementation Guide'), 'Must include guide content');
+
+    const globalLocalRes = await fetch(`${BASE_URL}/global-local`);
+    assert.strictEqual(globalLocalRes.status, 200, '/global-local must return HTTP 200');
+    const globalLocalHtml = await globalLocalRes.text();
+    assert(globalLocalHtml.includes('Local') && (globalLocalHtml.includes('Abroad') || globalLocalHtml.includes('International') || globalLocalHtml.includes('Global')), 'Must include local and abroad playbook');
+
+    const specRes = await fetch(`${BASE_URL}/spec`);
+    assert.strictEqual(specRes.status, 200, '/spec must return HTTP 200');
+    const specHtml = await specRes.text();
+    assert(specHtml.includes('RFC-2026-GEO-01') && specHtml.includes('v4.0'), 'Must include v4.0 spec and roadmap');
+    console.log('✅ PASS [Support Pages: /guide, /global-local, and /spec verified with HTTP 200]');
+
     // Test 4: Deep 5-Layer AST Inspection on Verified Reference Domain vs Unsynced SMB
     const auditVerifiedRes = await fetch(`${BASE_URL}/api/audit`, {
       method: 'POST',
