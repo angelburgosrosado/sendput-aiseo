@@ -15,6 +15,53 @@
     .glass-card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.22); backdrop-filter: blur(12px); }
     .local-card { background: rgba(13, 19, 31, 0.92); border: 1px solid rgba(16, 185, 129, 0.32); }
     .global-card { background: rgba(13, 19, 31, 0.92); border: 1px solid rgba(56, 189, 248, 0.32); }
+
+    /* Light Theme */
+    html.light body {
+      background-color: #F8FAFC !important;
+      color: #0F172A !important;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(6, 182, 212, 0.08), transparent 35%),
+        radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.08), transparent 35%);
+    }
+    html.light .glass-card, html.light .local-card, html.light .global-card {
+      background: rgba(255, 255, 255, 0.95) !important;
+      border: 1px solid rgba(56, 189, 248, 0.25) !important;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+    }
+    html.light .bg-slate-950,
+    html.light .bg-slate-950\/90,
+    html.light .bg-slate-950\/85,
+    html.light .bg-slate-950\/75 {
+      background-color: #FFFFFF !important;
+      color: #0F172A;
+    }
+    html.light .bg-slate-900 {
+      background-color: #F1F5F9 !important;
+      color: #0F172A;
+    }
+    html.light header, html.light footer {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      border-color: #E2E8F0 !important;
+    }
+    html.light .text-white {
+      color: #0F172A !important;
+    }
+    html.light .text-slate-200, html.light .text-slate-300 {
+      color: #334155 !important;
+    }
+    html.light .text-slate-400, html.light .text-slate-500 {
+      color: #64748B !important;
+    }
+    html.light .border-slate-800,
+    html.light .border-slate-800\/80,
+    html.light .border-slate-700 {
+      border-color: #CBD5E1 !important;
+    }
+    html.light pre {
+      background-color: #0F172A !important;
+      color: #A7F3D0 !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-cyan-400 selection:text-slate-950">
@@ -23,18 +70,18 @@
   <div class="bg-slate-950 border-b border-slate-800/80 px-4 py-2 text-xs mono">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-3">
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 font-semibold">
+        <span id="gl-top-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 font-semibold">
           <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
           LOCAL &amp; CROSS-BORDER AI DISCOVERY PLAYBOOK
         </span>
-        <span class="text-slate-400 hidden sm:inline">Hyper-Local GeoCoordinates • Multilingual @graph • Multi-Currency OfferCatalog</span>
+        <span id="gl-top-desc" class="text-slate-400 hidden sm:inline">Hyper-Local GeoCoordinates • Multilingual @graph • Multi-Currency OfferCatalog</span>
       </div>
       <div class="flex items-center gap-4 text-[11px]">
-        <a href="/" class="text-cyan-400 hover:underline">Home</a>
-        <a href="/guide" class="text-cyan-400 hover:underline">Implementation Guide</a>
-        <a href="/global-local" class="text-emerald-400 font-bold underline">Local &amp; Global Playbook</a>
-        <a href="/spec" class="text-cyan-400 hover:underline">Protocol Spec &amp; Roadmap</a>
-        <a href="https://getepo.com" class="text-amber-300 hover:underline font-bold">GetEPO Validator ↗</a>
+        <a id="gl-nav-home" href="/" class="text-cyan-400 hover:underline">Home</a>
+        <a id="gl-nav-guide" href="/guide" class="text-cyan-400 hover:underline">Implementation Guide</a>
+        <a id="gl-nav-playbook" href="/global-local" class="text-emerald-400 font-bold underline">Local &amp; Global Playbook</a>
+        <a id="gl-nav-spec" href="/spec" class="text-cyan-400 hover:underline">Protocol Spec &amp; Roadmap</a>
+        <a id="gl-nav-validator" href="https://getepo.com" class="text-amber-300 hover:underline font-bold">GetEPO Validator ↗</a>
       </div>
     </div>
   </div>
@@ -48,17 +95,26 @@
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <span class="font-black text-xl tracking-tight text-white">Local &amp; Global <span class="text-cyan-400">AI Visibility</span></span>
-            <span class="text-[10px] mono uppercase px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-semibold">Playbook</span>
+            <span id="gl-header-title" class="font-black text-xl tracking-tight text-white">Local &amp; Global <span class="text-cyan-400">AI Visibility</span></span>
+            <span id="gl-header-badge" class="text-[10px] mono uppercase px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-semibold">Playbook</span>
           </div>
-          <p class="text-xs text-slate-400">How SendPut &amp; GetEPO Boost Citations in Your City and Across International Borders</p>
+          <p id="gl-header-sub" class="text-xs text-slate-400">How SendPut &amp; GetEPO Boost Citations in Your City and Across International Borders</p>
         </div>
       </a>
       <div class="flex flex-wrap items-center gap-2.5">
-        <a href="/guide" class="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-slate-700 text-xs font-bold transition">
+        <!-- Bilingual Toggle -->
+        <div class="inline-flex rounded-lg bg-slate-900 border border-slate-800 p-0.5 mr-1">
+          <button id="btn-lang-en" type="button" class="px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition">EN</button>
+          <button id="btn-lang-es" type="button" class="px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition">ES</button>
+        </div>
+        <!-- Theme Toggle -->
+        <button id="btn-theme-toggle" type="button" class="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-1 mr-1" title="Toggle Light / Dark Mode">
+          <span id="theme-icon">🌙</span>
+        </button>
+        <a id="btn-guide-cta" href="/guide" class="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-slate-700 text-xs font-bold transition">
           📘 5-Step Setup Guide
         </a>
-        <a href="https://getepo.com" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-cyan-400 hover:opacity-95 text-slate-950 font-extrabold text-xs shadow-lg transition">
+        <a id="btn-audit-cta" href="https://getepo.com" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-cyan-400 hover:opacity-95 text-slate-950 font-extrabold text-xs shadow-lg transition">
           ⚡ Audit Your Domain Now
         </a>
       </div>
@@ -69,13 +125,13 @@
 
     <!-- Hero -->
     <section class="space-y-4 max-w-4xl">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mono">
+      <div id="gl-hero-badge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mono">
         DUAL-HORIZON DISCOVERY • HYPER-LOCAL + INTERNATIONAL ABROAD
       </div>
-      <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+      <h1 id="gl-hero-title" class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
         How to Dominate AI Search <span class="text-emerald-400">Locally in Your City</span> &amp; <span class="text-cyan-400">Globally Abroad</span>
       </h1>
-      <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+      <p id="gl-hero-desc" class="text-slate-300 text-sm sm:text-base leading-relaxed">
         Traditional SEO forced businesses to choose between local map packs and expensive international country-code domains. In Generative AI Search (ChatGPT Search, Perplexity, Google Gemini, Claude, and Copilot), LLMs resolve queries by matching <strong>geographic coordinates, service areas, currencies, and multilingual entity graphs</strong> in real time. Here is exactly how SendPut and GetEPO optimize both horizons—and how you can configure it today.
       </p>
     </section>
@@ -87,13 +143,13 @@
       <div class="local-card rounded-2xl p-6 space-y-5">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div>
-            <span class="text-[11px] mono uppercase text-emerald-400 font-bold">HORIZON 1 • HYPER-LOCAL DOMINANCE</span>
-            <h2 class="text-xl font-extrabold text-white mt-0.5">Winning Local City &amp; "Near Me" AI Prompts</h2>
+            <span id="gl-h1-badge" class="text-[11px] mono uppercase text-emerald-400 font-bold">HORIZON 1 • HYPER-LOCAL DOMINANCE</span>
+            <h2 id="gl-h1-title" class="text-xl font-extrabold text-white mt-0.5">Winning Local City &amp; "Near Me" AI Prompts</h2>
           </div>
-          <span class="px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 mono text-xs font-bold">Defeats Yelp/Angi</span>
+          <span id="gl-h1-tag" class="px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 mono text-xs font-bold">Defeats Yelp/Angi</span>
         </div>
 
-        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <p id="gl-h1-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
           When a local customer asks ChatGPT or Perplexity <em>"Who is the best licensed roofer in Orlando with transparent financing?"</em>, <strong>68% of unoptimized local businesses are omitted</strong> in favor of third-party aggregators (Yelp, Angi, Thumbtack) because the business website lacks structured local proof.
         </p>
 
@@ -121,13 +177,13 @@
       <div class="global-card rounded-2xl p-6 space-y-5">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div>
-            <span class="text-[11px] mono uppercase text-cyan-400 font-bold">HORIZON 2 • INTERNATIONAL &amp; ABROAD</span>
-            <h2 class="text-xl font-extrabold text-white mt-0.5">Capturing Cross-Border &amp; Multilingual Markets</h2>
+            <span id="gl-h2-badge" class="text-[11px] mono uppercase text-cyan-400 font-bold">HORIZON 2 • INTERNATIONAL &amp; ABROAD</span>
+            <h2 id="gl-h2-title" class="text-xl font-extrabold text-white mt-0.5">Capturing Cross-Border &amp; Multilingual Markets</h2>
           </div>
-          <span class="px-2.5 py-1 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 mono text-xs font-bold">Zero ccTLD Overhead</span>
+          <span id="gl-h2-tag" class="px-2.5 py-1 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 mono text-xs font-bold">Zero ccTLD Overhead</span>
         </div>
 
-        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <p id="gl-h2-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
           When buyers abroad query AI engines in Spanish, Portuguese, French, German, or Korean (e.g., <em>"¿Cuál es la mejor plataforma CRM de seguros bilingüe para Latinoamérica y EE.UU.?"</em>), LLMs translate and synthesize across languages—<strong>if and only if</strong> your entity graph declares cross-border capabilities.
         </p>
 
@@ -157,28 +213,28 @@
     <section class="glass-card rounded-2xl p-6 sm:p-8 space-y-6">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
         <div>
-          <span class="text-xs mono uppercase text-amber-300 font-bold">PRACTICAL IMPLEMENTATION</span>
-          <h2 class="text-2xl font-black text-white mt-0.5">How to Configure Your Site for Local &amp; International Visibility</h2>
+          <span id="gl-steps-badge" class="text-xs mono uppercase text-amber-300 font-bold">PRACTICAL IMPLEMENTATION</span>
+          <h2 id="gl-steps-title" class="text-2xl font-black text-white mt-0.5">How to Configure Your Site for Local &amp; International Visibility</h2>
         </div>
         <span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 mono text-xs font-bold">Copy &amp; Deploy Ready</span>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 text-xs">
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <div class="mono font-bold text-emerald-400">Step A • Enable Bilingual / Multilingual Mode</div>
-          <p class="text-slate-300 leading-relaxed">
+          <div id="gl-step-a-title" class="mono font-bold text-emerald-400">Step A • Enable Bilingual / Multilingual Mode</div>
+          <p id="gl-step-a-desc" class="text-slate-300 leading-relaxed">
             In the <strong>SendPut 5-Layer "PUT" Engine</strong> tab (on <a href="/#section-proof" class="text-cyan-400 underline">sendput.com</a>), check <strong>"Enable EN/ES Graph"</strong> and enter both your English and Spanish/International descriptions, or pass <code class="mono">bilingual_es_enabled: true</code> to <code class="mono">POST /api/entities/upsert</code>.
           </p>
         </div>
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <div class="mono font-bold text-cyan-400">Step B • Declare Both Local Geo &amp; Country Codes</div>
-          <p class="text-slate-300 leading-relaxed">
+          <div id="gl-step-b-title" class="mono font-bold text-cyan-400">Step B • Declare Both Local Geo &amp; Country Codes</div>
+          <p id="gl-step-b-desc" class="text-slate-300 leading-relaxed">
             Include both your physical headquarters (<code class="mono">addressLocality</code> + <code class="mono">GeoCoordinates</code>) AND your international <code class="mono">areaServed</code> countries in your <code class="mono">Schema.org @graph</code> (template below).
           </p>
         </div>
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <div class="mono font-bold text-purple-400">Step C • Trigger Global IndexNow &amp; Re-Verify</div>
-          <p class="text-slate-300 leading-relaxed">
+          <div id="gl-step-c-title" class="mono font-bold text-purple-400">Step C • Trigger Global IndexNow &amp; Re-Verify</div>
+          <p id="gl-step-c-desc" class="text-slate-300 leading-relaxed">
             Click <strong>"🚀 1-Click Provision &amp; Re-Verify"</strong> on <a href="https://getepo.com" class="text-cyan-400 underline">getepo.com</a> to broadcast your updated graph across global search gateways and verify your 3-Query Fan-Out telemetry.
           </p>
         </div>
@@ -247,15 +303,15 @@
 
     <!-- Bottom CTA -->
     <section class="local-card rounded-2xl p-8 text-center space-y-4">
-      <h2 class="text-2xl font-black text-white">Test Your Local &amp; International Readiness Right Now</h2>
-      <p class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
+      <h2 id="gl-bottom-title" class="text-2xl font-black text-white">Test Your Local &amp; International Readiness Right Now</h2>
+      <p id="gl-bottom-desc" class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
         Enter any city niche or international market in the GetEPO Validator to see how ChatGPT Search, Perplexity, and Gemini respond before and after 5-Layer EPO.
       </p>
       <div class="flex flex-wrap justify-center gap-3 pt-2">
-        <a href="https://getepo.com" class="px-6 py-3 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold text-xs uppercase tracking-wider transition">
+        <a id="gl-bottom-validator" href="https://getepo.com" class="px-6 py-3 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold text-xs uppercase tracking-wider transition">
           ⚡ Launch GetEPO Validator →
         </a>
-        <a href="/spec" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 font-bold text-xs uppercase tracking-wider transition">
+        <a id="gl-bottom-spec" href="/spec" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 font-bold text-xs uppercase tracking-wider transition">
           📐 View RFC-2026-GEO-01 Spec &amp; Next Upgrade Roadmap →
         </a>
       </div>
@@ -275,6 +331,191 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    const GLOBAL_LOCAL_I18N = {
+      en: {
+        topBadge: "LOCAL & CROSS-BORDER AI DISCOVERY PLAYBOOK",
+        topDesc: "Hyper-Local GeoCoordinates • Multilingual @graph • Multi-Currency OfferCatalog",
+        navHome: "Home",
+        navGuide: "Implementation Guide",
+        navPlaybook: "Local & Global Playbook",
+        navSpec: "Protocol Spec & Roadmap",
+        navValidator: "GetEPO Validator ↗",
+        headerTitle: 'Local & Global <span class="text-cyan-400">AI Visibility</span>',
+        headerBadge: "Playbook",
+        headerSub: "How SendPut & GetEPO Boost Citations in Your City and Across International Borders",
+        btnGuideCta: "📘 5-Step Setup Guide",
+        btnAuditCta: "⚡ Audit Your Domain Now",
+        heroBadge: "DUAL-HORIZON DISCOVERY • HYPER-LOCAL + INTERNATIONAL ABROAD",
+        heroTitle: 'How to Dominate AI Search <span class="text-emerald-400">Locally in Your City</span> &amp; <span class="text-cyan-400">Globally Abroad</span>',
+        heroDesc: 'Traditional SEO forced businesses to choose between local map packs and expensive international country-code domains. In Generative AI Search (ChatGPT Search, Perplexity, Google Gemini, Claude, and Copilot), LLMs resolve queries by matching <strong>geographic coordinates, service areas, currencies, and multilingual entity graphs</strong> in real time. Here is exactly how SendPut and GetEPO optimize both horizons—and how you can configure it today.',
+        h1Badge: "HORIZON 1 • HYPER-LOCAL DOMINANCE",
+        h1Title: "Winning Local City & \"Near Me\" AI Prompts",
+        h1Tag: "Defeats Yelp/Angi",
+        h1Desc: 'When a local customer asks ChatGPT or Perplexity <em>"Who is the best licensed roofer in Orlando with transparent financing?"</em>, <strong>68% of unoptimized local businesses are omitted</strong> in favor of third-party aggregators (Yelp, Angi, Thumbtack) because the business website lacks structured local proof.',
+        h2Badge: "HORIZON 2 • INTERNATIONAL & ABROAD",
+        h2Title: "Capturing Cross-Border & Multilingual Markets",
+        h2Tag: "Zero ccTLD Overhead",
+        h2Desc: 'When buyers abroad query AI engines in Spanish, Portuguese, French, German, or Korean (e.g., <em>"¿Cuál es la mejor plataforma CRM de seguros bilingüe para Latinoamérica y EE.UU.?"</em>), LLMs translate and synthesize across languages—<strong>if and only if</strong> your entity graph declares cross-border capabilities.',
+        stepsBadge: "PRACTICAL IMPLEMENTATION",
+        stepsTitle: "How to Configure Your Site for Local & International Visibility",
+        stepATitle: "Step A • Enable Bilingual / Multilingual Mode",
+        stepADesc: 'In the <strong>SendPut 5-Layer "PUT" Engine</strong> tab (on <a href="/#section-proof" class="text-cyan-400 underline">sendput.com</a>), check <strong>"Enable EN/ES Graph"</strong> and enter both your English and Spanish/International descriptions, or pass <code class="mono">bilingual_es_enabled: true</code> to <code class="mono">POST /api/entities/upsert</code>.',
+        stepBTitle: "Step B • Declare Both Local Geo & Country Codes",
+        stepBDesc: 'Include both your physical headquarters (<code class="mono">addressLocality</code> + <code class="mono">GeoCoordinates</code>) AND your international <code class="mono">areaServed</code> countries in your <code class="mono">Schema.org @graph</code> (template below).',
+        stepCTitle: "Step C • Trigger Global IndexNow & Re-Verify",
+        stepCDesc: 'Click <strong>"🚀 1-Click Provision &amp; Re-Verify"</strong> on <a href="https://getepo.com" class="text-cyan-400 underline">getepo.com</a> to broadcast your updated graph across global search gateways and verify your 3-Query Fan-Out telemetry.',
+        bottomTitle: "Test Your Local & International Readiness Right Now",
+        bottomDesc: "Enter any city niche or international market in the GetEPO Validator to see how ChatGPT Search, Perplexity, and Gemini respond before and after 5-Layer EPO.",
+        bottomValidator: "⚡ Launch GetEPO Validator →",
+        bottomSpec: "📐 View RFC-2026-GEO-01 Spec & Next Upgrade Roadmap →"
+      },
+      es: {
+        topBadge: "MANUAL DE DESCUBRIMIENTO LOCAL Y TRANSFRONTERIZO CON IA",
+        topDesc: "GeoCoordenadas Hiperlocales • @graph Multilingüe • OfferCatalog Multidivisa",
+        navHome: "Inicio",
+        navGuide: "Guía de Implementación",
+        navPlaybook: "Manual Local y Global",
+        navSpec: "Especificación y Hoja de Ruta",
+        navValidator: "Validador GetEPO ↗",
+        headerTitle: 'Visibilidad de IA <span class="text-cyan-400">Local y Global</span>',
+        headerBadge: "Manual",
+        headerSub: "Cómo SendPut y GetEPO Multiplican las Citas en su Ciudad y a Nivel Internacional",
+        btnGuideCta: "📘 Guía de 5 Pasos",
+        btnAuditCta: "⚡ Auditar Dominio Ahora",
+        heroBadge: "DESCUBRIMIENTO DE DOBLE HORIZONTE • HIPERLOCAL + INTERNACIONAL",
+        heroTitle: 'Cómo Dominar la Búsqueda de IA <span class="text-emerald-400">Localmente en su Ciudad</span> y <span class="text-cyan-400">Globalmente en el Extranjero</span>',
+        heroDesc: 'El SEO tradicional obligaba a elegir entre paquetes de mapas locales y costosos dominios territoriales. En la Búsqueda de IA Generativa (ChatGPT Search, Perplexity, Google Gemini, Claude y Copilot), los LLM resuelven consultas comparando <strong>coordenadas geográficas, áreas de servicio, divisas y grafos de entidades multilingües</strong> en tiempo real. Vea cómo SendPut y GetEPO optimizan ambos horizontes hoy.',
+        h1Badge: "HORIZONTE 1 • DOMINANCIA HIPERLOCAL",
+        h1Title: "Ganar Consultas de IA Locales en la Ciudad y \"Cerca de Mí\"",
+        h1Tag: "Supera a Yelp/Angi",
+        h1Desc: 'Cuando un cliente local pregunta a ChatGPT o Perplexity <em>"¿Quién es el mejor techador certificado en Orlando con financiamiento transparente?"</em>, <strong>el 68% de los negocios locales no optimizados son omitidos</strong> en favor de agregadores terceros (Yelp, Angi) porque el sitio web carece de pruebas estructuradas locales.',
+        h2Badge: "HORIZONTE 2 • INTERNACIONAL Y EN EL EXTRANJERO",
+        h2Title: "Capturar Mercados Transfronterizos y Multilingües",
+        h2Tag: "Cero Costo de ccTLD",
+        h2Desc: 'Cuando compradores del exterior consultan motores de IA en español, portugués, francés o alemán (ej., <em>"¿Cuál es la mejor plataforma CRM de seguros bilingüe para Latinoamérica y EE.UU.?"</em>), los LLM traducen y sintetizan: <strong>siempre y cuando</strong> su grafo de entidad declare capacidades transfronterizas.',
+        stepsBadge: "IMPLEMENTACIÓN PRÁCTICA",
+        stepsTitle: "Cómo Configurar su Sitio para Visibilidad Local e Internacional",
+        stepATitle: "Paso A • Activar Modo Bilingüe / Multilingüe",
+        stepADesc: 'En la pestaña <strong>Motor "PUT" de 5 Capas de SendPut</strong> (en <a href="/#section-proof" class="text-cyan-400 underline">sendput.com</a>), marque <strong>"Activar Grafo EN/ES"</strong> e ingrese sus descripciones en inglés y español/internacional, o pase <code class="mono">bilingual_es_enabled: true</code> a <code class="mono">POST /api/entities/upsert</code>.',
+        stepBTitle: "Paso B • Declarar Coordenadas Locales y Códigos de País",
+        stepBDesc: 'Incluya tanto su sede física (<code class="mono">addressLocality</code> + <code class="mono">GeoCoordinates</code>) COMO sus países de <code class="mono">areaServed</code> internacional en su <code class="mono">@graph Schema.org</code> (plantilla abajo).',
+        stepCTitle: "Paso C • Disparar IndexNow Global y Re-verificar",
+        stepCDesc: 'Haga clic en <strong>"🚀 Aprovisionar y Re-verificar con 1 Clic"</strong> en <a href="https://getepo.com" class="text-cyan-400 underline">getepo.com</a> para difundir su grafo actualizado a través de puertas de enlace de búsqueda global y verificar su telemetría Fan-Out.',
+        bottomTitle: "Pruebe su Preparación Local e Internacional Ahora Mismo",
+        bottomDesc: "Ingrese cualquier nicho de ciudad o mercado internacional en el Validador GetEPO para ver cómo responden ChatGPT Search, Perplexity y Gemini antes y después del protocolo EPO de 5 Capas.",
+        bottomValidator: "⚡ Iniciar Validador GetEPO →",
+        bottomSpec: "📐 Ver Especificación RFC-2026-GEO-01 y Hoja de Ruta →"
+      }
+    };
+
+    let currentGlobalLocalLang = 'en';
+
+    function setGlobalLocalLanguage(lang) {
+      currentGlobalLocalLang = lang;
+      const dict = GLOBAL_LOCAL_I18N[lang] || GLOBAL_LOCAL_I18N.en;
+      try { localStorage.setItem('lang', lang); } catch (e) {}
+
+      const btnEn = document.getElementById('btn-lang-en');
+      const btnEs = document.getElementById('btn-lang-es');
+      if (btnEn && btnEs) {
+        if (lang === 'es') {
+          btnEs.className = 'px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition';
+          btnEn.className = 'px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition';
+        } else {
+          btnEn.className = 'px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition';
+          btnEs.className = 'px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition';
+        }
+      }
+
+      const map = {
+        'gl-top-badge': dict.topBadge,
+        'gl-top-desc': dict.topDesc,
+        'gl-nav-home': dict.navHome,
+        'gl-nav-guide': dict.navGuide,
+        'gl-nav-playbook': dict.navPlaybook,
+        'gl-nav-spec': dict.navSpec,
+        'gl-nav-validator': dict.navValidator,
+        'gl-header-title': dict.headerTitle,
+        'gl-header-badge': dict.headerBadge,
+        'gl-header-sub': dict.headerSub,
+        'btn-guide-cta': dict.btnGuideCta,
+        'btn-audit-cta': dict.btnAuditCta,
+        'gl-hero-badge': dict.heroBadge,
+        'gl-hero-title': dict.heroTitle,
+        'gl-hero-desc': dict.heroDesc,
+        'gl-h1-badge': dict.h1Badge,
+        'gl-h1-title': dict.h1Title,
+        'gl-h1-tag': dict.h1Tag,
+        'gl-h1-desc': dict.h1Desc,
+        'gl-h2-badge': dict.h2Badge,
+        'gl-h2-title': dict.h2Title,
+        'gl-h2-tag': dict.h2Tag,
+        'gl-h2-desc': dict.h2Desc,
+        'gl-steps-badge': dict.stepsBadge,
+        'gl-steps-title': dict.stepsTitle,
+        'gl-step-a-title': dict.stepATitle,
+        'gl-step-a-desc': dict.stepADesc,
+        'gl-step-b-title': dict.stepBTitle,
+        'gl-step-b-desc': dict.stepBDesc,
+        'gl-step-c-title': dict.stepCTitle,
+        'gl-step-c-desc': dict.stepCDesc,
+        'gl-bottom-title': dict.bottomTitle,
+        'gl-bottom-desc': dict.bottomDesc,
+        'gl-bottom-validator': dict.bottomValidator,
+        'gl-bottom-spec': dict.bottomSpec
+      };
+
+      for (const [id, val] of Object.entries(map)) {
+        const el = document.getElementById(id);
+        if (el && val) el.innerHTML = val;
+      }
+    }
+
+    function applyGlobalLocalTheme(theme) {
+      const root = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if (theme === 'light') {
+        root.classList.remove('dark');
+        root.classList.add('light');
+        if (icon) icon.textContent = '☀️';
+      } else {
+        root.classList.remove('light');
+        root.classList.add('dark');
+        if (icon) icon.textContent = '🌙';
+      }
+      try { localStorage.setItem('theme', theme); } catch (e) {}
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Theme Init
+      let savedTheme = 'dark';
+      try { savedTheme = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+      applyGlobalLocalTheme(savedTheme);
+
+      const themeBtn = document.getElementById('btn-theme-toggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+          const isLight = document.documentElement.classList.contains('light');
+          applyGlobalLocalTheme(isLight ? 'dark' : 'light');
+        });
+      }
+
+      // Language Init
+      const params = new URLSearchParams(window.location.search);
+      let initialLang = params.get('lang') || 'en';
+      try {
+        if (!params.get('lang')) {
+          initialLang = localStorage.getItem('lang') || 'en';
+        }
+      } catch (e) {}
+
+      document.getElementById('btn-lang-en')?.addEventListener('click', () => setGlobalLocalLanguage('en'));
+      document.getElementById('btn-lang-es')?.addEventListener('click', () => setGlobalLocalLanguage('es'));
+      setGlobalLocalLanguage(initialLang);
+    });
+  </script>
 </body>
 </html>
 

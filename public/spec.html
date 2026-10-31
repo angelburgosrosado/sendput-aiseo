@@ -14,6 +14,53 @@
     .mono { font-family: 'JetBrains Mono', monospace; }
     .glass-card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.22); backdrop-filter: blur(12px); }
     .roadmap-card { background: rgba(13, 19, 31, 0.94); border: 1px solid rgba(168, 85, 247, 0.32); }
+
+    /* Light Theme */
+    html.light body {
+      background-color: #F8FAFC !important;
+      color: #0F172A !important;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(168, 85, 247, 0.08), transparent 35%),
+        radial-gradient(circle at 85% 15%, rgba(6, 182, 212, 0.08), transparent 35%);
+    }
+    html.light .glass-card, html.light .roadmap-card {
+      background: rgba(255, 255, 255, 0.95) !important;
+      border: 1px solid rgba(168, 85, 247, 0.25) !important;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+    }
+    html.light .bg-slate-950,
+    html.light .bg-slate-950\/90,
+    html.light .bg-slate-950\/85,
+    html.light .bg-slate-950\/75 {
+      background-color: #FFFFFF !important;
+      color: #0F172A;
+    }
+    html.light .bg-slate-900 {
+      background-color: #F1F5F9 !important;
+      color: #0F172A;
+    }
+    html.light header, html.light footer {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      border-color: #E2E8F0 !important;
+    }
+    html.light .text-white {
+      color: #0F172A !important;
+    }
+    html.light .text-slate-200, html.light .text-slate-300 {
+      color: #334155 !important;
+    }
+    html.light .text-slate-400, html.light .text-slate-500 {
+      color: #64748B !important;
+    }
+    html.light .border-slate-800,
+    html.light .border-slate-800\/80,
+    html.light .border-slate-700 {
+      border-color: #CBD5E1 !important;
+    }
+    html.light pre {
+      background-color: #0F172A !important;
+      color: #A7F3D0 !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-cyan-400 selection:text-slate-950">
@@ -22,17 +69,17 @@
   <div class="bg-slate-950 border-b border-slate-800/80 px-4 py-2 text-xs mono">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-3">
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30 font-semibold">
+        <span id="spec-top-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30 font-semibold">
           <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
           RFC-2026-GEO-01 STANDARD &amp; V4.0 ARCHITECTURE ROADMAP
         </span>
       </div>
       <div class="flex items-center gap-4 text-[11px]">
-        <a href="/" class="text-cyan-400 hover:underline">Home</a>
-        <a href="/guide" class="text-cyan-400 hover:underline">Implementation Guide</a>
-        <a href="/global-local" class="text-cyan-400 hover:underline">Local &amp; Global Playbook</a>
-        <a href="/spec" class="text-emerald-400 font-bold underline">Protocol Spec &amp; Roadmap</a>
-        <a href="https://getepo.com" class="text-amber-300 hover:underline font-bold">GetEPO Validator ↗</a>
+        <a id="spec-nav-home" href="/" class="text-cyan-400 hover:underline">Home</a>
+        <a id="spec-nav-guide" href="/guide" class="text-cyan-400 hover:underline">Implementation Guide</a>
+        <a id="spec-nav-playbook" href="/global-local" class="text-cyan-400 hover:underline">Local &amp; Global Playbook</a>
+        <a id="spec-nav-spec" href="/spec" class="text-emerald-400 font-bold underline">Protocol Spec &amp; Roadmap</a>
+        <a id="spec-nav-validator" href="https://getepo.com" class="text-amber-300 hover:underline font-bold">GetEPO Validator ↗</a>
       </div>
     </div>
   </div>
@@ -46,17 +93,26 @@
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <span class="font-black text-xl tracking-tight text-white">RFC-2026-GEO-01 <span class="text-purple-400">Spec &amp; Roadmap</span></span>
-            <span class="text-[10px] mono uppercase px-2 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-semibold">v3.5 Active → v4.0 Next</span>
+            <span id="spec-header-title" class="font-black text-xl tracking-tight text-white">RFC-2026-GEO-01 <span class="text-purple-400">Spec &amp; Roadmap</span></span>
+            <span id="spec-header-badge" class="text-[10px] mono uppercase px-2 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-semibold">v3.5 Active → v4.0 Next</span>
           </div>
-          <p class="text-xs text-slate-400">Mathematical Scoring Model, Live Trust Endpoints &amp; Next-Upgrade Requirements</p>
+          <p id="spec-header-sub" class="text-xs text-slate-400">Mathematical Scoring Model, Live Trust Endpoints &amp; Next-Upgrade Requirements</p>
         </div>
       </a>
       <div class="flex flex-wrap items-center gap-2.5">
-        <a href="/api/cert/1" target="_blank" class="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 text-xs font-bold transition">
+        <!-- Bilingual Toggle -->
+        <div class="inline-flex rounded-lg bg-slate-900 border border-slate-800 p-0.5 mr-1">
+          <button id="btn-lang-en" type="button" class="px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition">EN</button>
+          <button id="btn-lang-es" type="button" class="px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition">ES</button>
+        </div>
+        <!-- Theme Toggle -->
+        <button id="btn-theme-toggle" type="button" class="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-1 mr-1" title="Toggle Light / Dark Mode">
+          <span id="theme-icon">🌙</span>
+        </button>
+        <a id="spec-btn-cert-cta" href="/api/cert/1" target="_blank" class="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 text-xs font-bold transition">
           📜 Sample SHA-256 Certificate ↗
         </a>
-        <a href="https://getepo.com" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-cyan-400 hover:opacity-95 text-slate-950 font-extrabold text-xs shadow-lg transition">
+        <a id="spec-btn-validator-cta" href="https://getepo.com" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-cyan-400 hover:opacity-95 text-slate-950 font-extrabold text-xs shadow-lg transition">
           ⚡ Open GetEPO Validator
         </a>
       </div>
@@ -69,8 +125,8 @@
     <section class="glass-card rounded-2xl p-6 sm:p-8 space-y-6">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
         <div>
-          <span class="text-xs mono uppercase text-cyan-400 font-bold">SECTION 01 • MATHEMATICAL SCORING ENGINE</span>
-          <h1 class="text-2xl sm:text-4xl font-black text-white mt-0.5">The RFC-2026-GEO-01 Composite Formula</h1>
+          <span id="spec-s1-badge" class="text-xs mono uppercase text-cyan-400 font-bold">SECTION 01 • MATHEMATICAL SCORING ENGINE</span>
+          <h1 id="spec-s1-title" class="text-2xl sm:text-4xl font-black text-white mt-0.5">The RFC-2026-GEO-01 Composite Formula</h1>
         </div>
         <code class="px-3 py-1.5 rounded-lg bg-slate-950 border border-cyan-500/40 text-cyan-300 mono text-xs font-bold">
           EPO = 0.35·SFAI + 0.25·DVS + 0.25·AICS + 0.15·THQ
@@ -83,8 +139,8 @@
             <span class="font-bold text-cyan-400 mono">SFAI (35% Weight)</span>
             <span class="text-slate-500 mono">0–100</span>
           </div>
-          <div class="font-bold text-white">Semantic Fact &amp; AST Index</div>
-          <p class="text-slate-400 leading-relaxed">Evaluates JSON-LD <code class="mono">@graph</code> depth, <code class="mono">@id</code> canonicalization, <code class="mono">sameAs</code> authority links, <code class="mono">OfferCatalog</code> pricing clarity, and <code class="mono">/robots.txt</code> permissions across 8 AI retrieval crawlers.</p>
+          <div id="spec-sfai-title" class="font-bold text-white">Semantic Fact &amp; AST Index</div>
+          <p id="spec-sfai-desc" class="text-slate-400 leading-relaxed">Evaluates JSON-LD <code class="mono">@graph</code> depth, <code class="mono">@id</code> canonicalization, <code class="mono">sameAs</code> authority links, <code class="mono">OfferCatalog</code> pricing clarity, and <code class="mono">/robots.txt</code> permissions across 8 AI retrieval crawlers.</p>
         </div>
 
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
@@ -92,8 +148,8 @@
             <span class="font-bold text-emerald-400 mono">DVS (25% Weight)</span>
             <span class="text-slate-500 mono">0–100</span>
           </div>
-          <div class="font-bold text-white">Discovery Velocity Score</div>
-          <p class="text-slate-400 leading-relaxed">Measures root IndexNow cryptographic key verification, <code class="mono">/sitemap.xml</code> freshness, and real-time push latency to Bing, Copilot, SearchGPT, Naver, Seznam, and Yandex.</p>
+          <div id="spec-dvs-title" class="font-bold text-white">Discovery Velocity Score</div>
+          <p id="spec-dvs-desc" class="text-slate-400 leading-relaxed">Measures root IndexNow cryptographic key verification, <code class="mono">/sitemap.xml</code> freshness, and real-time push latency to Bing, Copilot, SearchGPT, Naver, Seznam, and Yandex.</p>
         </div>
 
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
@@ -101,8 +157,8 @@
             <span class="font-bold text-indigo-400 mono">AICS (25% Weight)</span>
             <span class="text-slate-500 mono">0–100</span>
           </div>
-          <div class="font-bold text-white">AI Citation Share-of-Voice</div>
-          <p class="text-slate-400 leading-relaxed">Measures primary brand citation rate across the 3-Query Fan-Out (<code class="mono">Transactional</code>, <code class="mono">Comparative</code>, <code class="mono">Agentic Action</code>) backed by 24h Neon PostgreSQL prompt caching.</p>
+          <div id="spec-aics-title" class="font-bold text-white">AI Citation Share-of-Voice</div>
+          <p id="spec-aics-desc" class="text-slate-400 leading-relaxed">Measures primary brand citation rate across the 3-Query Fan-Out (<code class="mono">Transactional</code>, <code class="mono">Comparative</code>, <code class="mono">Agentic Action</code>) backed by 24h Neon PostgreSQL prompt caching.</p>
         </div>
 
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
@@ -110,8 +166,8 @@
             <span class="font-bold text-purple-400 mono">THQ (15% Weight)</span>
             <span class="text-slate-500 mono">0–100</span>
           </div>
-          <div class="font-bold text-white">Technical Health &amp; MCP Quotient</div>
-          <p class="text-slate-400 leading-relaxed">Verifies <code class="mono">/llms.txt</code> token budget (&lt; 2,000 tokens), <code class="mono">/llms-full.txt</code> availability, OpenAPI 3.1.0 schema, and live JSON-RPC 2.0 / SSE MCP agent tool readiness.</p>
+          <div id="spec-thq-title" class="font-bold text-white">Technical Health &amp; MCP Quotient</div>
+          <p id="spec-thq-desc" class="text-slate-400 leading-relaxed">Verifies <code class="mono">/llms.txt</code> token budget (&lt; 2,000 tokens), <code class="mono">/llms-full.txt</code> availability, OpenAPI 3.1.0 schema, and live JSON-RPC 2.0 / SSE MCP agent tool readiness.</p>
         </div>
       </div>
     </section>
@@ -119,45 +175,45 @@
     <!-- Section 2: Live Production Verification & Trust Endpoints -->
     <section class="glass-card rounded-2xl p-6 sm:p-8 space-y-5">
       <div class="border-b border-slate-800 pb-3">
-        <span class="text-xs mono uppercase text-emerald-400 font-bold">SECTION 02 • LIVE TRUST &amp; TELEMETRY API SUITE (v3.5)</span>
-        <h2 class="text-2xl font-black text-white mt-0.5">Public Verification &amp; Closed-Loop Endpoints</h2>
+        <span id="spec-s2-badge" class="text-xs mono uppercase text-emerald-400 font-bold">SECTION 02 • LIVE TRUST &amp; TELEMETRY API SUITE (v3.5)</span>
+        <h2 id="spec-s2-title" class="text-2xl font-black text-white mt-0.5">Public Verification &amp; Closed-Loop Endpoints</h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
         <a href="/api/cert/1" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400/50 transition space-y-1.5 block">
           <div class="mono font-bold text-cyan-300">GET /api/cert/:id</div>
-          <div class="font-bold text-white">Signed SHA-256 Compliance Certificate</div>
-          <p class="text-slate-400">Tamper-evident HTML &amp; JSON (<code class="mono">?format=json</code>) cryptographic attestation of 5-Layer EPO compliance.</p>
+          <div id="spec-ep-cert-title" class="font-bold text-white">Signed SHA-256 Compliance Certificate</div>
+          <p id="spec-ep-cert-desc" class="text-slate-400">Tamper-evident HTML &amp; JSON (<code class="mono">?format=json</code>) cryptographic attestation of 5-Layer EPO compliance.</p>
         </a>
 
         <a href="/api/epo-score?domain=getepo.com" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-400/50 transition space-y-1.5 block">
           <div class="mono font-bold text-emerald-300">GET /api/epo-score?domain=...</div>
-          <div class="font-bold text-white">Developer CLI &amp; CI/CD Benchmark JSON</div>
-          <p class="text-slate-400">Returns machine-readable composite score, letter grade, and 5-Layer PASS/MISSING status for GitHub Actions gates.</p>
+          <div id="spec-ep-score-title" class="font-bold text-white">Developer CLI &amp; CI/CD Benchmark JSON</div>
+          <p id="spec-ep-score-desc" class="text-slate-400">Returns machine-readable composite score, letter grade, and 5-Layer PASS/MISSING status for GitHub Actions gates.</p>
         </a>
 
         <a href="/api/epo-badge?domain=getepo.com" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-indigo-400/50 transition space-y-1.5 block">
           <div class="mono font-bold text-indigo-300">GET /api/epo-badge?domain=...</div>
-          <div class="font-bold text-white">Dynamic SVG Score Shield</div>
-          <p class="text-slate-400">Live embeddable SVG badge displaying real-time RFC-2026-GEO-01 score and grade.</p>
+          <div id="spec-ep-badge-title" class="font-bold text-white">Dynamic SVG Score Shield</div>
+          <p id="spec-ep-badge-desc" class="text-slate-400">Live embeddable SVG badge displaying real-time RFC-2026-GEO-01 score and grade.</p>
         </a>
 
         <a href="/api/telemetry" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-purple-400/50 transition space-y-1.5 block">
           <div class="mono font-bold text-purple-300">GET /api/telemetry/:slug</div>
-          <div class="font-bold text-white">Real-Time AI Crawler Telemetry</div>
-          <p class="text-slate-400">Streams verified bot hits (<code class="mono">OAI-SearchBot</code>, <code class="mono">PerplexityBot</code>, <code class="mono">ClaudeBot</code>, <code class="mono">Google-Extended</code>) from Neon PostgreSQL.</p>
+          <div id="spec-ep-telem-title" class="font-bold text-white">Real-Time AI Crawler Telemetry</div>
+          <p id="spec-ep-telem-desc" class="text-slate-400">Streams verified bot hits (<code class="mono">OAI-SearchBot</code>, <code class="mono">PerplexityBot</code>, <code class="mono">ClaudeBot</code>, <code class="mono">Google-Extended</code>) from Neon PostgreSQL.</p>
         </a>
 
         <a href="/api/cron/epo-sync" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-amber-400/50 transition space-y-1.5 block">
           <div class="mono font-bold text-amber-300">GET / POST /api/cron/epo-sync</div>
-          <div class="font-bold text-white">Autonomous Drift &amp; IndexNow Heartbeat</div>
-          <p class="text-slate-400">Verifies zero schema drift across all registered entities and dispatches a scheduled IndexNow batch.</p>
+          <div id="spec-ep-cron-title" class="font-bold text-white">Autonomous Drift &amp; IndexNow Heartbeat</div>
+          <p id="spec-ep-cron-desc" class="text-slate-400">Verifies zero schema drift across all registered entities and dispatches a scheduled IndexNow batch.</p>
         </a>
 
         <a href="/api/leaderboard" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-400/50 transition space-y-1.5 block">
           <div class="mono font-bold text-emerald-300">GET /api/leaderboard</div>
-          <div class="font-bold text-white">Global RFC-2026-GEO-01 Hall of Fame</div>
-          <p class="text-slate-400">Live benchmark comparing Grade A+ verified domains against unoptimized industry baselines.</p>
+          <div id="spec-ep-lead-title" class="font-bold text-white">Global RFC-2026-GEO-01 Hall of Fame</div>
+          <p id="spec-ep-lead-desc" class="text-slate-400">Live benchmark comparing Grade A+ verified domains against unoptimized industry baselines.</p>
         </a>
       </div>
     </section>
@@ -166,9 +222,9 @@
     <section class="roadmap-card rounded-2xl p-6 sm:p-8 space-y-6">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
         <div>
-          <span class="text-xs mono uppercase text-purple-400 font-bold">SECTION 03 • NEXT-UPGRADE ARCHITECTURAL REQUIREMENTS (v4.0)</span>
-          <h2 class="text-2xl sm:text-3xl font-black text-white mt-0.5">What Is Required for the Next Upgrade (v4.0 Global Scale)</h2>
-          <p class="text-xs sm:text-sm text-slate-300 mt-1">
+          <span id="spec-s3-badge" class="text-xs mono uppercase text-purple-400 font-bold">SECTION 03 • NEXT-UPGRADE ARCHITECTURAL REQUIREMENTS (v4.0)</span>
+          <h2 id="spec-s3-title" class="text-2xl sm:text-3xl font-black text-white mt-0.5">What Is Required for the Next Upgrade (v4.0 Global Scale)</h2>
+          <p id="spec-s3-desc" class="text-xs sm:text-sm text-slate-300 mt-1">
             With v3.5 delivering the complete 5-Layer AST Inspector, Closed-Loop Tenant Provisioning, SHA-256 Attestation, and Bot Telemetry, these <strong>5 Next-Generation Modules</strong> represent the next upgrade horizon to scale local and international dominance:
           </p>
         </div>
@@ -178,55 +234,55 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
         <div class="p-5 rounded-xl bg-slate-950 border border-purple-500/30 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 mono text-[10px] font-bold">REQUIREMENT 01 • INTERNATIONALIZATION</span>
+            <span id="spec-req1-badge" class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 mono text-[10px] font-bold">REQUIREMENT 01 • INTERNATIONALIZATION</span>
             <span class="mono text-slate-400">Cross-Border RAG</span>
           </div>
-          <h3 class="text-sm font-extrabold text-white">Multi-Locale <code class="mono">/llms-{lang}.txt</code> &amp; Automated <code class="mono">hreflang</code> Matrix</h3>
-          <p class="text-slate-300 leading-relaxed">
+          <h3 id="spec-req1-title" class="text-sm font-extrabold text-white">Multi-Locale <code class="mono">/llms-{lang}.txt</code> &amp; Automated <code class="mono">hreflang</code> Matrix</h3>
+          <p id="spec-req1-desc" class="text-slate-300 leading-relaxed">
             Auto-compile dedicated language-specific context files (<code class="mono">/v1/tenants/:slug/llms-es.txt</code>, <code class="mono">llms-pt.txt</code>, <code class="mono">llms-fr.txt</code>, <code class="mono">llms-de.txt</code>) alongside localized <code class="mono">PriceSpecification</code> currencies so international AI agents ingest zero-translation native markdown in their buyer's language.
           </p>
         </div>
 
         <div class="p-5 rounded-xl bg-slate-950 border border-cyan-500/30 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 mono text-[10px] font-bold">REQUIREMENT 02 • SSR EDGE WORKER</span>
+            <span id="spec-req2-badge" class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 mono text-[10px] font-bold">REQUIREMENT 02 • SSR EDGE WORKER</span>
             <span class="mono text-slate-400">Non-JS Crawlers</span>
           </div>
-          <h3 class="text-sm font-extrabold text-white">Cloudflare &amp; Vercel Reverse-Proxy Edge Worker (<code class="mono">@sendput/edge-proxy</code>)</h3>
-          <p class="text-slate-300 leading-relaxed">
+          <h3 id="spec-req2-title" class="text-sm font-extrabold text-white">Cloudflare &amp; Vercel Reverse-Proxy Edge Worker (<code class="mono">@sendput/edge-proxy</code>)</h3>
+          <p id="spec-req2-desc" class="text-slate-300 leading-relaxed">
             While <code class="mono">epo-edge.js</code> and <code class="mono">/verified/:slug</code> work immediately, some strict non-JS crawlers only parse raw initial HTML response bytes. A 1-click Cloudflare Worker / Vercel Middleware script injects the JSON-LD <code class="mono">@graph</code> and HTTP <code class="mono">Link: &lt;/llms.txt&gt;; rel="llms-txt"</code> headers directly at the CDN edge before HTML reaches the crawler.
           </p>
         </div>
 
         <div class="p-5 rounded-xl bg-slate-950 border border-emerald-500/30 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 mono text-[10px] font-bold">REQUIREMENT 03 • KNOWLEDGE GRAPH LINKER</span>
+            <span id="spec-req3-badge" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 mono text-[10px] font-bold">REQUIREMENT 03 • KNOWLEDGE GRAPH LINKER</span>
             <span class="mono text-slate-400">Entity Resolution</span>
           </div>
-          <h3 class="text-sm font-extrabold text-white">Automated Wikidata Q-ID, NAICS &amp; Google Place ID Resolver</h3>
-          <p class="text-slate-300 leading-relaxed">
+          <h3 id="spec-req3-title" class="text-sm font-extrabold text-white">Automated Wikidata Q-ID, NAICS &amp; Google Place ID Resolver</h3>
+          <p id="spec-req3-desc" class="text-slate-300 leading-relaxed">
             Automatically query the Wikidata SPARQL and Google Places APIs during <code class="mono">POST /api/entities/upsert</code> to bind official city/industry Wikidata Q-IDs, NAICS classification codes, and verified <code class="mono">hasMap</code> Place IDs into every tenant's <code class="mono">sameAs</code> array without manual entry.
           </p>
         </div>
 
         <div class="p-5 rounded-xl bg-slate-950 border border-amber-500/30 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 mono text-[10px] font-bold">REQUIREMENT 04 • AGENTIC TRANSACTIONS</span>
+            <span id="spec-req4-badge" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 mono text-[10px] font-bold">REQUIREMENT 04 • AGENTIC TRANSACTIONS</span>
             <span class="mono text-slate-400">MCP Checkout &amp; Cal</span>
           </div>
-          <h3 class="text-sm font-extrabold text-white">Transactional MCP Tools (Live Calendar Booking &amp; Stripe Payment Links)</h3>
-          <p class="text-slate-300 leading-relaxed">
+          <h3 id="spec-req4-title" class="text-sm font-extrabold text-white">Transactional MCP Tools (Live Calendar Booking &amp; Stripe Payment Links)</h3>
+          <p id="spec-req4-desc" class="text-slate-300 leading-relaxed">
             Extend <code class="mono">/mcp/:slug/sse</code> with authenticated webhook bridges to Cal.com / Calendly / HubSpot / GoHighLevel and Stripe Payment Links so autonomous AI agents can complete confirmed bookings and deposits inside the chat window.
           </p>
         </div>
 
         <div class="p-5 rounded-xl bg-slate-950 border border-rose-500/30 space-y-2 md:col-span-2">
           <div class="flex items-center justify-between">
-            <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 mono text-[10px] font-bold">REQUIREMENT 05 • PROACTIVE CITATION ALERTS</span>
+            <span id="spec-req5-badge" class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 mono text-[10px] font-bold">REQUIREMENT 05 • PROACTIVE CITATION ALERTS</span>
             <span class="mono text-slate-400">Share-of-Voice Guard</span>
           </div>
-          <h3 class="text-sm font-extrabold text-white">Automated Citation Diff &amp; Competitor Hijack Webhook Alerts</h3>
-          <p class="text-slate-300 leading-relaxed">
+          <h3 id="spec-req5-title" class="text-sm font-extrabold text-white">Automated Citation Diff &amp; Competitor Hijack Webhook Alerts</h3>
+          <p id="spec-req5-desc" class="text-slate-300 leading-relaxed">
             Connect <code class="mono">/api/cron/epo-sync</code> to Resend / Slack / Webhook notifications so whenever a weekly 3-Query Fan-Out probe detects a drop in <code class="mono">AICS</code> share-of-voice or an accidentally modified <code class="mono">/robots.txt</code> file on a client domain, the business owner and agency partner receive an instant alert with a 1-click patch.
           </p>
         </div>
@@ -247,6 +303,245 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    const SPEC_I18N = {
+      en: {
+        topBadge: "RFC-2026-GEO-01 STANDARD & V4.0 ARCHITECTURE ROADMAP",
+        navHome: "Home",
+        navGuide: "Implementation Guide",
+        navPlaybook: "Local & Global Playbook",
+        navSpec: "Protocol Spec & Roadmap",
+        navValidator: "GetEPO Validator ↗",
+        headerTitle: 'RFC-2026-GEO-01 <span class="text-purple-400">Spec &amp; Roadmap</span>',
+        headerBadge: "v3.5 Active → v4.0 Next",
+        headerSub: "Mathematical Scoring Model, Live Trust Endpoints & Next-Upgrade Requirements",
+        btnCertCta: "📜 Sample SHA-256 Certificate ↗",
+        btnValidatorCta: "⚡ Open GetEPO Validator",
+        s1Badge: "SECTION 01 • MATHEMATICAL SCORING ENGINE",
+        s1Title: "The RFC-2026-GEO-01 Composite Formula",
+        sfaiTitle: "Semantic Fact & AST Index",
+        sfaiDesc: 'Evaluates JSON-LD <code class="mono">@graph</code> depth, <code class="mono">@id</code> canonicalization, <code class="mono">sameAs</code> authority links, <code class="mono">OfferCatalog</code> pricing clarity, and <code class="mono">/robots.txt</code> permissions across 8 AI retrieval crawlers.',
+        dvsTitle: "Discovery Velocity Score",
+        dvsDesc: 'Measures root IndexNow cryptographic key verification, <code class="mono">/sitemap.xml</code> freshness, and real-time push latency to Bing, Copilot, SearchGPT, Naver, Seznam, and Yandex.',
+        aicsTitle: "AI Citation Share-of-Voice",
+        aicsDesc: 'Measures primary brand citation rate across the 3-Query Fan-Out (<code class="mono">Transactional</code>, <code class="mono">Comparative</code>, <code class="mono">Agentic Action</code>) backed by 24h Neon PostgreSQL prompt caching.',
+        thqTitle: "Technical Health & MCP Quotient",
+        thqDesc: 'Verifies <code class="mono">/llms.txt</code> token budget (&lt; 2,000 tokens), <code class="mono">/llms-full.txt</code> availability, OpenAPI 3.1.0 schema, and live JSON-RPC 2.0 / SSE MCP agent tool readiness.',
+        s2Badge: "SECTION 02 • LIVE TRUST & TELEMETRY API SUITE (v3.5)",
+        s2Title: "Public Verification & Closed-Loop Endpoints",
+        epCertTitle: "Signed SHA-256 Compliance Certificate",
+        epCertDesc: 'Tamper-evident HTML &amp; JSON (<code class="mono">?format=json</code>) cryptographic attestation of 5-Layer EPO compliance.',
+        epScoreTitle: "Developer CLI & CI/CD Benchmark JSON",
+        epScoreDesc: 'Returns machine-readable composite score, letter grade, and 5-Layer PASS/MISSING status for GitHub Actions gates.',
+        epBadgeTitle: "Dynamic SVG Score Shield",
+        epBadgeDesc: 'Live embeddable SVG badge displaying real-time RFC-2026-GEO-01 score and grade.',
+        epTelemTitle: "Real-Time AI Crawler Telemetry",
+        epTelemDesc: 'Streams verified bot hits (<code class="mono">OAI-SearchBot</code>, <code class="mono">PerplexityBot</code>, <code class="mono">ClaudeBot</code>, <code class="mono">Google-Extended</code>) from Neon PostgreSQL.',
+        epCronTitle: "Autonomous Drift & IndexNow Heartbeat",
+        epCronDesc: 'Verifies zero schema drift across all registered entities and dispatches a scheduled IndexNow batch.',
+        epLeadTitle: "Global RFC-2026-GEO-01 Hall of Fame",
+        epLeadDesc: 'Live benchmark comparing Grade A+ verified domains against unoptimized industry baselines.',
+        s3Badge: "SECTION 03 • NEXT-UPGRADE ARCHITECTURAL REQUIREMENTS (v4.0)",
+        s3Title: "What Is Required for the Next Upgrade (v4.0 Global Scale)",
+        s3Desc: 'With v3.5 delivering the complete 5-Layer AST Inspector, Closed-Loop Tenant Provisioning, SHA-256 Attestation, and Bot Telemetry, these <strong>5 Next-Generation Modules</strong> represent the next upgrade horizon to scale local and international dominance:',
+        req1Badge: "REQUIREMENT 01 • INTERNATIONALIZATION",
+        req1Title: 'Multi-Locale <code class="mono">/llms-{lang}.txt</code> &amp; Automated <code class="mono">hreflang</code> Matrix',
+        req1Desc: 'Auto-compile dedicated language-specific context files (<code class="mono">/v1/tenants/:slug/llms-es.txt</code>, <code class="mono">llms-pt.txt</code>, <code class="mono">llms-fr.txt</code>, <code class="mono">llms-de.txt</code>) alongside localized <code class="mono">PriceSpecification</code> currencies so international AI agents ingest zero-translation native markdown in their buyer\'s language.',
+        req2Badge: "REQUIREMENT 02 • SSR EDGE WORKER",
+        req2Title: 'Cloudflare &amp; Vercel Reverse-Proxy Edge Worker (<code class="mono">@sendput/edge-proxy</code>)',
+        req2Desc: 'While <code class="mono">epo-edge.js</code> and <code class="mono">/verified/:slug</code> work immediately, some strict non-JS crawlers only parse raw initial HTML response bytes. A 1-click Cloudflare Worker / Vercel Middleware script injects the JSON-LD <code class="mono">@graph</code> and HTTP <code class="mono">Link: &lt;/llms.txt&gt;; rel="llms-txt"</code> headers directly at the CDN edge before HTML reaches the crawler.',
+        req3Badge: "REQUIREMENT 03 • KNOWLEDGE GRAPH LINKER",
+        req3Title: 'Automated Wikidata Q-ID, NAICS &amp; Google Place ID Resolver',
+        req3Desc: 'Automatically query the Wikidata SPARQL and Google Places APIs during <code class="mono">POST /api/entities/upsert</code> to bind official city/industry Wikidata Q-IDs, NAICS classification codes, and verified <code class="mono">hasMap</code> Place IDs into every tenant\'s <code class="mono">sameAs</code> array without manual entry.',
+        req4Badge: "REQUIREMENT 04 • AGENTIC TRANSACTIONS",
+        req4Title: 'Transactional MCP Tools (Live Calendar Booking &amp; Stripe Payment Links)',
+        req4Desc: 'Extend <code class="mono">/mcp/:slug/sse</code> with authenticated webhook bridges to Cal.com / Calendly / HubSpot / GoHighLevel and Stripe Payment Links so autonomous AI agents can complete confirmed bookings and deposits inside the chat window.',
+        req5Badge: "REQUIREMENT 05 • PROACTIVE CITATION ALERTS",
+        req5Title: 'Automated Citation Diff &amp; Competitor Hijack Webhook Alerts',
+        req5Desc: 'Connect <code class="mono">/api/cron/epo-sync</code> to Resend / Slack / Webhook notifications so whenever a weekly 3-Query Fan-Out probe detects a drop in <code class="mono">AICS</code> share-of-voice or an accidentally modified <code class="mono">/robots.txt</code> file on a client domain, the business owner and agency partner receive an instant alert with a 1-click patch.'
+      },
+      es: {
+        topBadge: "ESTÁNDAR RFC-2026-GEO-01 Y HOJA DE RUTA DE ARQUITECTURA V4.0",
+        navHome: "Inicio",
+        navGuide: "Guía de Implementación",
+        navPlaybook: "Manual Local y Global",
+        navSpec: "Especificación y Hoja de Ruta",
+        navValidator: "Validador GetEPO ↗",
+        headerTitle: 'RFC-2026-GEO-01 <span class="text-purple-400">Especificación y Hoja de Ruta</span>',
+        headerBadge: "v3.5 Activo → v4.0 Siguiente",
+        headerSub: "Modelo Matemático de Puntuación, Endpoints de Confianza y Requisitos de Próxima Actualización",
+        btnCertCta: "📜 Certificado SHA-256 de Muestra ↗",
+        btnValidatorCta: "⚡ Abrir Validador GetEPO",
+        s1Badge: "SECCIÓN 01 • MOTOR MATEMÁTICO DE PUNTUACIÓN",
+        s1Title: "La Fórmula Compuesta RFC-2026-GEO-01",
+        sfaiTitle: "Índice de Hechos Semánticos y AST",
+        sfaiDesc: 'Evalúa la profundidad de JSON-LD <code class="mono">@graph</code>, canonicalización <code class="mono">@id</code>, enlaces de autoridad <code class="mono">sameAs</code>, claridad de precios en <code class="mono">OfferCatalog</code> y permisos en <code class="mono">/robots.txt</code> para 8 rastreadores de IA.',
+        dvsTitle: "Puntuación de Velocidad de Descubrimiento",
+        dvsDesc: 'Mide la verificación criptográfica de la clave IndexNow raíz, frescura de <code class="mono">/sitemap.xml</code> y latencia de notificación a Bing, Copilot, SearchGPT, Naver, Seznam y Yandex.',
+        aicsTitle: "Cuota de Voz en Citas de IA",
+        aicsDesc: 'Mide la tasa de citación de la marca principal en el abanico de 3 consultas (<code class="mono">Transaccional</code>, <code class="mono">Comparativa</code>, <code class="mono">Acción Agéntica</code>) respaldado por caché de 24h en Neon PostgreSQL.',
+        thqTitle: "Cociente de Salud Técnica y MCP",
+        thqDesc: 'Verifica el presupuesto de tokens en <code class="mono">/llms.txt</code> (&lt; 2.000 tokens), disponibilidad de <code class="mono">/llms-full.txt</code>, esquema OpenAPI 3.1.0 y operatividad de herramientas de agentes MCP en vivo JSON-RPC 2.0 / SSE.',
+        s2Badge: "SECCIÓN 02 • SUITE DE API DE CONFIANZA Y TELEMETRÍA EN VIVO (v3.5)",
+        s2Title: "Endpoints Públicos de Verificación y Bucle Cerrado",
+        epCertTitle: "Certificado de Cumplimiento SHA-256 Firmado",
+        epCertDesc: 'Atestación criptográfica HTML y JSON (<code class="mono">?format=json</code>) a prueba de manipulaciones del cumplimiento de EPO en 5 Capas.',
+        epScoreTitle: "JSON de Benchmark para CLI de Desarrolladores y CI/CD",
+        epScoreDesc: 'Devuelve puntuación compuesta legible por máquina, calificación por letra y estado PASS/MISSING en 5 capas para flujos de GitHub Actions.',
+        epBadgeTitle: "Escudo SVG Dinámico de Puntuación",
+        epBadgeDesc: 'Insignia SVG insertable en vivo que muestra la puntuación y grado en tiempo real de RFC-2026-GEO-01.',
+        epTelemTitle: "Telemetría en Tiempo Real de Rastreadores de IA",
+        epTelemDesc: 'Transmite visitas verificadas de bots (<code class="mono">OAI-SearchBot</code>, <code class="mono">PerplexityBot</code>, <code class="mono">ClaudeBot</code>, <code class="mono">Google-Extended</code>) desde Neon PostgreSQL.',
+        epCronTitle: "Latido Autónomo de Desviación e IndexNow",
+        epCronDesc: 'Verifica cero desviación de esquema en todas las entidades registradas y despacha un lote programado de IndexNow.',
+        epLeadTitle: "Salón de la Fama Global RFC-2026-GEO-01",
+        epLeadDesc: 'Benchmark en vivo que compara dominios verificados Grado A+ frente a líneas base no optimizadas de la industria.',
+        s3Badge: "SECCIÓN 03 • REQUISITOS DE ARQUITECTURA PARA LA PRÓXIMA ACTUALIZACIÓN (v4.0)",
+        s3Title: "Qué se Requiere para la Próxima Actualización (v4.0 Escala Global)",
+        s3Desc: 'Con la v3.5 ofreciendo el Inspector AST de 5 Capas completo, Aprovisionamiento de Clientes en Bucle Cerrado, Atestación SHA-256 y Telemetría de Bots, estos <strong>5 Módulos de Nueva Generación</strong> representan el próximo horizonte para escalar la dominancia local e internacional:',
+        req1Badge: "REQUISITO 01 • INTERNACIONALIZACIÓN",
+        req1Title: 'Archivos <code class="mono">/llms-{idioma}.txt</code> Multi-Región y Matriz Automatizada de <code class="mono">hreflang</code>',
+        req1Desc: 'Compilación automática de archivos de contexto dedicados por idioma (<code class="mono">/v1/tenants/:slug/llms-es.txt</code>, <code class="mono">llms-pt.txt</code>, <code class="mono">llms-fr.txt</code>, <code class="mono">llms-de.txt</code>) junto con divisas en <code class="mono">PriceSpecification</code> para que los agentes de IA extranjeros consuman markdown nativo sin traducción.',
+        req2Badge: "REQUISITO 02 • SSR EDGE WORKER",
+        req2Title: 'Worker Edge de Reverse-Proxy para Cloudflare y Vercel (<code class="mono">@sendput/edge-proxy</code>)',
+        req2Desc: 'Aunque <code class="mono">epo-edge.js</code> y <code class="mono">/verified/:slug</code> funcionan de inmediato, algunos rastreadores sin JS solo procesan el HTML inicial en crudo. Un worker de 1 clic en Cloudflare / Vercel inyecta el <code class="mono">@graph</code> JSON-LD y cabeceras HTTP <code class="mono">Link: &lt;/llms.txt&gt;; rel="llms-txt"</code> en el borde de CDN antes de entregar el HTML.',
+        req3Badge: "REQUISITO 03 • ENLAZADOR DE GRAFOS DE CONOCIMIENTO",
+        req3Title: 'Resolución Automatizada de Wikidata Q-ID, NAICS y Google Place ID',
+        req3Desc: 'Consulta automática de las API SPARQL de Wikidata y Google Places durante <code class="mono">POST /api/entities/upsert</code> para vincular Q-IDs oficiales de ciudad/industria, códigos NAICS y Place IDs en el array <code class="mono">sameAs</code> de cada cliente sin entrada manual.',
+        req4Badge: "REQUISITO 04 • TRANSACCIONES AGÉNTICAS",
+        req4Title: 'Herramientas Transaccionales MCP (Reservas en Calendario y Enlaces de Pago Stripe)',
+        req4Desc: 'Amplía <code class="mono">/mcp/:slug/sse</code> con puentes de webhooks autenticados a Cal.com / Calendly / HubSpot / GoHighLevel y Stripe para que los agentes autónomos de IA completen reservas confirmadas y depósitos dentro de la conversación.',
+        req5Badge: "REQUISITO 05 • ALERTAS PROACTIVAS DE CITAS",
+        req5Title: 'Detección Automatizada de Caída de Citas y Alertas por Webhook de Secuestro Competitivo',
+        req5Desc: 'Conecta <code class="mono">/api/cron/epo-sync</code> con notificaciones por Resend / Slack / Webhook para que, si un sondeo semanal detecta una caída de cuota de voz en <code class="mono">AICS</code> o un archivo <code class="mono">/robots.txt</code> modificado accidentalmente, el propietario y la agencia reciban una alerta instantánea con parche de 1 clic.'
+      }
+    };
+
+    let currentSpecLang = 'en';
+
+    function setSpecLanguage(lang) {
+      currentSpecLang = lang;
+      const dict = SPEC_I18N[lang] || SPEC_I18N.en;
+      try { localStorage.setItem('lang', lang); } catch (e) {}
+
+      const btnEn = document.getElementById('btn-lang-en');
+      const btnEs = document.getElementById('btn-lang-es');
+      if (btnEn && btnEs) {
+        if (lang === 'es') {
+          btnEs.className = 'px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition';
+          btnEn.className = 'px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition';
+        } else {
+          btnEn.className = 'px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition';
+          btnEs.className = 'px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition';
+        }
+      }
+
+      const map = {
+        'spec-top-badge': dict.topBadge,
+        'spec-nav-home': dict.navHome,
+        'spec-nav-guide': dict.navGuide,
+        'spec-nav-playbook': dict.navPlaybook,
+        'spec-nav-spec': dict.navSpec,
+        'spec-nav-validator': dict.navValidator,
+        'spec-header-title': dict.headerTitle,
+        'spec-header-badge': dict.headerBadge,
+        'spec-header-sub': dict.headerSub,
+        'spec-btn-cert-cta': dict.btnCertCta,
+        'spec-btn-validator-cta': dict.btnValidatorCta,
+        'spec-s1-badge': dict.s1Badge,
+        'spec-s1-title': dict.s1Title,
+        'spec-sfai-title': dict.sfaiTitle,
+        'spec-sfai-desc': dict.sfaiDesc,
+        'spec-dvs-title': dict.dvsTitle,
+        'spec-dvs-desc': dict.dvsDesc,
+        'spec-aics-title': dict.aicsTitle,
+        'spec-aics-desc': dict.aicsDesc,
+        'spec-thq-title': dict.thqTitle,
+        'spec-thq-desc': dict.thqDesc,
+        'spec-s2-badge': dict.s2Badge,
+        'spec-s2-title': dict.s2Title,
+        'spec-ep-cert-title': dict.epCertTitle,
+        'spec-ep-cert-desc': dict.epCertDesc,
+        'spec-ep-score-title': dict.epScoreTitle,
+        'spec-ep-score-desc': dict.epScoreDesc,
+        'spec-ep-badge-title': dict.epBadgeTitle,
+        'spec-ep-badge-desc': dict.epBadgeDesc,
+        'spec-ep-telem-title': dict.epTelemTitle,
+        'spec-ep-telem-desc': dict.epTelemDesc,
+        'spec-ep-cron-title': dict.epCronTitle,
+        'spec-ep-cron-desc': dict.epCronDesc,
+        'spec-ep-lead-title': dict.epLeadTitle,
+        'spec-ep-lead-desc': dict.epLeadDesc,
+        'spec-s3-badge': dict.s3Badge,
+        'spec-s3-title': dict.s3Title,
+        'spec-s3-desc': dict.s3Desc,
+        'spec-req1-badge': dict.req1Badge,
+        'spec-req1-title': dict.req1Title,
+        'spec-req1-desc': dict.req1Desc,
+        'spec-req2-badge': dict.req2Badge,
+        'spec-req2-title': dict.req2Title,
+        'spec-req2-desc': dict.req2Desc,
+        'spec-req3-badge': dict.req3Badge,
+        'spec-req3-title': dict.req3Title,
+        'spec-req3-desc': dict.req3Desc,
+        'spec-req4-badge': dict.req4Badge,
+        'spec-req4-title': dict.req4Title,
+        'spec-req4-desc': dict.req4Desc,
+        'spec-req5-badge': dict.req5Badge,
+        'spec-req5-title': dict.req5Title,
+        'spec-req5-desc': dict.req5Desc
+      };
+
+      for (const [id, val] of Object.entries(map)) {
+        const el = document.getElementById(id);
+        if (el && val) el.innerHTML = val;
+      }
+    }
+
+    function applySpecTheme(theme) {
+      const root = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if (theme === 'light') {
+        root.classList.remove('dark');
+        root.classList.add('light');
+        if (icon) icon.textContent = '☀️';
+      } else {
+        root.classList.remove('light');
+        root.classList.add('dark');
+        if (icon) icon.textContent = '🌙';
+      }
+      try { localStorage.setItem('theme', theme); } catch (e) {}
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Theme Init
+      let savedTheme = 'dark';
+      try { savedTheme = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+      applySpecTheme(savedTheme);
+
+      const themeBtn = document.getElementById('btn-theme-toggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+          const isLight = document.documentElement.classList.contains('light');
+          applySpecTheme(isLight ? 'dark' : 'light');
+        });
+      }
+
+      // Language Init
+      const params = new URLSearchParams(window.location.search);
+      let initialLang = params.get('lang') || 'en';
+      try {
+        if (!params.get('lang')) {
+          initialLang = localStorage.getItem('lang') || 'en';
+        }
+      } catch (e) {}
+
+      document.getElementById('btn-lang-en')?.addEventListener('click', () => setSpecLanguage('en'));
+      document.getElementById('btn-lang-es')?.addEventListener('click', () => setSpecLanguage('es'));
+      setSpecLanguage(initialLang);
+    });
+  </script>
 </body>
 </html>
 

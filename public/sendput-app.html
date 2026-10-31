@@ -138,6 +138,52 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #00FF66;
     }
+    html.light body {
+      background-color: #F8FAFC !important;
+      color: #0F172A !important;
+    }
+    html.light .terminal-card {
+      background: #FFFFFF !important;
+      border: 1px solid rgba(0, 0, 0, 0.08) !important;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.06);
+    }
+    html.light .bg-\[\#05080E\],
+    html.light .bg-\[\#080C14\],
+    html.light .bg-\[\#0D131F\],
+    html.light .bg-\[\#0A0E17\]\/90,
+    html.light .bg-\[\#08121A\]\/95,
+    html.light .bg-\[\#09121E\] {
+      background-color: #F8FAFC !important;
+      color: #0F172A;
+    }
+    html.light header, html.light footer {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      border-color: #E2E8F0 !important;
+    }
+    html.light .text-white {
+      color: #0F172A !important;
+    }
+    html.light .text-slate-200, html.light .text-slate-300 {
+      color: #334155 !important;
+    }
+    html.light .text-slate-400 {
+      color: #64748B !important;
+    }
+    html.light .text-slate-500 {
+      color: #64748B !important;
+    }
+    html.light .border-white\/10,
+    html.light .border-white\/15,
+    html.light .border-white\/5,
+    html.light .border-white\/20,
+    html.light .border-slate-800 {
+      border-color: #CBD5E1 !important;
+    }
+    html.light input, html.light select, html.light textarea {
+      background-color: #FFFFFF !important;
+      color: #0F172A !important;
+      border-color: #CBD5E1 !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-[#00FF66] selection:text-black">
@@ -204,11 +250,20 @@
 
       <!-- Primary Action CTA -->
       <div class="flex items-center gap-2">
+        <!-- Bilingual Toggle -->
+        <div class="inline-flex rounded-lg bg-black/40 border border-white/10 p-0.5 text-xs font-mono">
+          <button id="btn-lang-en" type="button" class="px-2 py-1 rounded bg-[#00FF66]/20 text-[#00FF66] font-bold text-[11px] transition">EN</button>
+          <button id="btn-lang-es" type="button" class="px-2 py-1 rounded text-slate-400 hover:text-white font-bold text-[11px] transition">ES</button>
+        </div>
+        <!-- Theme Toggle -->
+        <button id="btn-theme-toggle" type="button" class="p-1.5 rounded-lg bg-black/40 border border-white/10 text-slate-300 hover:text-white font-bold text-xs transition" title="Toggle Light / Dark Mode">
+          <span id="theme-icon">🌙</span>
+        </button>
         <a href="https://getepo.com" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 font-mono font-bold text-xs uppercase tracking-wider transition hidden sm:inline-flex items-center gap-1">
           <span>⚡ GetEPO ↗</span>
         </a>
         <a href="#section-hero" class="px-4 py-2 rounded-lg bg-[#FF6B00] hover:bg-[#e05e00] text-black font-mono font-bold text-xs uppercase tracking-wider shadow-lg glow-signal-orange transition flex items-center gap-1.5">
-          <span>[&gt;_] INITIALIZE EPO AUDIT</span>
+          <span id="btn-hero-cta-nav">[&gt;_] INITIALIZE EPO AUDIT</span>
         </a>
       </div>
     </div>
@@ -2884,6 +2939,93 @@ Our multi-engine AI scan across ChatGPT Search, Perplexity, Google Gemini, Claud
       }
       if (qNiche) {
         document.getElementById('input-biz-niche').value = qNiche;
+      }
+
+      // ============================================================================
+      // THEME & BILINGUAL I18N CONTROLLER
+      // ============================================================================
+      let currentSendputLang = localStorage.getItem('lang') || 'en';
+
+      function initSendputTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        applySendputTheme(savedTheme);
+      }
+
+      function applySendputTheme(theme) {
+        const isLight = theme === 'light';
+        if (isLight) {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+          const icon = document.getElementById('theme-icon');
+          if (icon) icon.textContent = '☀️';
+        } else {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+          const icon = document.getElementById('theme-icon');
+          if (icon) icon.textContent = '🌙';
+        }
+        localStorage.setItem('theme', theme);
+      }
+
+      const spThemeBtn = document.getElementById('btn-theme-toggle');
+      if (spThemeBtn) {
+        spThemeBtn.addEventListener('click', () => {
+          const isDark = document.documentElement.classList.contains('dark') || !document.documentElement.classList.contains('light');
+          applySendputTheme(isDark ? 'light' : 'dark');
+        });
+      }
+
+      const SENDPUT_I18N = {
+        en: {
+          btnInitAudit: '[>_] INITIALIZE EPO AUDIT',
+          btnLaunchEngine: '[>_] LAUNCH ENGINE TAB',
+          btnOneClickFix: '⚡ Simulate 1-Click SendPut EPO Remediation',
+          btnDeploySendput: '[>_] DEPLOY SENDPUT'
+        },
+        es: {
+          btnInitAudit: '[>_] INICIAR AUDITORÍA EPO',
+          btnLaunchEngine: '[>_] ABRIR PESTAÑA DEL MOTOR',
+          btnOneClickFix: '⚡ Simular Corrección EPO SendPut en 1 Clic',
+          btnDeploySendput: '[>_] DESPLEGAR SENDPUT'
+        }
+      };
+
+      function setSendputLanguage(lang) {
+        currentSendputLang = lang === 'es' ? 'es' : 'en';
+        localStorage.setItem('lang', currentSendputLang);
+        const dict = SENDPUT_I18N[currentSendputLang];
+
+        const btnEn = document.getElementById('btn-lang-en');
+        const btnEs = document.getElementById('btn-lang-es');
+        if (btnEn) btnEn.className = currentSendputLang === 'en'
+          ? 'px-2 py-1 rounded bg-[#00FF66]/20 text-[#00FF66] font-bold text-[11px] transition'
+          : 'px-2 py-1 rounded text-slate-400 hover:text-white font-bold text-[11px] transition';
+        if (btnEs) btnEs.className = currentSendputLang === 'es'
+          ? 'px-2 py-1 rounded bg-[#00FF66]/20 text-[#00FF66] font-bold text-[11px] transition'
+          : 'px-2 py-1 rounded text-slate-400 hover:text-white font-bold text-[11px] transition';
+
+        const navBtn = document.getElementById('btn-hero-cta-nav');
+        if (navBtn) navBtn.textContent = dict.btnInitAudit;
+        const heroBtn = document.getElementById('hero-btn-run-audit');
+        if (heroBtn) {
+          heroBtn.innerHTML = `<span>${dict.btnInitAudit}</span> <span class="text-[10px] bg-black/20 px-1.5 py-0.5 rounded">${currentSendputLang === 'es' ? 'GRATIS' : 'FREE'}</span>`;
+        }
+        const launchBtn = document.getElementById('hero-btn-launch-engine');
+        if (launchBtn) launchBtn.innerHTML = `<span>${dict.btnLaunchEngine}</span>`;
+        const fixBtn = document.getElementById('btn-one-click-fix');
+        if (fixBtn) fixBtn.innerHTML = `<span>${dict.btnOneClickFix}</span>`;
+      }
+
+      const langEnBtn = document.getElementById('btn-lang-en');
+      if (langEnBtn) langEnBtn.addEventListener('click', () => setSendputLanguage('en'));
+      const langEsBtn = document.getElementById('btn-lang-es');
+      if (langEsBtn) langEsBtn.addEventListener('click', () => setSendputLanguage('es'));
+
+      initSendputTheme();
+      if (urlParams.get('lang')) {
+        setSendputLanguage(urlParams.get('lang'));
+      } else {
+        setSendputLanguage(currentSendputLang);
       }
 
       // Initial Render

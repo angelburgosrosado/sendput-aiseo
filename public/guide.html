@@ -14,6 +14,58 @@
     .mono { font-family: 'JetBrains Mono', monospace; }
     .glass-card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.22); backdrop-filter: blur(12px); }
     .matrix-card { background: #0D131F; border: 1px solid rgba(0, 255, 102, 0.28); }
+
+    /* Light Theme */
+    html.light body {
+      background-color: #F8FAFC !important;
+      color: #0F172A !important;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(6, 182, 212, 0.08), transparent 35%),
+        radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.08), transparent 35%);
+    }
+    html.light .glass-card {
+      background: rgba(255, 255, 255, 0.95) !important;
+      border: 1px solid rgba(56, 189, 248, 0.25) !important;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+    }
+    html.light .matrix-card {
+      background: #FFFFFF !important;
+      border: 1px solid rgba(16, 185, 129, 0.35) !important;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+    }
+    html.light .bg-slate-950,
+    html.light .bg-slate-950\/90,
+    html.light .bg-slate-950\/85,
+    html.light .bg-slate-950\/75 {
+      background-color: #FFFFFF !important;
+      color: #0F172A;
+    }
+    html.light .bg-slate-900 {
+      background-color: #F1F5F9 !important;
+      color: #0F172A;
+    }
+    html.light header, html.light footer {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      border-color: #E2E8F0 !important;
+    }
+    html.light .text-white {
+      color: #0F172A !important;
+    }
+    html.light .text-slate-200, html.light .text-slate-300 {
+      color: #334155 !important;
+    }
+    html.light .text-slate-400, html.light .text-slate-500 {
+      color: #64748B !important;
+    }
+    html.light .border-slate-800,
+    html.light .border-slate-800\/80,
+    html.light .border-slate-700 {
+      border-color: #CBD5E1 !important;
+    }
+    html.light pre {
+      background-color: #0F172A !important;
+      color: #A7F3D0 !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-cyan-400 selection:text-slate-950">
@@ -22,18 +74,18 @@
   <div class="bg-slate-950 border-b border-slate-800/80 px-4 py-2 text-xs mono">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-3">
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold">
+        <span id="top-bar-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           RFC-2026-GEO-01 IMPLEMENTATION DOCS v3.5
         </span>
-        <span class="text-slate-400 hidden sm:inline">5-Layer AST • SHA-256 Attestation • Closed-Loop MCP</span>
+        <span id="top-bar-desc" class="text-slate-400 hidden sm:inline">5-Layer AST • SHA-256 Attestation • Closed-Loop MCP</span>
       </div>
       <div class="flex items-center gap-4 text-[11px]">
-        <a href="/" class="text-cyan-400 hover:underline">Home</a>
-        <a href="/guide" class="text-emerald-400 font-bold underline">Implementation Guide</a>
-        <a href="/global-local" class="text-cyan-400 hover:underline">Local &amp; Global Playbook</a>
-        <a href="/spec" class="text-cyan-400 hover:underline">Protocol Spec &amp; Roadmap</a>
-        <a href="https://getepo.com" class="text-amber-300 hover:underline font-bold">GetEPO Validator ↗</a>
+        <a id="nav-home" href="/" class="text-cyan-400 hover:underline">Home</a>
+        <a id="nav-guide" href="/guide" class="text-emerald-400 font-bold underline">Implementation Guide</a>
+        <a id="nav-playbook" href="/global-local" class="text-cyan-400 hover:underline">Local &amp; Global Playbook</a>
+        <a id="nav-spec" href="/spec" class="text-cyan-400 hover:underline">Protocol Spec &amp; Roadmap</a>
+        <a id="nav-validator" href="https://getepo.com" class="text-amber-300 hover:underline font-bold">GetEPO Validator ↗</a>
       </div>
     </div>
   </div>
@@ -48,16 +100,25 @@
         <div>
           <div class="flex items-center gap-2">
             <span class="font-black text-xl tracking-tight text-white">SendPut<span class="text-emerald-400">.com</span> &amp; GetEPO<span class="text-cyan-400">.com</span></span>
-            <span class="text-[10px] mono uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold">Documentation</span>
+            <span id="header-badge" class="text-[10px] mono uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold">Documentation</span>
           </div>
-          <p class="text-xs text-slate-400">Step-by-Step Guide to Achieving Grade A+ (97/100) AI Search Authority</p>
+          <p id="header-sub" class="text-xs text-slate-400">Step-by-Step Guide to Achieving Grade A+ (97/100) AI Search Authority</p>
         </div>
       </a>
       <div class="flex flex-wrap items-center gap-2.5">
-        <a href="/global-local" class="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 text-xs font-bold transition">
+        <!-- Bilingual Toggle -->
+        <div class="inline-flex rounded-lg bg-slate-900 border border-slate-800 p-0.5 mr-1">
+          <button id="btn-lang-en" type="button" class="px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition">EN</button>
+          <button id="btn-lang-es" type="button" class="px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition">ES</button>
+        </div>
+        <!-- Theme Toggle -->
+        <button id="btn-theme-toggle" type="button" class="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-1 mr-1" title="Toggle Light / Dark Mode">
+          <span id="theme-icon">🌙</span>
+        </button>
+        <a id="btn-playbook-cta" href="/global-local" class="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 text-xs font-bold transition">
           🌍 Local &amp; Global Playbook
         </a>
-        <a href="https://getepo.com" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-cyan-400 hover:opacity-95 text-slate-950 font-extrabold text-xs shadow-lg transition">
+        <a id="btn-audit-cta" href="https://getepo.com" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-cyan-400 hover:opacity-95 text-slate-950 font-extrabold text-xs shadow-lg transition">
           ⚡ Run Live Domain Audit
         </a>
       </div>
@@ -68,50 +129,50 @@
 
     <!-- Hero Banner -->
     <section class="space-y-4 max-w-4xl">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-semibold mono">
+      <div id="hero-badge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-semibold mono">
         IMPLEMENTATION PLAYBOOK • ZERO TO GRADE A+ IN 5 MINUTES
       </div>
-      <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+      <h1 id="hero-title" class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
         How to Implement <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-indigo-400">5-Layer Entity Presence Optimization</span>
       </h1>
-      <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+      <p id="hero-desc" class="text-slate-300 text-sm sm:text-base leading-relaxed">
         Generative answer engines (ChatGPT Search, Perplexity Sonar, Google Gemini 2.5, Claude SearchBot, and Microsoft Copilot) do not rank web pages by backlinks—they synthesize answers from verified, machine-readable entity graphs. Follow these <strong>5 deterministic steps</strong> to transform any website from an unverified <code class="mono text-rose-400">Grade F (38/100)</code> into a cryptographically attested <code class="mono text-emerald-400">Grade A+ (97/100)</code> authority.
       </p>
     </section>
 
     <!-- 3 Deployment Options Overview -->
     <section class="space-y-4">
-      <h2 class="text-xl font-extrabold text-white">Choose Your Integration Path</h2>
+      <h2 id="paths-title" class="text-xl font-extrabold text-white">Choose Your Integration Path</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div class="matrix-card rounded-2xl p-6 space-y-3">
           <div class="flex items-center justify-between">
-            <span class="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 mono text-[10px] font-bold">PATH A • FASTEST (60 SEC)</span>
-            <span class="mono text-xs text-slate-400">Zero Backend Code</span>
+            <span id="path-a-badge" class="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 mono text-[10px] font-bold">PATH A • FASTEST (60 SEC)</span>
+            <span id="path-a-sub" class="mono text-xs text-slate-400">Zero Backend Code</span>
           </div>
-          <h3 class="text-base font-extrabold text-white">1-Line Edge Script + Cloud Upsert</h3>
-          <p class="text-xs text-slate-300 leading-relaxed">
+          <h3 id="path-a-title" class="text-base font-extrabold text-white">1-Line Edge Script + Cloud Upsert</h3>
+          <p id="path-a-desc" class="text-xs text-slate-300 leading-relaxed">
             Provision your entity via <code class="mono text-emerald-300">POST /api/entities/upsert</code> (or click <strong>"1-Click Provision &amp; Re-Verify"</strong> in the Validator) and paste a single <code class="mono text-cyan-300">&lt;script&gt;</code> tag into your site's <code class="mono">&lt;head&gt;</code>. SendPut automatically injects your Schema.org <code class="mono">@graph</code>, <code class="mono">/llms.txt</code> link header, and live MCP SSE node.
           </p>
         </div>
 
         <div class="glass-card rounded-2xl p-6 space-y-3">
           <div class="flex items-center justify-between">
-            <span class="px-2.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 mono text-[10px] font-bold">PATH B • NATIVE ROOT FILES</span>
-            <span class="mono text-xs text-slate-400">Full Root Control</span>
+            <span id="path-b-badge" class="px-2.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 mono text-[10px] font-bold">PATH B • NATIVE ROOT FILES</span>
+            <span id="path-b-sub" class="mono text-xs text-slate-400">Full Root Control</span>
           </div>
-          <h3 class="text-base font-extrabold text-white">Static Root Protocol Bundle</h3>
-          <p class="text-xs text-slate-300 leading-relaxed">
+          <h3 id="path-b-title" class="text-base font-extrabold text-white">Static Root Protocol Bundle</h3>
+          <p id="path-b-desc" class="text-xs text-slate-300 leading-relaxed">
             Copy the generated artifacts from the GetEPO Remediation Workbench directly into your web root: <code class="mono text-cyan-300">/robots.txt</code>, <code class="mono text-cyan-300">/llms.txt</code>, <code class="mono text-cyan-300">/llms-full.txt</code>, <code class="mono text-cyan-300">/schema.json</code>, and your root IndexNow key file.
           </p>
         </div>
 
         <div class="glass-card rounded-2xl p-6 space-y-3">
           <div class="flex items-center justify-between">
-            <span class="px-2.5 py-0.5 rounded bg-purple-500/20 text-purple-300 mono text-[10px] font-bold">PATH C • DEVOPS &amp; CI/CD</span>
-            <span class="mono text-xs text-slate-400">Automated Gate</span>
+            <span id="path-c-badge" class="px-2.5 py-0.5 rounded bg-purple-500/20 text-purple-300 mono text-[10px] font-bold">PATH C • DEVOPS &amp; CI/CD</span>
+            <span id="path-c-sub" class="mono text-xs text-slate-400">Automated Gate</span>
           </div>
-          <h3 class="text-base font-extrabold text-white">CLI Benchmark &amp; Cron Drift Sync</h3>
-          <p class="text-xs text-slate-300 leading-relaxed">
+          <h3 id="path-c-title" class="text-base font-extrabold text-white">CLI Benchmark &amp; Cron Drift Sync</h3>
+          <p id="path-c-desc" class="text-xs text-slate-300 leading-relaxed">
             Enforce <code class="mono text-purple-300">epo_score &gt;= 90</code> in GitHub Actions via <code class="mono">GET /api/epo-score?domain=...</code> and run automated IndexNow heartbeats via <code class="mono">POST /api/cron/epo-sync</code>.
           </p>
         </div>
@@ -121,8 +182,8 @@
     <!-- Detailed 5-Step Walkthrough -->
     <section class="space-y-6">
       <div class="border-b border-slate-800 pb-3">
-        <h2 class="text-2xl font-black text-white">Step-by-Step Implementation Walkthrough</h2>
-        <p class="text-xs text-slate-400 mt-1">Follow these five steps in order to establish verifiable AI search dominance.</p>
+        <h2 id="steps-title" class="text-2xl font-black text-white">Step-by-Step Implementation Walkthrough</h2>
+        <p id="steps-sub" class="text-xs text-slate-400 mt-1">Follow these five steps in order to establish verifiable AI search dominance.</p>
       </div>
 
       <!-- STEP 1 -->
@@ -130,11 +191,11 @@
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-3">
             <span class="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 mono font-black text-xs">STEP 01</span>
-            <h3 class="text-lg font-extrabold text-white">Run a Deep 5-Layer AST Diagnostic on GetEPO.com</h3>
+            <h3 id="step-1-title" class="text-lg font-extrabold text-white">Run a Deep 5-Layer AST Diagnostic on GetEPO.com</h3>
           </div>
           <span class="mono text-xs text-slate-400">Endpoint: <code class="text-cyan-300">POST /api/audit</code></span>
         </div>
-        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <p id="step-1-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
           Enter your business name, canonical URL, and primary market (local city or international sector) on <a href="https://getepo.com" class="text-cyan-400 underline">GetEPO.com</a>. The Deep AST Protocol Inspector performs a real-time inspection across five layers:
         </p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
@@ -166,11 +227,11 @@
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-3">
             <span class="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mono font-black text-xs">STEP 02</span>
-            <h3 class="text-lg font-extrabold text-white">Provision Your Entity into the Live Registry (1-Click or API)</h3>
+            <h3 id="step-2-title" class="text-lg font-extrabold text-white">Provision Your Entity into the Live Registry (1-Click or API)</h3>
           </div>
           <span class="mono text-xs text-slate-400">Endpoint: <code class="text-emerald-300">POST /api/entities/upsert</code></span>
         </div>
-        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <p id="step-2-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
           Click the <strong>"🚀 1-Click Provision &amp; Re-Verify (Grade A+)"</strong> button inside the Validator (or run the API command below). This persists your business into the Neon PostgreSQL <code class="mono text-cyan-300">business_entities</code> ledger, compiles your 5-Layer endpoints on <code class="mono">sendput.com</code>, and automatically dispatches an IndexNow batch.
         </p>
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 overflow-x-auto">
@@ -196,11 +257,11 @@
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-3">
             <span class="px-3 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 mono font-black text-xs">STEP 03</span>
-            <h3 class="text-lg font-extrabold text-white">Install the 1-Line Edge Script (or Static Root Files)</h3>
+            <h3 id="step-3-title" class="text-lg font-extrabold text-white">Install the 1-Line Edge Script (or Static Root Files)</h3>
           </div>
           <span class="mono text-xs text-slate-400">Edge Injector: <code class="text-indigo-300">/epo-edge.js?tenant=:slug</code></span>
         </div>
-        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <p id="step-3-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
           Paste the following snippet inside your website's <code class="mono">&lt;head&gt;</code> tag. It non-destructively binds your Schema.org <code class="mono">@graph</code>, <code class="mono">/llms.txt</code> discovery link, and live MCP SSE server to your domain:
         </p>
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 overflow-x-auto">
@@ -216,11 +277,11 @@
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-3">
             <span class="px-3 py-1 rounded-lg bg-purple-500/20 text-purple-300 border border-purple-500/40 mono font-black text-xs">STEP 04</span>
-            <h3 class="text-lg font-extrabold text-white">Connect Google Business Profile OAuth &amp; Test Your Live MCP Node</h3>
+            <h3 id="step-4-title" class="text-lg font-extrabold text-white">Connect Google Business Profile OAuth &amp; Test Your Live MCP Node</h3>
           </div>
           <span class="mono text-xs text-slate-400">Endpoints: <code class="text-purple-300">/api/oauth/google/authorize</code> &amp; <code class="text-purple-300">/mcp/:slug/sse</code></span>
         </div>
-        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <p id="step-4-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
           Synchronize your physical location data with Google Business Profile &amp; Search Console via OAuth 2.0, and test your live Model Context Protocol (MCP) JSON-RPC 2.0 tools (<code class="mono">verify_business_status</code>, <code class="mono">get_service_catalog</code>, <code class="mono">initiate_inquiry</code>) so AI assistants can verify pricing and book leads directly.
         </p>
       </div>
@@ -230,11 +291,11 @@
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-3">
             <span class="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 mono font-black text-xs">STEP 05</span>
-            <h3 class="text-lg font-extrabold text-white">Claim Your SHA-256 Certificate &amp; Embed the Score Shield</h3>
+            <h3 id="step-5-title" class="text-lg font-extrabold text-white">Claim Your SHA-256 Certificate &amp; Embed the Score Shield</h3>
           </div>
           <span class="mono text-xs text-slate-400">Endpoints: <code class="text-amber-300">/api/cert/:id</code> &amp; <code class="text-amber-300">/api/epo-badge</code></span>
         </div>
-        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <p id="step-5-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
           Re-run your audit on <a href="https://getepo.com" class="text-cyan-400 underline">GetEPO.com</a>. Your domain will immediately verify at <strong>Grade A+ (97/100)</strong>. Open your signed <strong>SHA-256 Compliance Certificate</strong> (<code class="mono">/api/cert/:id</code>) and embed the live SVG Score Shield in your site footer or README.
         </p>
       </div>
@@ -242,15 +303,15 @@
 
     <!-- Bottom CTA -->
     <section class="matrix-card rounded-2xl p-8 text-center space-y-4">
-      <h2 class="text-2xl font-black text-white">Next: Master Local &amp; International (Abroad) Visibility</h2>
-      <p class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
+      <h2 id="bottom-title" class="text-2xl font-black text-white">Next: Master Local &amp; International (Abroad) Visibility</h2>
+      <p id="bottom-desc" class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
         Learn how to configure hyper-local GeoCoordinates to beat directory aggregators in your city AND multilingual cross-border Schema.org graphs to capture buyers abroad.
       </p>
       <div class="flex flex-wrap justify-center gap-3 pt-2">
-        <a href="/global-local" class="px-6 py-3 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold text-xs uppercase tracking-wider transition">
+        <a id="btn-bottom-playbook" href="/global-local" class="px-6 py-3 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold text-xs uppercase tracking-wider transition">
           🌍 Read Local &amp; Global Playbook →
         </a>
-        <a href="/spec" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 font-bold text-xs uppercase tracking-wider transition">
+        <a id="btn-bottom-spec" href="/spec" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 font-bold text-xs uppercase tracking-wider transition">
           📐 View RFC-2026-GEO-01 Spec &amp; v4.0 Roadmap →
         </a>
       </div>
@@ -270,6 +331,215 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    const GUIDE_I18N = {
+      en: {
+        topBarBadge: "RFC-2026-GEO-01 IMPLEMENTATION DOCS v3.5",
+        topBarDesc: "5-Layer AST • SHA-256 Attestation • Closed-Loop MCP",
+        navHome: "Home",
+        navGuide: "Implementation Guide",
+        navPlaybook: "Local & Global Playbook",
+        navSpec: "Protocol Spec & Roadmap",
+        navValidator: "GetEPO Validator ↗",
+        headerBadge: "Documentation",
+        headerSub: "Step-by-Step Guide to Achieving Grade A+ (97/100) AI Search Authority",
+        btnPlaybookCta: "🌍 Local & Global Playbook",
+        btnAuditCta: "⚡ Run Live Domain Audit",
+        heroBadge: "IMPLEMENTATION PLAYBOOK • ZERO TO GRADE A+ IN 5 MINUTES",
+        heroTitle: 'How to Implement <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-indigo-400">5-Layer Entity Presence Optimization</span>',
+        heroDesc: 'Generative answer engines (ChatGPT Search, Perplexity Sonar, Google Gemini 2.5, Claude SearchBot, and Microsoft Copilot) do not rank web pages by backlinks—they synthesize answers from verified, machine-readable entity graphs. Follow these <strong>5 deterministic steps</strong> to transform any website from an unverified <code class="mono text-rose-400">Grade F (38/100)</code> into a cryptographically attested <code class="mono text-emerald-400">Grade A+ (97/100)</code> authority.',
+        pathsTitle: "Choose Your Integration Path",
+        pathABadge: "PATH A • FASTEST (60 SEC)",
+        pathASub: "Zero Backend Code",
+        pathATitle: "1-Line Edge Script + Cloud Upsert",
+        pathADesc: 'Provision your entity via <code class="mono text-emerald-300">POST /api/entities/upsert</code> (or click <strong>"1-Click Provision &amp; Re-Verify"</strong> in the Validator) and paste a single <code class="mono text-cyan-300">&lt;script&gt;</code> tag into your site\'s <code class="mono">&lt;head&gt;</code>. SendPut automatically injects your Schema.org <code class="mono">@graph</code>, <code class="mono">/llms.txt</code> link header, and live MCP SSE node.',
+        pathBBadge: "PATH B • NATIVE ROOT FILES",
+        pathBSub: "Full Root Control",
+        pathBTitle: "Static Root Protocol Bundle",
+        pathBDesc: 'Copy the generated artifacts from the GetEPO Remediation Workbench directly into your web root: <code class="mono text-cyan-300">/robots.txt</code>, <code class="mono text-cyan-300">/llms.txt</code>, <code class="mono text-cyan-300">/llms-full.txt</code>, <code class="mono text-cyan-300">/schema.json</code>, and your root IndexNow key file.',
+        pathCBadge: "PATH C • DEVOPS &amp; CI/CD",
+        pathCSub: "Automated Gate",
+        pathCTitle: "CLI Benchmark &amp; Cron Drift Sync",
+        pathCDesc: 'Enforce <code class="mono text-purple-300">epo_score &gt;= 90</code> in GitHub Actions via <code class="mono">GET /api/epo-score?domain=...</code> and run automated IndexNow heartbeats via <code class="mono">POST /api/cron/epo-sync</code>.',
+        stepsTitle: "Step-by-Step Implementation Walkthrough",
+        stepsSub: "Follow these five steps in order to establish verifiable AI search dominance.",
+        step1Title: "Run a Deep 5-Layer AST Diagnostic on GetEPO.com",
+        step1Desc: 'Enter your business name, canonical URL, and primary market (local city or international sector) on <a href="https://getepo.com" class="text-cyan-400 underline">GetEPO.com</a>. The Deep AST Protocol Inspector performs a real-time inspection across five layers:',
+        step2Title: "Provision Your Entity into the Live Registry (1-Click or API)",
+        step2Desc: 'Click the <strong>"🚀 1-Click Provision &amp; Re-Verify (Grade A+)"</strong> button inside the Validator (or run the API command below). This persists your business into the Neon PostgreSQL <code class="mono text-cyan-300">business_entities</code> ledger, compiles your 5-Layer endpoints on <code class="mono">sendput.com</code>, and automatically dispatches an IndexNow batch.',
+        step3Title: "Install the 1-Line Edge Script (or Static Root Files)",
+        step3Desc: 'Paste the following snippet inside your website\'s <code class="mono">&lt;head&gt;</code> tag. It non-destructively binds your Schema.org <code class="mono">@graph</code>, <code class="mono">/llms.txt</code> discovery link, and live MCP SSE server to your domain:',
+        step4Title: "Connect Google Business Profile OAuth &amp; Test Your Live MCP Node",
+        step4Desc: 'Synchronize your physical location data with Google Business Profile &amp; Search Console via OAuth 2.0, and test your live Model Context Protocol (MCP) JSON-RPC 2.0 tools (<code class="mono">verify_business_status</code>, <code class="mono">get_service_catalog</code>, <code class="mono">initiate_inquiry</code>) so AI assistants can verify pricing and book leads directly.',
+        step5Title: "Claim Your SHA-256 Certificate &amp; Embed the Score Shield",
+        step5Desc: 'Re-run your audit on <a href="https://getepo.com" class="text-cyan-400 underline">GetEPO.com</a>. Your domain will immediately verify at <strong>Grade A+ (97/100)</strong>. Open your signed <strong>SHA-256 Compliance Certificate</strong> (<code class="mono">/api/cert/:id</code>) and embed the live SVG Score Shield in your site footer or README.',
+        bottomTitle: "Next: Master Local &amp; International (Abroad) Visibility",
+        bottomDesc: "Learn how to configure hyper-local GeoCoordinates to beat directory aggregators in your city AND multilingual cross-border Schema.org graphs to capture buyers abroad.",
+        btnBottomPlaybook: "🌍 Read Local &amp; Global Playbook →",
+        btnBottomSpec: "📐 View RFC-2026-GEO-01 Spec &amp; v4.0 Roadmap →"
+      },
+      es: {
+        topBarBadge: "DOCS DE IMPLEMENTACIÓN RFC-2026-GEO-01 v3.5",
+        topBarDesc: "AST de 5 Capas • Atestación SHA-256 • MCP de Bucle Cerrado",
+        navHome: "Inicio",
+        navGuide: "Guía de Implementación",
+        navPlaybook: "Manual Local y Global",
+        navSpec: "Especificación y Hoja de Ruta",
+        navValidator: "Validador GetEPO ↗",
+        headerBadge: "Documentación",
+        headerSub: "Guía Paso a Paso para Alcanzar Grado A+ (97/100) en Autoridad de Búsqueda IA",
+        btnPlaybookCta: "🌍 Manual Local y Global",
+        btnAuditCta: "⚡ Ejecutar Auditoría en Vivo",
+        heroBadge: "MANUAL DE IMPLEMENTACIÓN • DE CERO A GRADO A+ EN 5 MINUTOS",
+        heroTitle: 'Cómo Implementar la <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-indigo-400">Optimización de Presencia de Entidad de 5 Capas</span>',
+        heroDesc: 'Los motores de respuesta generativa (ChatGPT Search, Perplexity Sonar, Google Gemini 2.5, Claude SearchBot y Microsoft Copilot) no clasifican páginas web por enlaces externos: sintetizan respuestas a partir de grafos de entidades legibles por máquina verificados. Siga estos <strong>5 pasos deterministas</strong> para transformar cualquier sitio web de un <code class="mono text-rose-400">Grado F no verificado (38/100)</code> en una autoridad <code class="mono text-emerald-400">Grado A+ (97/100)</code> atestada criptográficamente.',
+        pathsTitle: "Elija su Ruta de Integración",
+        pathABadge: "RUTA A • MÁS RÁPIDA (60 SEG)",
+        pathASub: "Cero Código en Backend",
+        pathATitle: "Script Edge de 1 Línea + Upsert en la Nube",
+        pathADesc: 'Aprovisione su entidad mediante <code class="mono text-emerald-300">POST /api/entities/upsert</code> (o haga clic en <strong>"Aprovisionar y Re-verificar con 1 Clic"</strong> en el Validador) y pegue una sola etiqueta <code class="mono text-cyan-300">&lt;script&gt;</code> en el <code class="mono">&lt;head&gt;</code> de su sitio. SendPut inyecta automáticamente su <code class="mono">@graph</code> Schema.org, cabecera <code class="mono">/llms.txt</code> y nodo MCP SSE en vivo.',
+        pathBBadge: "RUTA B • ARCHIVOS RAÍZ NATIVOS",
+        pathBSub: "Control Raíz Total",
+        pathBTitle: "Paquete Estático de Protocolo Raíz",
+        pathBDesc: 'Copie los artefactos generados desde el Banco de Remediación GetEPO directamente en la raíz de su web: <code class="mono text-cyan-300">/robots.txt</code>, <code class="mono text-cyan-300">/llms.txt</code>, <code class="mono text-cyan-300">/llms-full.txt</code>, <code class="mono text-cyan-300">/schema.json</code> y su clave raíz IndexNow.',
+        pathCBadge: "RUTA C • DEVOPS Y CI/CD",
+        pathCSub: "Puerta de Calidad Automatizada",
+        pathCTitle: "Benchmark CLI y Sincronización Automática",
+        pathCDesc: 'Exija <code class="mono text-purple-300">epo_score &gt;= 90</code> en GitHub Actions vía <code class="mono">GET /api/epo-score?domain=...</code> y ejecute latidos automatizados de IndexNow vía <code class="mono">POST /api/cron/epo-sync</code>.',
+        stepsTitle: "Recorrido Paso a Paso de Implementación",
+        stepsSub: "Siga estos cinco pasos en orden para establecer una dominancia verificable en búsquedas de IA.",
+        step1Title: "Ejecutar un Diagnóstico Profundo AST de 5 Capas en GetEPO.com",
+        step1Desc: 'Ingrese el nombre de su empresa, URL canónica y mercado principal (ciudad local o sector internacional) en <a href="https://getepo.com" class="text-cyan-400 underline">GetEPO.com</a>. El Inspector de Protocolo AST Profundo realiza una inspección en tiempo real en cinco capas:',
+        step2Title: "Aprovisionar su Entidad en el Registro Activo (1 Clic o API)",
+        step2Desc: 'Haga clic en el botón <strong>"🚀 Aprovisionar y Re-verificar con 1 Clic (Grado A+)"</strong> en el Validador (o ejecute el comando API abajo). Esto persiste su negocio en el libro mayor Neon PostgreSQL <code class="mono text-cyan-300">business_entities</code>, compila sus endpoints de 5 capas en <code class="mono">sendput.com</code> y envía automáticamente un lote IndexNow.',
+        step3Title: "Instalar el Script Edge de 1 Línea (o Archivos Raíz Estáticos)",
+        step3Desc: 'Pegue el siguiente fragmento dentro de la etiqueta <code class="mono">&lt;head&gt;</code> de su sitio web. Vincula de forma no destructiva su <code class="mono">@graph</code> Schema.org, enlace de descubrimiento <code class="mono">/llms.txt</code> y servidor MCP SSE en vivo con su dominio:',
+        step4Title: "Conectar Google Business Profile OAuth y Probar su Nodo MCP Activo",
+        step4Desc: 'Sincronice sus datos de ubicación física con Google Business Profile y Search Console mediante OAuth 2.0, y pruebe sus herramientas activas JSON-RPC 2.0 de Model Context Protocol (MCP) (<code class="mono">verify_business_status</code>, <code class="mono">get_service_catalog</code>, <code class="mono">initiate_inquiry</code>) para que los asistentes de IA puedan verificar precios y registrar solicitudes directamente.',
+        step5Title: "Reclamar su Certificado SHA-256 e Incrustar el Escudo de Puntuación",
+        step5Desc: 'Vuelva a ejecutar su auditoría en <a href="https://getepo.com" class="text-cyan-400 underline">GetEPO.com</a>. Su dominio verificará inmediatamente en <strong>Grado A+ (97/100)</strong>. Abra su <strong>Certificado de Cumplimiento SHA-256</strong> firmado (<code class="mono">/api/cert/:id</code>) e incruste el Escudo de Puntuación SVG en el pie de página o README de su sitio.',
+        bottomTitle: "Siguiente: Domine la Visibilidad Local e Internacional (en el Extranjero)",
+        bottomDesc: "Aprenda cómo configurar GeoCoordinates hiperlocales para superar a los agregadores de directorios en su ciudad Y grafos multilingües Schema.org para captar clientes en el extranjero.",
+        btnBottomPlaybook: "🌍 Leer Manual Local y Global →",
+        btnBottomSpec: "📐 Ver Especificación RFC-2026-GEO-01 y Hoja de Ruta v4.0 →"
+      }
+    };
+
+    let currentGuideLang = 'en';
+
+    function setGuideLanguage(lang) {
+      currentGuideLang = lang;
+      const dict = GUIDE_I18N[lang] || GUIDE_I18N.en;
+      try { localStorage.setItem('lang', lang); } catch (e) {}
+
+      const btnEn = document.getElementById('btn-lang-en');
+      const btnEs = document.getElementById('btn-lang-es');
+      if (btnEn && btnEs) {
+        if (lang === 'es') {
+          btnEs.className = 'px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition';
+          btnEn.className = 'px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition';
+        } else {
+          btnEn.className = 'px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition';
+          btnEs.className = 'px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition';
+        }
+      }
+
+      const map = {
+        'top-bar-badge': dict.topBarBadge,
+        'top-bar-desc': dict.topBarDesc,
+        'nav-home': dict.navHome,
+        'nav-guide': dict.navGuide,
+        'nav-playbook': dict.navPlaybook,
+        'nav-spec': dict.navSpec,
+        'nav-validator': dict.navValidator,
+        'header-badge': dict.headerBadge,
+        'header-sub': dict.headerSub,
+        'btn-playbook-cta': dict.btnPlaybookCta,
+        'btn-audit-cta': dict.btnAuditCta,
+        'hero-badge': dict.heroBadge,
+        'hero-title': dict.heroTitle,
+        'hero-desc': dict.heroDesc,
+        'paths-title': dict.pathsTitle,
+        'path-a-badge': dict.pathABadge,
+        'path-a-sub': dict.pathASub,
+        'path-a-title': dict.pathATitle,
+        'path-a-desc': dict.pathADesc,
+        'path-b-badge': dict.pathBBadge,
+        'path-b-sub': dict.pathBSub,
+        'path-b-title': dict.pathBTitle,
+        'path-b-desc': dict.pathBDesc,
+        'path-c-badge': dict.pathCBadge,
+        'path-c-sub': dict.pathCSub,
+        'path-c-title': dict.pathCTitle,
+        'path-c-desc': dict.pathCDesc,
+        'steps-title': dict.stepsTitle,
+        'steps-sub': dict.stepsSub,
+        'step-1-title': dict.step1Title,
+        'step-1-desc': dict.step1Desc,
+        'step-2-title': dict.step2Title,
+        'step-2-desc': dict.step2Desc,
+        'step-3-title': dict.step3Title,
+        'step-3-desc': dict.step3Desc,
+        'step-4-title': dict.step4Title,
+        'step-4-desc': dict.step4Desc,
+        'step-5-title': dict.step5Title,
+        'step-5-desc': dict.step5Desc,
+        'bottom-title': dict.bottomTitle,
+        'bottom-desc': dict.bottomDesc,
+        'btn-bottom-playbook': dict.btnBottomPlaybook,
+        'btn-bottom-spec': dict.btnBottomSpec
+      };
+
+      for (const [id, val] of Object.entries(map)) {
+        const el = document.getElementById(id);
+        if (el && val) el.innerHTML = val;
+      }
+    }
+
+    function applyGuideTheme(theme) {
+      const root = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if (theme === 'light') {
+        root.classList.remove('dark');
+        root.classList.add('light');
+        if (icon) icon.textContent = '☀️';
+      } else {
+        root.classList.remove('light');
+        root.classList.add('dark');
+        if (icon) icon.textContent = '🌙';
+      }
+      try { localStorage.setItem('theme', theme); } catch (e) {}
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Theme Init
+      let savedTheme = 'dark';
+      try { savedTheme = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+      applyGuideTheme(savedTheme);
+
+      const themeBtn = document.getElementById('btn-theme-toggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+          const isLight = document.documentElement.classList.contains('light');
+          applyGuideTheme(isLight ? 'dark' : 'light');
+        });
+      }
+
+      // Language Init
+      const params = new URLSearchParams(window.location.search);
+      let initialLang = params.get('lang') || 'en';
+      try {
+        if (!params.get('lang')) {
+          initialLang = localStorage.getItem('lang') || 'en';
+        }
+      } catch (e) {}
+
+      document.getElementById('btn-lang-en')?.addEventListener('click', () => setGuideLanguage('en'));
+      document.getElementById('btn-lang-es')?.addEventListener('click', () => setGuideLanguage('es'));
+      setGuideLanguage(initialLang);
+    });
+  </script>
 </body>
 </html>
 

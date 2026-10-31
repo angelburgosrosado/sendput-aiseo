@@ -63,6 +63,69 @@
     .glow-cyan {
       box-shadow: 0 0 40px -10px rgba(6, 182, 212, 0.35);
     }
+    html.light body {
+      background-color: #F8FAFC !important;
+      color: #0F172A !important;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(6, 182, 212, 0.08), transparent 35%),
+        radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.08), transparent 35%);
+    }
+    html.light .glass-card {
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(99, 102, 241, 0.2) !important;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+    }
+    html.light .bg-slate-950,
+    html.light .bg-slate-950\/90,
+    html.light .bg-slate-950\/85,
+    html.light .bg-slate-950\/80,
+    html.light .bg-slate-950\/75,
+    html.light .bg-slate-950\/40,
+    html.light .bg-slate-950\/35,
+    html.light .bg-slate-950\/25 {
+      background-color: #FFFFFF !important;
+      color: #0F172A;
+    }
+    html.light .bg-slate-900,
+    html.light .bg-slate-900\/90,
+    html.light .bg-slate-900\/80,
+    html.light .bg-slate-900\/70,
+    html.light .bg-slate-900\/60 {
+      background-color: #F1F5F9 !important;
+      color: #0F172A;
+    }
+    html.light header, html.light footer {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      border-color: #E2E8F0 !important;
+    }
+    html.light .text-white {
+      color: #0F172A !important;
+    }
+    html.light .text-slate-200, html.light .text-slate-300 {
+      color: #334155 !important;
+    }
+    html.light .text-slate-400 {
+      color: #64748B !important;
+    }
+    html.light .text-slate-500 {
+      color: #64748B !important;
+    }
+    html.light .border-slate-800,
+    html.light .border-slate-800\/80,
+    html.light .border-slate-800\/70,
+    html.light .border-slate-800\/40,
+    html.light .border-slate-700 {
+      border-color: #CBD5E1 !important;
+    }
+    html.light input, html.light select, html.light textarea {
+      background-color: #FFFFFF !important;
+      color: #0F172A !important;
+      border-color: #CBD5E1 !important;
+    }
+    html.light input::placeholder {
+      color: #94A3B8 !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black">
@@ -93,6 +156,10 @@
           <button id="btn-lang-en" type="button" class="px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition">EN</button>
           <button id="btn-lang-es" type="button" class="px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition">ES</button>
         </div>
+        <!-- Theme Toggle -->
+        <button id="btn-theme-toggle" type="button" class="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-1" title="Toggle Light / Dark Mode">
+          <span id="theme-icon">🌙</span>
+        </button>
         <a href="/guide" class="text-slate-300 hover:text-emerald-300 font-semibold transition hidden sm:inline">Guide</a>
         <a href="/global-local" class="text-slate-300 hover:text-cyan-300 font-semibold transition hidden md:inline">Local &amp; Abroad</a>
         <a href="/spec" class="text-slate-300 hover:text-purple-300 font-semibold transition hidden lg:inline">v4.0 Spec</a>
@@ -504,7 +571,7 @@
   </footer>
 
   <script>
-    let currentLang = 'en';
+    let currentLang = localStorage.getItem('lang') || 'en';
     let lastAuditData = null;
     let activeRemTab = 'diff';
 
@@ -518,7 +585,22 @@
         lblUrl: 'Website Domain URL',
         lblNiche: 'Market / City & Niche',
         btnAudit: 'Audit Now',
-        presets: 'Live test presets:'
+        presets: 'Live test presets:',
+        shareAudit: '🔗 Copy Shareable Audit URL',
+        navGuide: 'Guide',
+        navLocalGlobal: 'Local & Abroad',
+        navSpec: 'v4.0 Spec',
+        navLeaderboard: 'Leaderboard',
+        navFullEngine: 'Full Enterprise Engine →',
+        resDomainTitle: 'Domain Audit Results',
+        btnProvision: '🚀 1-Click Provision & Re-Verify (Grade A+)',
+        btnIndexNow: '⚡ Test Live IndexNow Relay',
+        btnMcp: '🤖 Test Live MCP JSON-RPC Ping',
+        btnDrift: '🔄 Fleet Drift & Heartbeat Sync',
+        simWithoutHeader: '⚠️ Without 5-Layer EPO (Unverified)',
+        simWithHeader: '✅ With SendPut 5-Layer EPO (Verified Authority)',
+        simPromptPrefix: 'Buyer Query:',
+        toastAuditDone: 'Completed 5-Layer EPO Audit'
       },
       es: {
         badge: 'BENCHMARK ABIERTO DE BÚSQUEDA IA • RFC-2026-GEO-01',
@@ -529,9 +611,53 @@
         lblUrl: 'URL del Dominio Web',
         lblNiche: 'Mercado / Ciudad y Nicho',
         btnAudit: 'Auditar Ahora',
-        presets: 'Ejemplos en vivo:'
+        presets: 'Ejemplos en vivo:',
+        shareAudit: '🔗 Copiar Enlace Compartible',
+        navGuide: 'Guía',
+        navLocalGlobal: 'Local e Internacional',
+        navSpec: 'Especificación v4.0',
+        navLeaderboard: 'Cuadro de Honor',
+        navFullEngine: 'Motor Empresarial Completo →',
+        resDomainTitle: 'Resultados de la Auditoría',
+        btnProvision: '🚀 Aprovisionar y Re-Verificar en 1 Clic (Grado A+)',
+        btnIndexNow: '⚡ Probar Transmisión IndexNow en Vivo',
+        btnMcp: '🤖 Probar Ping MCP JSON-RPC en Vivo',
+        btnDrift: '🔄 Sincronización y Latido de Flota',
+        simWithoutHeader: '⚠️ Sin EPO de 5 Capas (No Verificado)',
+        simWithHeader: '✅ Con EPO de 5 Capas de SendPut (Autoridad Verificada)',
+        simPromptPrefix: 'Consulta del Comprador:',
+        toastAuditDone: 'Auditoría EPO de 5 Capas Completada'
       }
     };
+
+    function initTheme() {
+      const saved = localStorage.getItem('theme') || 'dark';
+      applyTheme(saved);
+    }
+
+    function applyTheme(theme) {
+      const isLight = theme === 'light';
+      if (isLight) {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+        const icon = document.getElementById('theme-icon');
+        if (icon) icon.textContent = '☀️';
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+        const icon = document.getElementById('theme-icon');
+        if (icon) icon.textContent = '🌙';
+      }
+      localStorage.setItem('theme', theme);
+    }
+
+    const themeToggleBtn = document.getElementById('btn-theme-toggle');
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        const isCurrentlyDark = document.documentElement.classList.contains('dark') || !document.documentElement.classList.contains('light');
+        applyTheme(isCurrentlyDark ? 'light' : 'dark');
+      });
+    }
 
     function showValidatorToast(msg) {
       const t = document.getElementById('val-toast');
@@ -545,6 +671,7 @@
 
     function setLanguage(lang) {
       currentLang = lang === 'es' ? 'es' : 'en';
+      localStorage.setItem('lang', currentLang);
       const dict = I18N[currentLang];
       document.getElementById('hero-badge-text').textContent = dict.badge;
       document.getElementById('hero-title-top').textContent = dict.titleTop;
@@ -556,12 +683,34 @@
       document.getElementById('val-btn-text').textContent = dict.btnAudit;
       document.getElementById('lbl-presets').textContent = dict.presets;
 
+      const shareBtn = document.getElementById('btn-share-audit');
+      if (shareBtn) shareBtn.textContent = dict.shareAudit;
+
+      const btnProv = document.getElementById('btn-val-provision');
+      if (btnProv) btnProv.textContent = dict.btnProvision;
+      const btnIn = document.getElementById('btn-val-indexnow');
+      if (btnIn) btnIn.textContent = dict.btnIndexNow;
+      const btnM = document.getElementById('btn-val-mcp-ping');
+      if (btnM) btnM.textContent = dict.btnMcp;
+      const btnD = document.getElementById('btn-val-drift-sync');
+      if (btnD) btnD.textContent = dict.btnDrift;
+
+      const simWithoutTitle = document.getElementById('sim-without-title');
+      if (simWithoutTitle) simWithoutTitle.textContent = dict.simWithoutHeader;
+
+      const resTitle = document.getElementById('res-biz-title');
+      if (resTitle && !lastAuditData) resTitle.textContent = dict.resDomainTitle;
+
       document.getElementById('btn-lang-en').className = currentLang === 'en'
         ? 'px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition'
         : 'px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition';
       document.getElementById('btn-lang-es').className = currentLang === 'es'
         ? 'px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[11px] transition'
         : 'px-2 py-1 rounded-md text-slate-400 hover:text-white font-bold text-[11px] transition';
+
+      if (lastAuditData) {
+        renderAuditResults(lastAuditData);
+      }
     }
 
     document.getElementById('btn-lang-en').addEventListener('click', () => setLanguage('en'));
@@ -1154,11 +1303,16 @@
 
     // Auto-populate and run if query params present, or run default preset on load
     window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
       const params = new URLSearchParams(window.location.search);
       if (params.get('name')) document.getElementById('val-biz-name').value = params.get('name');
       if (params.get('url') || params.get('domain')) document.getElementById('val-biz-url').value = params.get('url') || params.get('domain');
       if (params.get('niche')) document.getElementById('val-biz-niche').value = params.get('niche');
-      if (params.get('lang') === 'es') setLanguage('es');
+      if (params.get('lang')) {
+        setLanguage(params.get('lang'));
+      } else {
+        setLanguage(currentLang);
+      }
       loadLeaderboard();
       executeAudit();
     });
