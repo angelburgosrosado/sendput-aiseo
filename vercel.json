@@ -50,6 +50,11 @@
     { "source": "/sitemap.xml", "destination": "/api/index.js" },
     { "source": "/schema.json", "destination": "/api/index.js" },
     { "source": "/validator", "destination": "/validator.html" },
+    { "source": "/guide", "destination": "/guide.html" },
+    { "source": "/global-local", "destination": "/global-local.html" },
+    { "source": "/local-global", "destination": "/global-local.html" },
+    { "source": "/spec", "destination": "/spec.html" },
+    { "source": "/roadmap", "destination": "/spec.html" },
     { "source": "/(.*)\\.map", "destination": "/api/index.js" }
   ],
   "headers": [
