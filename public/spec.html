@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RFC-2026-GEO-01 Protocol Specification, Trust Center &amp; v4.0 Upgrade Roadmap | SendPut &amp; GetEPO</title>
+  <meta name="description" content="Official RFC-2026-GEO-01 Entity Presence Optimization (EPO) specification, SHA-256 Trust Center, and v4.0 Next-Upgrade Architectural Roadmap." />
+  <link rel="canonical" href="https://sendput.com/spec" />
+  <link rel="llms-txt" type="text/markdown" href="/llms.txt" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #060911; color: #f8fafc; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.22); backdrop-filter: blur(12px); }
+    .roadmap-card { background: rgba(13, 19, 31, 0.94); border: 1px solid rgba(168, 85, 247, 0.32); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-cyan-400 selection:text-slate-950">
+
+  <!-- Top Protocol Bar -->
+  <div class="bg-slate-950 border-b border-slate-800/80 px-4 py-2 text-xs mono">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30 font-semibold">
+          <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+          RFC-2026-GEO-01 STANDARD &amp; V4.0 ARCHITECTURE ROADMAP
+        </span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px]">
+        <a href="/" class="text-cyan-400 hover:underline">Home</a>
+        <a href="/guide" class="text-cyan-400 hover:underline">Implementation Guide</a>
+        <a href="/global-local" class="text-cyan-400 hover:underline">Local &amp; Global Playbook</a>
+        <a href="/spec" class="text-emerald-400 font-bold underline">Protocol Spec &amp; Roadmap</a>
+        <a href="https://getepo.com" class="text-amber-300 hover:underline font-bold">GetEPO Validator ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-950/75 sticky top-0 z-30 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+      <a href="/" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-400 to-cyan-500 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg">
+          📐
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-black text-xl tracking-tight text-white">RFC-2026-GEO-01 <span class="text-purple-400">Spec &amp; Roadmap</span></span>
+            <span class="text-[10px] mono uppercase px-2 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-semibold">v3.5 Active → v4.0 Next</span>
+          </div>
+          <p class="text-xs text-slate-400">Mathematical Scoring Model, Live Trust Endpoints &amp; Next-Upgrade Requirements</p>
+        </div>
+      </a>
+      <div class="flex flex-wrap items-center gap-2.5">
+        <a href="/api/cert/1" target="_blank" class="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 text-xs font-bold transition">
+          📜 Sample SHA-256 Certificate ↗
+        </a>
+        <a href="https://getepo.com" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-cyan-400 hover:opacity-95 text-slate-950 font-extrabold text-xs shadow-lg transition">
+          ⚡ Open GetEPO Validator
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-10 space-y-12">
+
+    <!-- Section 1: Mathematical Scoring Formula & 4 Core Pillars -->
+    <section class="glass-card rounded-2xl p-6 sm:p-8 space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
+        <div>
+          <span class="text-xs mono uppercase text-cyan-400 font-bold">SECTION 01 • MATHEMATICAL SCORING ENGINE</span>
+          <h1 class="text-2xl sm:text-4xl font-black text-white mt-0.5">The RFC-2026-GEO-01 Composite Formula</h1>
+        </div>
+        <code class="px-3 py-1.5 rounded-lg bg-slate-950 border border-cyan-500/40 text-cyan-300 mono text-xs font-bold">
+          EPO = 0.35·SFAI + 0.25·DVS + 0.25·AICS + 0.15·THQ
+        </code>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-cyan-400 mono">SFAI (35% Weight)</span>
+            <span class="text-slate-500 mono">0–100</span>
+          </div>
+          <div class="font-bold text-white">Semantic Fact &amp; AST Index</div>
+          <p class="text-slate-400 leading-relaxed">Evaluates JSON-LD <code class="mono">@graph</code> depth, <code class="mono">@id</code> canonicalization, <code class="mono">sameAs</code> authority links, <code class="mono">OfferCatalog</code> pricing clarity, and <code class="mono">/robots.txt</code> permissions across 8 AI retrieval crawlers.</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-emerald-400 mono">DVS (25% Weight)</span>
+            <span class="text-slate-500 mono">0–100</span>
+          </div>
+          <div class="font-bold text-white">Discovery Velocity Score</div>
+          <p class="text-slate-400 leading-relaxed">Measures root IndexNow cryptographic key verification, <code class="mono">/sitemap.xml</code> freshness, and real-time push latency to Bing, Copilot, SearchGPT, Naver, Seznam, and Yandex.</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-indigo-400 mono">AICS (25% Weight)</span>
+            <span class="text-slate-500 mono">0–100</span>
+          </div>
+          <div class="font-bold text-white">AI Citation Share-of-Voice</div>
+          <p class="text-slate-400 leading-relaxed">Measures primary brand citation rate across the 3-Query Fan-Out (<code class="mono">Transactional</code>, <code class="mono">Comparative</code>, <code class="mono">Agentic Action</code>) backed by 24h Neon PostgreSQL prompt caching.</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-purple-400 mono">THQ (15% Weight)</span>
+            <span class="text-slate-500 mono">0–100</span>
+          </div>
+          <div class="font-bold text-white">Technical Health &amp; MCP Quotient</div>
+          <p class="text-slate-400 leading-relaxed">Verifies <code class="mono">/llms.txt</code> token budget (&lt; 2,000 tokens), <code class="mono">/llms-full.txt</code> availability, OpenAPI 3.1.0 schema, and live JSON-RPC 2.0 / SSE MCP agent tool readiness.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Live Production Verification & Trust Endpoints -->
+    <section class="glass-card rounded-2xl p-6 sm:p-8 space-y-5">
+      <div class="border-b border-slate-800 pb-3">
+        <span class="text-xs mono uppercase text-emerald-400 font-bold">SECTION 02 • LIVE TRUST &amp; TELEMETRY API SUITE (v3.5)</span>
+        <h2 class="text-2xl font-black text-white mt-0.5">Public Verification &amp; Closed-Loop Endpoints</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+        <a href="/api/cert/1" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400/50 transition space-y-1.5 block">
+          <div class="mono font-bold text-cyan-300">GET /api/cert/:id</div>
+          <div class="font-bold text-white">Signed SHA-256 Compliance Certificate</div>
+          <p class="text-slate-400">Tamper-evident HTML &amp; JSON (<code class="mono">?format=json</code>) cryptographic attestation of 5-Layer EPO compliance.</p>
+        </a>
+
+        <a href="/api/epo-score?domain=getepo.com" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-400/50 transition space-y-1.5 block">
+          <div class="mono font-bold text-emerald-300">GET /api/epo-score?domain=...</div>
+          <div class="font-bold text-white">Developer CLI &amp; CI/CD Benchmark JSON</div>
+          <p class="text-slate-400">Returns machine-readable composite score, letter grade, and 5-Layer PASS/MISSING status for GitHub Actions gates.</p>
+        </a>
+
+        <a href="/api/epo-badge?domain=getepo.com" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-indigo-400/50 transition space-y-1.5 block">
+          <div class="mono font-bold text-indigo-300">GET /api/epo-badge?domain=...</div>
+          <div class="font-bold text-white">Dynamic SVG Score Shield</div>
+          <p class="text-slate-400">Live embeddable SVG badge displaying real-time RFC-2026-GEO-01 score and grade.</p>
+        </a>
+
+        <a href="/api/telemetry" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-purple-400/50 transition space-y-1.5 block">
+          <div class="mono font-bold text-purple-300">GET /api/telemetry/:slug</div>
+          <div class="font-bold text-white">Real-Time AI Crawler Telemetry</div>
+          <p class="text-slate-400">Streams verified bot hits (<code class="mono">OAI-SearchBot</code>, <code class="mono">PerplexityBot</code>, <code class="mono">ClaudeBot</code>, <code class="mono">Google-Extended</code>) from Neon PostgreSQL.</p>
+        </a>
+
+        <a href="/api/cron/epo-sync" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-amber-400/50 transition space-y-1.5 block">
+          <div class="mono font-bold text-amber-300">GET / POST /api/cron/epo-sync</div>
+          <div class="font-bold text-white">Autonomous Drift &amp; IndexNow Heartbeat</div>
+          <p class="text-slate-400">Verifies zero schema drift across all registered entities and dispatches a scheduled IndexNow batch.</p>
+        </a>
+
+        <a href="/api/leaderboard" target="_blank" class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-400/50 transition space-y-1.5 block">
+          <div class="mono font-bold text-emerald-300">GET /api/leaderboard</div>
+          <div class="font-bold text-white">Global RFC-2026-GEO-01 Hall of Fame</div>
+          <p class="text-slate-400">Live benchmark comparing Grade A+ verified domains against unoptimized industry baselines.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Section 3: WHAT IS REQUIRED FOR THE NEXT UPGRADE (v4.0 Roadmap Analysis) -->
+    <section class="roadmap-card rounded-2xl p-6 sm:p-8 space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
+        <div>
+          <span class="text-xs mono uppercase text-purple-400 font-bold">SECTION 03 • NEXT-UPGRADE ARCHITECTURAL REQUIREMENTS (v4.0)</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-white mt-0.5">What Is Required for the Next Upgrade (v4.0 Global Scale)</h2>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1">
+            With v3.5 delivering the complete 5-Layer AST Inspector, Closed-Loop Tenant Provisioning, SHA-256 Attestation, and Bot Telemetry, these <strong>5 Next-Generation Modules</strong> represent the next upgrade horizon to scale local and international dominance:
+          </p>
+        </div>
+        <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 mono text-xs font-bold">v4.0 Blueprint</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
+        <div class="p-5 rounded-xl bg-slate-950 border border-purple-500/30 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 mono text-[10px] font-bold">REQUIREMENT 01 • INTERNATIONALIZATION</span>
+            <span class="mono text-slate-400">Cross-Border RAG</span>
+          </div>
+          <h3 class="text-sm font-extrabold text-white">Multi-Locale <code class="mono">/llms-{lang}.txt</code> &amp; Automated <code class="mono">hreflang</code> Matrix</h3>
+          <p class="text-slate-300 leading-relaxed">
+            Auto-compile dedicated language-specific context files (<code class="mono">/v1/tenants/:slug/llms-es.txt</code>, <code class="mono">llms-pt.txt</code>, <code class="mono">llms-fr.txt</code>, <code class="mono">llms-de.txt</code>) alongside localized <code class="mono">PriceSpecification</code> currencies so international AI agents ingest zero-translation native markdown in their buyer's language.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-xl bg-slate-950 border border-cyan-500/30 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 mono text-[10px] font-bold">REQUIREMENT 02 • SSR EDGE WORKER</span>
+            <span class="mono text-slate-400">Non-JS Crawlers</span>
+          </div>
+          <h3 class="text-sm font-extrabold text-white">Cloudflare &amp; Vercel Reverse-Proxy Edge Worker (<code class="mono">@sendput/edge-proxy</code>)</h3>
+          <p class="text-slate-300 leading-relaxed">
+            While <code class="mono">epo-edge.js</code> and <code class="mono">/verified/:slug</code> work immediately, some strict non-JS crawlers only parse raw initial HTML response bytes. A 1-click Cloudflare Worker / Vercel Middleware script injects the JSON-LD <code class="mono">@graph</code> and HTTP <code class="mono">Link: &lt;/llms.txt&gt;; rel="llms-txt"</code> headers directly at the CDN edge before HTML reaches the crawler.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-xl bg-slate-950 border border-emerald-500/30 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 mono text-[10px] font-bold">REQUIREMENT 03 • KNOWLEDGE GRAPH LINKER</span>
+            <span class="mono text-slate-400">Entity Resolution</span>
+          </div>
+          <h3 class="text-sm font-extrabold text-white">Automated Wikidata Q-ID, NAICS &amp; Google Place ID Resolver</h3>
+          <p class="text-slate-300 leading-relaxed">
+            Automatically query the Wikidata SPARQL and Google Places APIs during <code class="mono">POST /api/entities/upsert</code> to bind official city/industry Wikidata Q-IDs, NAICS classification codes, and verified <code class="mono">hasMap</code> Place IDs into every tenant's <code class="mono">sameAs</code> array without manual entry.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-xl bg-slate-950 border border-amber-500/30 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 mono text-[10px] font-bold">REQUIREMENT 04 • AGENTIC TRANSACTIONS</span>
+            <span class="mono text-slate-400">MCP Checkout &amp; Cal</span>
+          </div>
+          <h3 class="text-sm font-extrabold text-white">Transactional MCP Tools (Live Calendar Booking &amp; Stripe Payment Links)</h3>
+          <p class="text-slate-300 leading-relaxed">
+            Extend <code class="mono">/mcp/:slug/sse</code> with authenticated webhook bridges to Cal.com / Calendly / HubSpot / GoHighLevel and Stripe Payment Links so autonomous AI agents can complete confirmed bookings and deposits inside the chat window.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-xl bg-slate-950 border border-rose-500/30 space-y-2 md:col-span-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 mono text-[10px] font-bold">REQUIREMENT 05 • PROACTIVE CITATION ALERTS</span>
+            <span class="mono text-slate-400">Share-of-Voice Guard</span>
+          </div>
+          <h3 class="text-sm font-extrabold text-white">Automated Citation Diff &amp; Competitor Hijack Webhook Alerts</h3>
+          <p class="text-slate-300 leading-relaxed">
+            Connect <code class="mono">/api/cron/epo-sync</code> to Resend / Slack / Webhook notifications so whenever a weekly 3-Query Fan-Out probe detects a drop in <code class="mono">AICS</code> share-of-voice or an accidentally modified <code class="mono">/robots.txt</code> file on a client domain, the business owner and agency partner receive an instant alert with a 1-click patch.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-8 px-4 text-xs text-slate-400 mono">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div>© 2026 SendPut AI Technologies Inc. • RFC-2026-GEO-01 Standard</div>
+      <div class="flex flex-wrap gap-4">
+        <a href="/" class="hover:text-emerald-400">SendPut Engine</a>
+        <a href="https://getepo.com" class="hover:text-cyan-400">GetEPO Validator</a>
+        <a href="/guide" class="hover:text-cyan-400">Implementation Guide</a>
+        <a href="/global-local" class="hover:text-cyan-400">Local &amp; Global Playbook</a>
+        <a href="/spec" class="text-emerald-400">Protocol Spec &amp; Roadmap</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+

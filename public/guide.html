@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Step-by-Step Implementation Guide — How to Deploy 5-Layer EPO Locally &amp; Globally | SendPut &amp; GetEPO</title>
+  <meta name="description" content="Complete step-by-step guide to deploying the 5-Layer RFC-2026-GEO-01 Entity Presence Optimization (EPO) protocol to dominate ChatGPT Search, Perplexity, Gemini, and Claude both locally and abroad." />
+  <link rel="canonical" href="https://sendput.com/guide" />
+  <link rel="llms-txt" type="text/markdown" href="/llms.txt" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #060911; color: #f8fafc; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.22); backdrop-filter: blur(12px); }
+    .matrix-card { background: #0D131F; border: 1px solid rgba(0, 255, 102, 0.28); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-cyan-400 selection:text-slate-950">
+
+  <!-- Top Protocol Bar -->
+  <div class="bg-slate-950 border-b border-slate-800/80 px-4 py-2 text-xs mono">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          RFC-2026-GEO-01 IMPLEMENTATION DOCS v3.5
+        </span>
+        <span class="text-slate-400 hidden sm:inline">5-Layer AST • SHA-256 Attestation • Closed-Loop MCP</span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px]">
+        <a href="/" class="text-cyan-400 hover:underline">Home</a>
+        <a href="/guide" class="text-emerald-400 font-bold underline">Implementation Guide</a>
+        <a href="/global-local" class="text-cyan-400 hover:underline">Local &amp; Global Playbook</a>
+        <a href="/spec" class="text-cyan-400 hover:underline">Protocol Spec &amp; Roadmap</a>
+        <a href="https://getepo.com" class="text-amber-300 hover:underline font-bold">GetEPO Validator ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-950/75 sticky top-0 z-30 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+      <a href="/" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg">
+          &gt;_
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-black text-xl tracking-tight text-white">SendPut<span class="text-emerald-400">.com</span> &amp; GetEPO<span class="text-cyan-400">.com</span></span>
+            <span class="text-[10px] mono uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold">Documentation</span>
+          </div>
+          <p class="text-xs text-slate-400">Step-by-Step Guide to Achieving Grade A+ (97/100) AI Search Authority</p>
+        </div>
+      </a>
+      <div class="flex flex-wrap items-center gap-2.5">
+        <a href="/global-local" class="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 text-xs font-bold transition">
+          🌍 Local &amp; Global Playbook
+        </a>
+        <a href="https://getepo.com" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-400 to-cyan-400 hover:opacity-95 text-slate-950 font-extrabold text-xs shadow-lg transition">
+          ⚡ Run Live Domain Audit
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-10 space-y-12">
+
+    <!-- Hero Banner -->
+    <section class="space-y-4 max-w-4xl">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-semibold mono">
+        IMPLEMENTATION PLAYBOOK • ZERO TO GRADE A+ IN 5 MINUTES
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+        How to Implement <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-indigo-400">5-Layer Entity Presence Optimization</span>
+      </h1>
+      <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+        Generative answer engines (ChatGPT Search, Perplexity Sonar, Google Gemini 2.5, Claude SearchBot, and Microsoft Copilot) do not rank web pages by backlinks—they synthesize answers from verified, machine-readable entity graphs. Follow these <strong>5 deterministic steps</strong> to transform any website from an unverified <code class="mono text-rose-400">Grade F (38/100)</code> into a cryptographically attested <code class="mono text-emerald-400">Grade A+ (97/100)</code> authority.
+      </p>
+    </section>
+
+    <!-- 3 Deployment Options Overview -->
+    <section class="space-y-4">
+      <h2 class="text-xl font-extrabold text-white">Choose Your Integration Path</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="matrix-card rounded-2xl p-6 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 mono text-[10px] font-bold">PATH A • FASTEST (60 SEC)</span>
+            <span class="mono text-xs text-slate-400">Zero Backend Code</span>
+          </div>
+          <h3 class="text-base font-extrabold text-white">1-Line Edge Script + Cloud Upsert</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Provision your entity via <code class="mono text-emerald-300">POST /api/entities/upsert</code> (or click <strong>"1-Click Provision &amp; Re-Verify"</strong> in the Validator) and paste a single <code class="mono text-cyan-300">&lt;script&gt;</code> tag into your site's <code class="mono">&lt;head&gt;</code>. SendPut automatically injects your Schema.org <code class="mono">@graph</code>, <code class="mono">/llms.txt</code> link header, and live MCP SSE node.
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 mono text-[10px] font-bold">PATH B • NATIVE ROOT FILES</span>
+            <span class="mono text-xs text-slate-400">Full Root Control</span>
+          </div>
+          <h3 class="text-base font-extrabold text-white">Static Root Protocol Bundle</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Copy the generated artifacts from the GetEPO Remediation Workbench directly into your web root: <code class="mono text-cyan-300">/robots.txt</code>, <code class="mono text-cyan-300">/llms.txt</code>, <code class="mono text-cyan-300">/llms-full.txt</code>, <code class="mono text-cyan-300">/schema.json</code>, and your root IndexNow key file.
+          </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-0.5 rounded bg-purple-500/20 text-purple-300 mono text-[10px] font-bold">PATH C • DEVOPS &amp; CI/CD</span>
+            <span class="mono text-xs text-slate-400">Automated Gate</span>
+          </div>
+          <h3 class="text-base font-extrabold text-white">CLI Benchmark &amp; Cron Drift Sync</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Enforce <code class="mono text-purple-300">epo_score &gt;= 90</code> in GitHub Actions via <code class="mono">GET /api/epo-score?domain=...</code> and run automated IndexNow heartbeats via <code class="mono">POST /api/cron/epo-sync</code>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detailed 5-Step Walkthrough -->
+    <section class="space-y-6">
+      <div class="border-b border-slate-800 pb-3">
+        <h2 class="text-2xl font-black text-white">Step-by-Step Implementation Walkthrough</h2>
+        <p class="text-xs text-slate-400 mt-1">Follow these five steps in order to establish verifiable AI search dominance.</p>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 mono font-black text-xs">STEP 01</span>
+            <h3 class="text-lg font-extrabold text-white">Run a Deep 5-Layer AST Diagnostic on GetEPO.com</h3>
+          </div>
+          <span class="mono text-xs text-slate-400">Endpoint: <code class="text-cyan-300">POST /api/audit</code></span>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          Enter your business name, canonical URL, and primary market (local city or international sector) on <a href="https://getepo.com" class="text-cyan-400 underline">GetEPO.com</a>. The Deep AST Protocol Inspector performs a real-time inspection across five layers:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="font-bold text-cyan-300 mono">1. /robots.txt</div>
+            <p class="text-slate-400 mt-1 text-[11px]">Verifies explicit <code class="mono">Allow: /</code> rules for all 8 AI retrieval bots (<code class="mono">OAI-SearchBot</code>, <code class="mono">PerplexityBot</code>, <code class="mono">ClaudeBot</code>, <code class="mono">Google-Extended</code>, etc.).</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="font-bold text-cyan-300 mono">2. Schema.org AST</div>
+            <p class="text-slate-400 mt-1 text-[11px]">Parses <code class="mono">&lt;script type="application/ld+json"&gt;</code> and <code class="mono">/schema.json</code> for <code class="mono">@graph</code>, <code class="mono">@id</code>, <code class="mono">sameAs</code>, and <code class="mono">OfferCatalog</code>.</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="font-bold text-cyan-300 mono">3. IndexNow Key</div>
+            <p class="text-slate-400 mt-1 text-[11px]">Checks root cryptographic key verification for sub-minute Bing, Copilot, ChatGPT Search, Naver &amp; Yandex indexing.</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="font-bold text-cyan-300 mono">4. /llms.txt Budget</div>
+            <p class="text-slate-400 mt-1 text-[11px]">Measures token density (&lt; 2,000 tokens for <code class="mono">/llms.txt</code>) and checks <code class="mono">/llms-full.txt</code> for deep RAG ingestion.</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="font-bold text-cyan-300 mono">5. MCP 2026-07-28</div>
+            <p class="text-slate-400 mt-1 text-[11px]">Detects live JSON-RPC 2.0 / SSE Model Context Protocol servers for autonomous agent tool execution.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mono font-black text-xs">STEP 02</span>
+            <h3 class="text-lg font-extrabold text-white">Provision Your Entity into the Live Registry (1-Click or API)</h3>
+          </div>
+          <span class="mono text-xs text-slate-400">Endpoint: <code class="text-emerald-300">POST /api/entities/upsert</code></span>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          Click the <strong>"🚀 1-Click Provision &amp; Re-Verify (Grade A+)"</strong> button inside the Validator (or run the API command below). This persists your business into the Neon PostgreSQL <code class="mono text-cyan-300">business_entities</code> ledger, compiles your 5-Layer endpoints on <code class="mono">sendput.com</code>, and automatically dispatches an IndexNow batch.
+        </p>
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 overflow-x-auto">
+          <pre class="mono text-xs text-emerald-300 leading-relaxed">curl -X POST "https://sendput.com/api/entities/upsert" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "business_name": "Your Company Name",
+    "website_url": "https://yourdomain.com",
+    "city_niche": "Orlando, FL &amp; International SaaS",
+    "primary_category": "LocalBusiness",
+    "phone": "+1-888-506-9423",
+    "opening_hours": "Mo-Fr 08:00-18:00",
+    "bilingual_es_enabled": true,
+    "services": [
+      { "name": "Enterprise AI Consultation", "price": "$299", "desc": "Verified RFC-2026-GEO-01 audit and deployment" }
+    ]
+  }'</pre>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 mono font-black text-xs">STEP 03</span>
+            <h3 class="text-lg font-extrabold text-white">Install the 1-Line Edge Script (or Static Root Files)</h3>
+          </div>
+          <span class="mono text-xs text-slate-400">Edge Injector: <code class="text-indigo-300">/epo-edge.js?tenant=:slug</code></span>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          Paste the following snippet inside your website's <code class="mono">&lt;head&gt;</code> tag. It non-destructively binds your Schema.org <code class="mono">@graph</code>, <code class="mono">/llms.txt</code> discovery link, and live MCP SSE server to your domain:
+        </p>
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 overflow-x-auto">
+          <pre class="mono text-xs text-cyan-300 leading-relaxed">&lt;!-- SendPut &amp; GetEPO RFC-2026-GEO-01 5-Layer Edge Integration --&gt;
+&lt;link rel="llms-txt" type="text/markdown" href="https://sendput.com/v1/tenants/YOUR-SLUG/llms.txt" /&gt;
+&lt;link rel="mcp-server" type="application/json" href="https://sendput.com/mcp/YOUR-SLUG/sse" /&gt;
+&lt;script src="https://sendput.com/epo-edge.js?tenant=YOUR-SLUG" defer&gt;&lt;/script&gt;</pre>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-lg bg-purple-500/20 text-purple-300 border border-purple-500/40 mono font-black text-xs">STEP 04</span>
+            <h3 class="text-lg font-extrabold text-white">Connect Google Business Profile OAuth &amp; Test Your Live MCP Node</h3>
+          </div>
+          <span class="mono text-xs text-slate-400">Endpoints: <code class="text-purple-300">/api/oauth/google/authorize</code> &amp; <code class="text-purple-300">/mcp/:slug/sse</code></span>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          Synchronize your physical location data with Google Business Profile &amp; Search Console via OAuth 2.0, and test your live Model Context Protocol (MCP) JSON-RPC 2.0 tools (<code class="mono">verify_business_status</code>, <code class="mono">get_service_catalog</code>, <code class="mono">initiate_inquiry</code>) so AI assistants can verify pricing and book leads directly.
+        </p>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="glass-card rounded-2xl p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 mono font-black text-xs">STEP 05</span>
+            <h3 class="text-lg font-extrabold text-white">Claim Your SHA-256 Certificate &amp; Embed the Score Shield</h3>
+          </div>
+          <span class="mono text-xs text-slate-400">Endpoints: <code class="text-amber-300">/api/cert/:id</code> &amp; <code class="text-amber-300">/api/epo-badge</code></span>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          Re-run your audit on <a href="https://getepo.com" class="text-cyan-400 underline">GetEPO.com</a>. Your domain will immediately verify at <strong>Grade A+ (97/100)</strong>. Open your signed <strong>SHA-256 Compliance Certificate</strong> (<code class="mono">/api/cert/:id</code>) and embed the live SVG Score Shield in your site footer or README.
+        </p>
+      </div>
+    </section>
+
+    <!-- Bottom CTA -->
+    <section class="matrix-card rounded-2xl p-8 text-center space-y-4">
+      <h2 class="text-2xl font-black text-white">Next: Master Local &amp; International (Abroad) Visibility</h2>
+      <p class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
+        Learn how to configure hyper-local GeoCoordinates to beat directory aggregators in your city AND multilingual cross-border Schema.org graphs to capture buyers abroad.
+      </p>
+      <div class="flex flex-wrap justify-center gap-3 pt-2">
+        <a href="/global-local" class="px-6 py-3 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold text-xs uppercase tracking-wider transition">
+          🌍 Read Local &amp; Global Playbook →
+        </a>
+        <a href="/spec" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 font-bold text-xs uppercase tracking-wider transition">
+          📐 View RFC-2026-GEO-01 Spec &amp; v4.0 Roadmap →
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-8 px-4 text-xs text-slate-400 mono">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div>© 2026 SendPut AI Technologies Inc. • RFC-2026-GEO-01 Standard</div>
+      <div class="flex flex-wrap gap-4">
+        <a href="/" class="hover:text-emerald-400">SendPut Engine</a>
+        <a href="https://getepo.com" class="hover:text-cyan-400">GetEPO Validator</a>
+        <a href="/guide" class="text-emerald-400">Implementation Guide</a>
+        <a href="/global-local" class="hover:text-cyan-400">Local &amp; Global Playbook</a>
+        <a href="/spec" class="hover:text-cyan-400">Protocol Spec &amp; Roadmap</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+
