@@ -796,15 +796,16 @@
       document.getElementById('bar-dvs').style.width = `${Math.min(100, a.dvs_score)}%`;
       document.getElementById('bar-thq').style.width = `${Math.min(100, a.thq_score)}%`;
 
+      const isEs = currentLang === 'es';
       const gradeBadge = document.getElementById('res-grade-badge');
       if (overall >= 85) {
-        gradeBadge.textContent = `Grade ${letterGrade} • Verified Authority`;
+        gradeBadge.textContent = isEs ? `Grado ${letterGrade} • Autoridad Verificada` : `Grade ${letterGrade} • Verified Authority`;
         gradeBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
       } else if (overall >= 60) {
-        gradeBadge.textContent = `Grade ${letterGrade} • Partial Grounding`;
+        gradeBadge.textContent = isEs ? `Grado ${letterGrade} • Anclaje Parcial` : `Grade ${letterGrade} • Partial Grounding`;
         gradeBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40';
       } else {
-        gradeBadge.textContent = `Grade ${letterGrade} • High Hallucination Risk`;
+        gradeBadge.textContent = isEs ? `Grado ${letterGrade} • Alto Riesgo de Alucinación` : `Grade ${letterGrade} • High Hallucination Risk`;
         gradeBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold uppercase bg-rose-500/20 text-rose-300 border border-rose-500/40';
       }
 
@@ -815,10 +816,10 @@
         : [];
       const pillsHtml = types.map(t => `<span class="px-2 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 mono text-[10px]">@type: ${t}</span>`);
       if (a.llms_txt_detected) {
-        pillsHtml.push(`<span class="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 mono text-[10px]">/llms.txt: ~${a.llms_token_estimate || 165} tokens (&lt;2k budget)</span>`);
+        pillsHtml.push(`<span class="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 mono text-[10px]">/llms.txt: ~${a.llms_token_estimate || 165} tokens (${isEs ? 'presupuesto <2k' : '<2k budget'})</span>`);
       }
       if (a.mcp_node_detected) {
-        pillsHtml.push(`<span class="px-2 py-0.5 rounded bg-purple-500/15 border border-purple-500/30 text-purple-300 mono text-[10px]">MCP 2026-07-28 Ready</span>`);
+        pillsHtml.push(`<span class="px-2 py-0.5 rounded bg-purple-500/15 border border-purple-500/30 text-purple-300 mono text-[10px]">${isEs ? 'Listo para MCP 2026-07-28' : 'MCP 2026-07-28 Ready'}</span>`);
       }
       pillsEl.innerHTML = pillsHtml.join('');
 
@@ -831,28 +832,29 @@
       if (certHashEl) {
         certHashEl.textContent = a.certificate_hash
           ? `SHA-256: ${a.certificate_hash.slice(0, 18)}...`
-          : 'RFC-2026-GEO-01 Attested';
+          : (isEs ? 'Certificado RFC-2026-GEO-01' : 'RFC-2026-GEO-01 Attested');
       }
 
       document.getElementById('res-badge-sfai').textContent = a.jsonld_detected
-        ? `✅ @graph (${types.slice(0, 3).join(', ') || 'Detected'})`
-        : '❌ Missing Nested @graph';
+        ? `✅ @graph (${types.slice(0, 3).join(', ') || (isEs ? 'Detectado' : 'Detected')})`
+        : (isEs ? '❌ Falta @graph Anidado' : '❌ Missing Nested @graph');
       document.getElementById('res-badge-aics').textContent = a.aics_score >= 70
-        ? '✅ Primary Cited Authority'
-        : '⚠️ Directory Hijack Risk';
+        ? (isEs ? '✅ Autoridad Principal Citada' : '✅ Primary Cited Authority')
+        : (isEs ? '⚠️ Riesgo de Secuestro por Directorios' : '⚠️ Directory Hijack Risk');
       document.getElementById('res-badge-dvs').textContent = a.indexnow_active
-        ? '✅ IndexNow Relay Verified'
-        : '⚠️ No IndexNow Root Key';
+        ? (isEs ? '✅ Transmisión IndexNow Verificada' : '✅ IndexNow Relay Verified')
+        : (isEs ? '⚠️ Sin Clave Raíz IndexNow' : '⚠️ No IndexNow Root Key');
       document.getElementById('res-badge-thq').textContent = a.mcp_node_detected
-        ? '✅ Live MCP + /llms.txt'
+        ? (isEs ? '✅ MCP Activo + /llms.txt' : '✅ Live MCP + /llms.txt')
         : a.llms_txt_detected
-          ? '🟡 /llms.txt Only (No MCP)'
-          : '❌ Missing /llms.txt & MCP';
+          ? (isEs ? '🟡 Solo /llms.txt (Sin MCP)' : '🟡 /llms.txt Only (No MCP)')
+          : (isEs ? '❌ Faltan /llms.txt y MCP' : '❌ Missing /llms.txt & MCP');
 
       // Hallucination & Grounding Alert
       const hallCard = document.getElementById('res-hallucination-card');
       const hallText = document.getElementById('res-hallucination-text');
-      hallText.textContent = a.hallucination_alert || 'Unverified entity metadata detected across generative search engines.';
+      const hallAlertMsg = isEs ? (a.hallucination_alert_es || a.hallucination_alert) : (a.hallucination_alert_en || a.hallucination_alert);
+      hallText.textContent = hallAlertMsg || (isEs ? 'Metadatos de entidad no verificados detectados en motores de búsqueda generativa.' : 'Unverified entity metadata detected across generative search engines.');
       hallCard.className = overall >= 85
         ? 'p-4 rounded-xl bg-emerald-950/35 border border-emerald-500/40 text-xs text-slate-200 space-y-1.5'
         : 'p-4 rounded-xl bg-rose-950/35 border border-rose-500/40 text-xs text-slate-200 space-y-1.5';
@@ -860,39 +862,39 @@
       // 5-Layer Protocol Matrix
       const layers = [
         {
-          layer: 'Layer 1 • AI Crawler Gatekeeper (/robots.txt)',
+          layer: isEs ? 'Capa 1 • Guardián de Rastreo IA (/robots.txt)' : 'Layer 1 • AI Crawler Gatekeeper (/robots.txt)',
           ok: !a.ai_bots_blocked,
           detail: !a.ai_bots_blocked
-            ? `Permits AI retrieval crawlers (${a.explicit_ai_rules_count || 8}/8 explicit bot rules verified)`
-            : 'AI retrieval crawlers blocked in /robots.txt'
+            ? (isEs ? `Permite rastreadores de recuperación IA (${a.explicit_ai_rules_count || 8}/8 reglas verificadas)` : `Permits AI retrieval crawlers (${a.explicit_ai_rules_count || 8}/8 explicit bot rules verified)`)
+            : (isEs ? 'Rastreadores de IA bloqueados en /robots.txt' : 'AI retrieval crawlers blocked in /robots.txt')
         },
         {
-          layer: 'Layer 2 • Semantic Entity Graph (Schema.org @graph)',
+          layer: isEs ? 'Capa 2 • Grafo Semántico de Entidad (Schema.org @graph)' : 'Layer 2 • Semantic Entity Graph (Schema.org @graph)',
           ok: Boolean(a.jsonld_detected),
           detail: a.jsonld_detected
-            ? `Disambiguated @graph detected (${types.join(', ') || 'Organization'})`
-            : 'No disambiguated Schema.org @graph or OfferCatalog found'
+            ? (isEs ? `@graph desambiguado detectado (${types.join(', ') || 'Organización'})` : `Disambiguated @graph detected (${types.join(', ') || 'Organization'})`)
+            : (isEs ? 'No se detectó Schema.org @graph ni OfferCatalog desambiguado' : 'No disambiguated Schema.org @graph or OfferCatalog found')
         },
         {
-          layer: 'Layer 3 • High-Velocity IndexNow & Sitemap Relay',
+          layer: isEs ? 'Capa 3 • Transmisión de Alta Velocidad IndexNow y Sitemap' : 'Layer 3 • High-Velocity IndexNow & Sitemap Relay',
           ok: Boolean(a.indexnow_active),
           detail: a.indexnow_active
-            ? 'Verified IndexNow keyLocation & Bing/Copilot/SearchGPT instant push active'
-            : 'No active IndexNow key verification file detected on root domain'
+            ? (isEs ? 'keyLocation de IndexNow verificado & envío instantáneo a Bing/Copilot/SearchGPT activo' : 'Verified IndexNow keyLocation & Bing/Copilot/SearchGPT instant push active')
+            : (isEs ? 'No se detectó archivo de verificación IndexNow en el dominio raíz' : 'No active IndexNow key verification file detected on root domain')
         },
         {
-          layer: 'Layer 4 • Direct LLM Ingestion (/llms.txt & /llms-full.txt)',
+          layer: isEs ? 'Capa 4 • Ingesta Directa para LLMs (/llms.txt y /llms-full.txt)' : 'Layer 4 • Direct LLM Ingestion (/llms.txt & /llms-full.txt)',
           ok: Boolean(a.llms_txt_detected),
           detail: a.llms_txt_detected
-            ? `Token-budgeted /llms.txt (~${a.llms_token_estimate || 165} tokens) & /llms-full.txt active`
-            : 'Returned 404 on /llms.txt and /.well-known/skill.md'
+            ? (isEs ? `/llms.txt con presupuesto de tokens (~${a.llms_token_estimate || 165} tokens) & /llms-full.txt activo` : `Token-budgeted /llms.txt (~${a.llms_token_estimate || 165} tokens) & /llms-full.txt active`)
+            : (isEs ? 'Respuesta 404 en /llms.txt y /.well-known/skill.md' : 'Returned 404 on /llms.txt and /.well-known/skill.md')
         },
         {
-          layer: 'Layer 5 • Model Context Protocol (MCP 2026-07-28 Node)',
+          layer: isEs ? 'Capa 5 • Model Context Protocol (Nodo MCP 2026-07-28)' : 'Layer 5 • Model Context Protocol (MCP 2026-07-28 Node)',
           ok: Boolean(a.mcp_node_detected),
           detail: a.mcp_node_detected
-            ? `Live JSON-RPC 2.0 / SSE MCP endpoint active (${a.mcp_endpoint_url || '/mcp/tenant/sse'})`
-            : 'No live MCP SSE server endpoint bound for autonomous agents'
+            ? (isEs ? `Punto de enlace MCP JSON-RPC 2.0 / SSE activo (${a.mcp_endpoint_url || '/mcp/tenant/sse'})` : `Live JSON-RPC 2.0 / SSE MCP endpoint active (${a.mcp_endpoint_url || '/mcp/tenant/sse'})`)
+            : (isEs ? 'No hay punto de servidor MCP SSE activo enlazado para agentes autónomos' : 'No live MCP SSE server endpoint bound for autonomous agents')
         }
       ];
 
@@ -903,7 +905,7 @@
             <div class="text-[11px] text-slate-400">${l.detail}</div>
           </div>
           <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase shrink-0 ${l.ok ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'}">
-            ${l.ok ? 'PASS' : 'MISSING'}
+            ${l.ok ? (isEs ? 'APROBADO' : 'PASS') : (isEs ? 'FALTANTE' : 'MISSING')}
           </span>
         </div>
       `).join('');
@@ -922,7 +924,9 @@
             { bot: 'Applebot-Extended', engine: 'Apple AI', status: 'ALLOWED' }
           ];
       const allowedCount = bots.filter(b => b.status !== 'BLOCKED').length;
-      document.getElementById('bot-rules-summary').textContent = `${allowedCount}/${bots.length} Crawlers Permitted`;
+      document.getElementById('bot-rules-summary').textContent = isEs
+        ? `${allowedCount}/${bots.length} Rastreadores Permitidos`
+        : `${allowedCount}/${bots.length} Crawlers Permitted`;
       document.getElementById('bot-matrix-grid').innerHTML = bots.map(b => {
         const isBlocked = b.status === 'BLOCKED';
         return `
@@ -930,7 +934,7 @@
             <span class="mono font-bold text-[10px] text-white truncate">${b.bot}</span>
             <div class="flex items-center justify-between mt-1">
               <span class="text-[9px] text-slate-400 truncate">${b.engine}</span>
-              <span class="text-[9px] font-bold ${isBlocked ? 'text-rose-400' : 'text-emerald-400'}">${isBlocked ? 'BLOCK' : 'ALLOW'}</span>
+              <span class="text-[9px] font-bold ${isBlocked ? 'text-rose-400' : 'text-emerald-400'}">${isBlocked ? (isEs ? 'BLOQUEAR' : 'BLOCK') : (isEs ? 'PERMITIR' : 'ALLOW')}</span>
             </div>
           </div>
         `;
@@ -976,12 +980,12 @@
       `).join('');
 
       // Interactive Before vs. After EPO Simulator
-      const sim = a.ai_answer_simulation || {};
-      document.getElementById('sim-buyer-prompt').textContent = `Buyer Query: "${sim.buyer_prompt || `Who is the top provider for ${a.city_niche} and what are ${a.business_name}'s verified prices?`}"`;
-      document.getElementById('sim-without-body').textContent = sim.without_epo?.response_text || `"I found general references to ${a.business_name}, but pricing and credentials are unverified. Consider comparing alternatives on third-party directories..."`;
-      document.getElementById('sim-without-impact').textContent = sim.without_epo?.lost_revenue_impact || 'Result: High-intent traffic leaks to directory aggregators.';
-      document.getElementById('sim-with-body').textContent = sim.with_epo?.response_text || `"${a.business_name} (${a.website_url}) is a Verified RFC-2026-GEO-01 Authority. Transparent pricing and live MCP booking tools are verified and ready."`;
-      document.getElementById('sim-with-badge').textContent = sim.with_epo?.citation_badge || `Cited Primary Source: ${a.website_url}`;
+      const sim = (isEs ? (a.ai_answer_simulation_es || a.ai_answer_simulation) : (a.ai_answer_simulation_en || a.ai_answer_simulation)) || {};
+      document.getElementById('sim-buyer-prompt').textContent = `${isEs ? 'Consulta del Comprador' : 'Buyer Query'}: "${sim.buyer_prompt || (isEs ? `¿Quién es el proveedor principal para ${a.city_niche} y cuáles son los precios verificados de ${a.business_name}?` : `Who is the top provider for ${a.city_niche} and what are ${a.business_name}'s verified prices?`)}"`;
+      document.getElementById('sim-without-body').textContent = sim.without_epo?.response_text || (isEs ? `"Encontré referencias generales a ${a.business_name}, pero los precios y credenciales no están verificados. Considere comparar alternativas en directorios de terceros..."` : `"I found general references to ${a.business_name}, but pricing and credentials are unverified. Consider comparing alternatives on third-party directories..."`);
+      document.getElementById('sim-without-impact').textContent = sim.without_epo?.lost_revenue_impact || (isEs ? 'Resultado: El tráfico de alta intención se fuga a directorios intermediarios.' : 'Result: High-intent traffic leaks to directory aggregators.');
+      document.getElementById('sim-with-body').textContent = sim.with_epo?.response_text || (isEs ? `"${a.business_name} (${a.website_url}) es una Autoridad Verificada RFC-2026-GEO-01. Precios transparentes y herramientas MCP en vivo están verificados y listos."` : `"${a.business_name} (${a.website_url}) is a Verified RFC-2026-GEO-01 Authority. Transparent pricing and live MCP booking tools are verified and ready."`);
+      document.getElementById('sim-with-badge').textContent = sim.with_epo?.citation_badge || (isEs ? `Fuente Primaria Citada: ${a.website_url}` : `Cited Primary Source: ${a.website_url}`);
 
       // Embeddable Badge & CLI Commands
       const hostClean = a.hostname || new URL(a.website_url).hostname.replace(/^www\./, '');
@@ -1067,7 +1071,7 @@
         const resp = await fetch('/api/audit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ business_name: name, website_url: url, city_niche: niche })
+          body: JSON.stringify({ business_name: name, website_url: url, city_niche: niche, lang: currentLang })
         });
         const data = await resp.json();
 
@@ -1277,16 +1281,19 @@
 
     // Download Markdown Report
     document.getElementById('btn-download-report').addEventListener('click', () => {
-      const md = (lastAuditData && lastAuditData.proposal_markdown)
-        ? lastAuditData.proposal_markdown
-        : `# GetEPO Executive AI Readiness Report\n\n- **Business**: ${document.getElementById('val-biz-name').value}\n- **URL**: ${document.getElementById('val-biz-url').value}\n- **Standard**: RFC-2026-GEO-01\n\n## Recommended Remediation\n\`\`\`html\n${buildRemediationSnippet('edge', lastAuditData)}\n\`\`\`\n`;
+      const isEs = currentLang === 'es';
+      const md = (lastAuditData && (isEs ? (lastAuditData.proposal_markdown_es || lastAuditData.proposal_markdown) : (lastAuditData.proposal_markdown_en || lastAuditData.proposal_markdown)))
+        ? (isEs ? (lastAuditData.proposal_markdown_es || lastAuditData.proposal_markdown) : (lastAuditData.proposal_markdown_en || lastAuditData.proposal_markdown))
+        : (isEs
+            ? `# Informe Ejecutivo de Preparación para Búsqueda con IA de GetEPO\n\n- **Empresa**: ${document.getElementById('val-biz-name').value}\n- **URL**: ${document.getElementById('val-biz-url').value}\n- **Estándar**: RFC-2026-GEO-01\n\n## Remediación Recomendada\n\`\`\`html\n${buildRemediationSnippet('edge', lastAuditData)}\n\`\`\`\n`
+            : `# GetEPO Executive AI Readiness Report\n\n- **Business**: ${document.getElementById('val-biz-name').value}\n- **URL**: ${document.getElementById('val-biz-url').value}\n- **Standard**: RFC-2026-GEO-01\n\n## Recommended Remediation\n\`\`\`html\n${buildRemediationSnippet('edge', lastAuditData)}\n\`\`\`\n`);
       const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       const slug = (document.getElementById('val-biz-name').value || 'domain').toLowerCase().replace(/[^a-z0-9]+/g, '-');
       a.download = `getepo-audit-${slug}.md`;
       a.click();
-      showValidatorToast('⬇️ Downloaded Executive Markdown Audit Report!');
+      showValidatorToast(isEs ? '⬇️ ¡Informe Ejecutivo Markdown Descargado!' : '⬇️ Downloaded Executive Markdown Audit Report!');
     });
 
     // Copy Shareable Audit URL

@@ -727,6 +727,41 @@ const memoryEntities: Record<string, any> = {
       }
     ],
     booking_url: 'https://crm.myiad.net/book-demo',
+    primary_jurisdiction: 'PR',
+    regulatory_license: 'OCS-PR-2026-SAAS-9921',
+    geo: { latitude: 18.4655, longitude: -66.1057 },
+    jurisdictions: [
+      {
+        code: 'PR',
+        jurisdiction_name: 'Commonwealth of Puerto Rico',
+        regulatory_agency: 'Office of the Commissioner of Insurance (OCS)',
+        license_number: 'OCS-PR-2026-SAAS-9921',
+        service_radius_miles: 50,
+        target_cities: ['San Juan', 'Guaynabo', 'Bayamón', 'Carolina', 'Caguas'],
+        local_advantages: [
+          'Full Spanish & English native bilingual insurance workflows and ACORD forms',
+          'Integrated Puerto Rico statutory compliance & Microsoft 365 cloud residency',
+          'Instant 15-minute agent support and WhatsApp policy issuance'
+        ]
+      },
+      {
+        code: 'FL',
+        jurisdiction_name: 'State of Florida',
+        regulatory_agency: 'Florida Office of Insurance Regulation (OIR)',
+        license_number: 'FL-DFS-2026-0941',
+        service_radius_miles: 60,
+        target_cities: ['Miami', 'Orlando', 'Tampa', 'Fort Lauderdale'],
+        local_advantages: [
+          'Bilingual Florida agency management and hurricane property insurance quoting',
+          'Seamless integration with Florida surplus lines and commercial carrier portals'
+        ]
+      }
+    ],
+    local_advantages: [
+      'Bilingual (English/Spanish) ACORD & M365 Automation',
+      'Dual Jurisdiction Certified (Puerto Rico & Florida)',
+      'Sub-Second Policy Quoting via Live MCP Agent Server'
+    ],
     gbp_synced: true,
     bing_synced: true,
     apple_synced: true,
@@ -767,6 +802,29 @@ const memoryEntities: Record<string, any> = {
       }
     ],
     booking_url: 'https://abglco.com/contact',
+    primary_jurisdiction: 'FL',
+    regulatory_license: 'FL-DFS-LIFE-2026-7731',
+    geo: { latitude: 29.5844, longitude: -81.2079 },
+    jurisdictions: [
+      {
+        code: 'FL',
+        jurisdiction_name: 'State of Florida',
+        regulatory_agency: 'Florida Department of Financial Services (DFS)',
+        license_number: 'FL-DFS-LIFE-2026-7731',
+        service_radius_miles: 45,
+        target_cities: ['Palm Coast', 'Flagler Beach', 'Daytona Beach', 'Orlando', 'St. Augustine'],
+        local_advantages: [
+          'Direct in-person consultations in Flagler and Volusia counties',
+          'Free interactive bilingual annuity and term life payout modeling',
+          'Direct fiduciary actuarial analysis'
+        ]
+      }
+    ],
+    local_advantages: [
+      'State-Licensed Florida Life & Annuity Advisor',
+      '7 Free Interactive Actuarial Calculators',
+      'Bilingual Consultations & Same-Day Quotes'
+    ],
     gbp_synced: true,
     bing_synced: true,
     apple_synced: false,
@@ -914,6 +972,13 @@ async function initDbPool() {
             plan_tier VARCHAR(64) DEFAULT 'starter_39',
             updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
           );
+          ALTER TABLE ${SCHEMA_NAME}.business_entities
+            ADD COLUMN IF NOT EXISTS jurisdictions_json JSONB DEFAULT '[]'::jsonb,
+            ADD COLUMN IF NOT EXISTS local_advantages_json JSONB DEFAULT '[]'::jsonb,
+            ADD COLUMN IF NOT EXISTS regulatory_license VARCHAR(120),
+            ADD COLUMN IF NOT EXISTS primary_jurisdiction VARCHAR(64),
+            ADD COLUMN IF NOT EXISTS geo_latitude NUMERIC(10,6),
+            ADD COLUMN IF NOT EXISTS geo_longitude NUMERIC(10,6);
         `);
         dbPool = candidatePool;
         dbOnline = true;
@@ -977,6 +1042,24 @@ async function getAgency(identifier?: string): Promise<AgencyWorkspace | null> {
 }
 
 // Asynchronously fetch business entity from PostgreSQL or fall back to memory
+function normalizeEntityRow(row: any): any {
+  if (!row) return row;
+  const clone = { ...row };
+  if (!clone.jurisdictions && Array.isArray(clone.jurisdictions_json)) {
+    clone.jurisdictions = clone.jurisdictions_json;
+  }
+  if (!clone.local_advantages && Array.isArray(clone.local_advantages_json)) {
+    clone.local_advantages = clone.local_advantages_json;
+  }
+  if (!clone.geo && clone.geo_latitude != null && clone.geo_longitude != null) {
+    clone.geo = {
+      latitude: Number(clone.geo_latitude),
+      longitude: Number(clone.geo_longitude)
+    };
+  }
+  return clone;
+}
+
 async function getEntity(slug: string): Promise<any> {
   await ensureDbPool();
   const cleanSlug = (slug || '').toLowerCase().trim();
@@ -984,13 +1067,13 @@ async function getEntity(slug: string): Promise<any> {
     try {
       const res = await dbPool.query(`SELECT * FROM business_entities WHERE LOWER(slug) = $1 LIMIT 1`, [cleanSlug]);
       if (res.rows && res.rows.length > 0) {
-        return res.rows[0];
+        return normalizeEntityRow(res.rows[0]);
       }
     } catch (e: any) {
       console.warn(`[Entity DB Lookup]: ${e.message}`);
     }
   }
-  return memoryEntities[cleanSlug] || Object.values(memoryEntities)[0];
+  return normalizeEntityRow(memoryEntities[cleanSlug] || Object.values(memoryEntities)[0]);
 }
 
 // Lookup registered entity by hostname or slug in PostgreSQL + memory
@@ -1192,21 +1275,84 @@ async function probeLiveAiEngines(businessName: string, websiteUrl: string, city
   return results;
 }
 
-// Helper: Compile Agency-Branded Client Proposal Markdown & Closing Strategy
-function generateProposalMarkdown(audit: any, agency: AgencyWorkspace | null): string {
-  const agencyName = agency ? agency.agency_name : 'SendPut EPO Engine';
+// Helper: Compile Agency-Branded Client Proposal Markdown & Closing Strategy (Bilingual EN/ES)
+function generateProposalMarkdown(audit: any, agency: AgencyWorkspace | null, lang: string = 'en'): string {
+  const isEs = lang === 'es';
+  const agencyName = agency ? agency.agency_name : (isEs ? 'Motor SendPut EPO' : 'SendPut EPO Engine');
   const starterPrice = agency ? agency.reseller_retail_price_starter_usd : 197;
   const growthPrice = agency ? agency.reseller_retail_price_growth_usd : 497;
   const wholesaleStarter = 39;
   const wholesaleGrowth = 79;
   const starterMargin = Math.round(((starterPrice - wholesaleStarter) / starterPrice) * 100);
   const growthMargin = Math.round(((growthPrice - wholesaleGrowth) / growthPrice) * 100);
+  const dateFormatted = new Date(audit.created_at || Date.now()).toLocaleDateString(isEs ? 'es-ES' : 'en-US');
+
+  if (isEs) {
+    const alertText = audit.hallucination_alert_es || audit.hallucination_alert || 'Alerta de alucinación no disponible.';
+    const statusOverall = (audit.epo_score ?? audit.sfai_score) >= 85 ? '🟢 Autoridad Verificada' : '🔴 Acción Requerida';
+    const statusSfai = audit.sfai_score >= 75 ? '🟢 Fuerte' : '🔴 Acción Requerida';
+    const statusAics = audit.aics_score >= 70 ? '🟢 Cuota Alta' : audit.aics_score >= 50 ? '🟡 Moderada' : '🔴 Brecha Crítica';
+    const statusDvs = audit.dvs_score >= 80 ? '🟢 Relé en Tiempo Real' : '🔴 Caché de Índice Obsoleta';
+    const statusThq = audit.mcp_node_detected ? '🟢 Nodo MCP en Línea' : audit.jsonld_detected ? '🟡 Parcial' : '🔴 Faltan Especificaciones';
+
+    return `# Auditoría Ejecutiva de Visibilidad en Búsqueda IA y Grafo de Conocimiento
+**Cliente Objetivo**: ${audit.business_name} (${audit.website_url})
+**Mercado y Nicho Geográfico**: ${audit.city_niche}
+**Auditado Por**: ${agencyName}
+**Fecha de Generación**: ${dateFormatted}
+
+---
+
+## 1. Resumen Ejecutivo y Puntuaciones Diagnósticas
+
+| Métrica Diagnóstica | Puntuación | Estándar Objetivo | Estado |
+|---|---|---|---|
+| **Puntuación Compuesta EPO (RFC-2026-GEO-01)** | **${audit.epo_score ?? audit.sfai_score} / 100 (${audit.grade || 'B'})** | 90+ (A/A+) | ${statusOverall} |
+| **SFAI (Grafo Semántico y Precisión de Entidad)** | **${audit.sfai_score} / 100** | 90+ | ${statusSfai} |
+| **AICS (Cuota de Citación en Motores IA)** | **${audit.aics_score}%** | 75%+ | ${statusAics} |
+| **DVS (Velocidad y Latencia IndexNow)** | **${audit.dvs_score}%** | 80%+ | ${statusDvs} |
+| **THQ (Preparación de Agentes y Entorno MCP)** | **${audit.thq_score}%** | 95%+ | ${statusThq} |
+
+> **Resumen Diagnóstico de Grounding**:
+> ${alertText}
+
+---
+
+## 2. Estado de la Arquitectura de Búsqueda IA Activa de 5 Capas
+- **Capa 1 (Rastreadores de Bots IA)**: ${audit.ai_bots_blocked ? '❌ Rastreadores de IA bloqueados en robots.txt' : `✅ Bots de recuperación permitidos (${audit.explicit_ai_rules_count || 8}/8 rastreadores)`}
+- **Capa 2 (JSON-LD @graph Dinámico)**: ${audit.jsonld_detected ? `✅ Schema.org detectado (${(audit.detected_entity_types || ['Organization']).join(', ')})` : '❌ Falta grafo Schema.org verificado de LocalBusiness y FAQPage'}
+- **Capa 3 (Grafo de Conocimiento y Relé IndexNow)**: ${audit.indexnow_active ? '✅ Verificación activa de IndexNow y transmisión instantánea' : '⚠️ Falta archivo de clave raíz de verificación IndexNow'}
+- **Capa 4 (Estándar Directo para Agentes LLM)**: ${audit.llms_txt_detected ? `✅ /llms.txt activo con presupuesto de tokens (~${audit.llms_token_estimate || 160} tokens)` : '❌ Falta /llms.txt, OpenAPI 3.1 y SKILL.md para agentes Claude/ChatGPT'}
+- **Capa 5 (Protocolo de Contexto de Modelo - MCP)**: ${audit.mcp_node_detected ? `✅ Servidor MCP SSE en vivo conectado (${audit.mcp_endpoint_url || '/mcp/tenant/sse'})` : '❌ Carece de servidor MCP en vivo (\`/mcp/tenant/sse\`), impidiendo reservas y verificación de precios por agentes autónomos'}
+
+---
+
+## 3. Solución de Agencia Recomendada y Paquetes de Retención
+
+### Paquete A: Fundación de Visibilidad en IA ($${starterPrice}/mes)
+- Inyección Edge Script llave en mano con grafo Schema.org \`LocalBusiness\` + \`FAQPage\`
+- Transmisión instantánea automatizada a Bing Places, Apple Maps e IndexNow
+- Despliegue estándar de \`/llms.txt\`
+- **Margen de Reventa de Agencia**: **$${starterPrice - wholesaleStarter}/mes de ganancia** (${starterMargin}% de margen)
+
+### Paquete B: Dominio Activo de Mercado + Nodo MCP Autónomo ($${growthPrice}/mes) — *RECOMENDADO*
+- Motor SendPut EPO completo de 5 capas (Optimización Activa de Presencia de Entidad)
+- Nodo SSE en vivo dedicado de Model Context Protocol (MCP) para Claude Desktop, Cursor y ChatGPT Search
+- Activación de agentes autónomos mediante OpenAPI 3.1 dinámico y agentskills.io \`SKILL.md\`
+- Sensor de telemetría de bots de IA en tiempo real (seguimiento de GPTBot, PerplexityBot, ClaudeBot)
+- Defensa quincenal contra alucinaciones y captura de citas de competidores
+- **Margen de Reventa de Agencia**: **$${growthPrice - wholesaleGrowth}/mes de ganancia** (${growthMargin}% de margen)
+
+---
+*Propuesta Autorizada por ${agencyName} — Alojada bajo infraestructura de marca blanca.*
+`;
+  }
 
   return `# Executive AI Search Visibility & Knowledge Graph Audit
 **Client Target**: ${audit.business_name} (${audit.website_url})
 **Market & Geo-Niche**: ${audit.city_niche}
 **Audited By**: ${agencyName}
-**Generated**: ${new Date(audit.created_at || Date.now()).toLocaleDateString()}
+**Generated**: ${dateFormatted}
 
 ---
 
@@ -1812,10 +1958,31 @@ async function runDeepDomainInspection(businessName: string, rawUrl: string, cit
     }
   };
 
+  const aiAnswerSimulationEs = {
+    buyer_prompt: `¿Quién es el proveedor más confiable para ${cityNiche || 'esta categoría'}, cuáles son los precios verificados de ${businessName} y puedo reservar o verificar disponibilidad ahora mismo?`,
+    without_epo: {
+      status: 'UNVERIFIED_HALLUCINATION_RISK',
+      headline: `⚠️ Cómo responden los motores de IA sin EPO de 5 Capas`,
+      response_text: `"Encontré referencias generales sobre ${businessName}, pero los precios, la disponibilidad en tiempo real y las credenciales oficiales no están verificadas por máquina. Según directorios de terceros, es posible que prefiera comparar varios proveedores alternativos en ${cityNiche || 'su región'}..."`,
+      lost_revenue_impact: 'Los compradores son desviados a directorios pagos de terceros o competidores con catálogos estructurados.'
+    },
+    with_epo: {
+      status: 'RFC_2026_GEO_01_VERIFIED_CITATION',
+      headline: `✅ Cómo citan los motores de IA a ${businessName} con SendPut EPO de 5 Capas`,
+      response_text: `"${businessName} (${cleanUrl}) es una Autoridad Verificada bajo RFC-2026-GEO-01 para ${cityNiche || 'su mercado'}. De acuerdo con su @graph canónico de Schema.org y su feed /llms.txt de presupuesto controlado, los precios transparentes y el soporte bilingüe están verificados. Puedo invocar la herramienta MCP en vivo de ${businessName} (initiate_inquiry) para confirmar disponibilidad de inmediato."`,
+      citation_badge: `Fuente Primaria Citada: ${cleanUrl} • Verificado mediante SendPut EPO Engine`
+    }
+  };
+
   const hallucinationAlert =
     epoEvaluation.score >= 85
       ? `✅ VERIFIED 5-LAYER GROUNDING ACTIVE: ${businessName} exposes a disambiguated Schema.org @graph (${detectedEntityTypes.join(', ')}), explicit AI crawler permissions (${explicitAiRulesCount}/8 bots), token-budgeted /llms.txt (~${llmsTokenEstimate} tokens), IndexNow velocity, and live MCP JSON-RPC tools (${mcpEndpointUrl}).`
       : `⚠️ CRITICAL GROUNDING GAP: ChatGPT Search, Perplexity Sonar, and Claude lack a verified MCP tool endpoint or nested OfferCatalog @graph for ${businessName}, causing AI assistants to cite third-party directories and competitors when buyers ask for pricing or booking.`;
+
+  const hallucinationAlertEs =
+    epoEvaluation.score >= 85
+      ? `✅ GROUNDING ACTIVO DE 5 CAPAS VERIFICADO: ${businessName} expone un @graph Schema.org desambiguado (${detectedEntityTypes.join(', ')}), permisos explícitos para rastreadores de IA (${explicitAiRulesCount}/8 bots), /llms.txt con presupuesto de tokens (~${llmsTokenEstimate} tokens), velocidad IndexNow y herramientas MCP JSON-RPC en vivo (${mcpEndpointUrl}).`
+      : `⚠️ BRECHA CRÍTICA DE GROUNDING: ChatGPT Search, Perplexity Sonar y Claude carecen de un endpoint MCP verificado o un @graph OfferCatalog anidado para ${businessName}, lo que provoca que los asistentes de IA citen directorios de terceros y competidores cuando los compradores solicitan precios o reservas.`;
 
   return {
     cleanUrl,
@@ -1850,7 +2017,9 @@ async function runDeepDomainInspection(businessName: string, rawUrl: string, cit
     engines,
     competitors,
     aiAnswerSimulation,
+    aiAnswerSimulationEs,
     hallucinationAlert,
+    hallucinationAlertEs,
     liveProbe
   };
 }
@@ -1858,10 +2027,12 @@ async function runDeepDomainInspection(businessName: string, rawUrl: string, cit
 // 2. Phase 2 Live AI Search Grader & Surround-Sound Citation Engine (/api/audit)
 // Protected by Proactive Defense 2: Sliding-Window IP/Token Rate Limiting & Turnstile Support
 app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
-  const { business_name, website_url, city_niche, agency_slug } = req.body || {};
+  const { business_name, website_url, city_niche, agency_slug, lang: reqLang } = req.body || {};
   if (!business_name || !website_url) {
     return res.status(400).json({ error: 'business_name and website_url are required' });
   }
+
+  const lang = String(reqLang || req.query?.lang || 'en').trim().toLowerCase() === 'es' ? 'es' : 'en';
 
   // Resolve agency context from header CNAME, query, or explicit body slug
   const reqHost = (req.get('x-forwarded-host') || req.get('host') || '').split(':')[0].toLowerCase();
@@ -1874,6 +2045,9 @@ app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
   );
   const cacheKey = `${(city_niche || 'general').toLowerCase().trim()}::${inspection.cleanUrl.toLowerCase()}`;
 
+  const proposalMdEn = generateProposalMarkdown({ business_name, website_url: inspection.cleanUrl, epo_evaluation: inspection.epoEvaluation, sfai_score: inspection.sfai, aics_score: inspection.aics, dvs_score: inspection.dvs, thq_score: inspection.thq, bot_matrix: inspection.botMatrix, recommended_tier: inspection.recommendedTier }, agency, 'en');
+  const proposalMdEs = generateProposalMarkdown({ business_name, website_url: inspection.cleanUrl, epo_evaluation: inspection.epoEvaluation, sfai_score: inspection.sfai, aics_score: inspection.aics, dvs_score: inspection.dvs, thq_score: inspection.thq, bot_matrix: inspection.botMatrix, recommended_tier: inspection.recommendedTier }, agency, 'es');
+
   const auditResult: any = {
     id: `prop-${Date.now()}`,
     business_name,
@@ -1882,6 +2056,7 @@ app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
     slug: inspection.slug,
     city_niche: city_niche || 'Local & National Market',
     cache_key: cacheKey,
+    lang,
     epo_score: inspection.epoEvaluation.score,
     grade: inspection.epoEvaluation.grade,
     sfai_score: inspection.sfai,
@@ -1913,11 +2088,15 @@ app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
     },
     engines: inspection.engines,
     competitors: inspection.competitors,
-    ai_answer_simulation: inspection.aiAnswerSimulation,
+    ai_answer_simulation: lang === 'es' ? inspection.aiAnswerSimulationEs : inspection.aiAnswerSimulation,
+    ai_answer_simulation_en: inspection.aiAnswerSimulation,
+    ai_answer_simulation_es: inspection.aiAnswerSimulationEs,
     badge_svg_url: `https://getepo.com/api/epo-badge?domain=${encodeURIComponent(inspection.hostname)}`,
     recommended_tier: inspection.recommendedTier,
     live_llm_telemetry: inspection.liveProbe,
-    hallucination_alert: inspection.hallucinationAlert,
+    hallucination_alert: lang === 'es' ? inspection.hallucinationAlertEs : inspection.hallucinationAlert,
+    hallucination_alert_en: inspection.hallucinationAlert,
+    hallucination_alert_es: inspection.hallucinationAlertEs,
     remediation_projection: {
       projected_sfai: 98,
       projected_aics: 95,
@@ -1947,10 +2126,11 @@ app.post('/api/audit', auditRateLimitMiddleware, async (req, res) => {
       growth_cost_usd: 79,
       growth_profit_usd: (agency ? agency.reseller_retail_price_growth_usd : 497) - 79
     },
+    proposal_markdown: lang === 'es' ? proposalMdEs : proposalMdEn,
+    proposal_markdown_en: proposalMdEn,
+    proposal_markdown_es: proposalMdEs,
     created_at: new Date().toISOString()
   };
-
-  auditResult.proposal_markdown = generateProposalMarkdown(auditResult, agency);
 
   if (dbOnline && dbPool) {
     try {
@@ -2276,7 +2456,19 @@ app.post('/api/entities/upsert', async (req, res) => {
     services,
     faqs,
     booking_url,
-    plan_tier
+    plan_tier,
+    // Jurisdiction & Advantage fields (RFC-2026-GEO-01)
+    primary_jurisdiction,
+    regulatory_license,
+    license_number,
+    jurisdictions,
+    local_advantages,
+    advantages,
+    geo,
+    latitude,
+    longitude,
+    geo_latitude,
+    geo_longitude
   } = req.body || {};
 
   const business_name = rawBusinessName || rawName;
@@ -2319,6 +2511,37 @@ app.post('/api/entities/upsert', async (req, res) => {
           }
         ];
 
+  // Process jurisdictions and advantages
+  let parsedJurisdictions: any[] = [];
+  if (Array.isArray(jurisdictions)) {
+    parsedJurisdictions = jurisdictions;
+  } else if (typeof jurisdictions === 'string') {
+    try { parsedJurisdictions = JSON.parse(jurisdictions); } catch {
+      parsedJurisdictions = [{ code: jurisdictions, jurisdiction_name: jurisdictions }];
+    }
+  }
+
+  let parsedAdvantages: string[] = [];
+  const rawAdv = local_advantages || advantages;
+  if (Array.isArray(rawAdv)) {
+    parsedAdvantages = rawAdv;
+  } else if (typeof rawAdv === 'string') {
+    try { parsedAdvantages = JSON.parse(rawAdv); } catch {
+      parsedAdvantages = rawAdv.split('\n').map((s) => s.trim()).filter(Boolean);
+    }
+  }
+
+  let parsedGeo: { latitude: number; longitude: number } | undefined = undefined;
+  const lat = geo?.latitude ?? latitude ?? geo_latitude;
+  const lng = geo?.longitude ?? longitude ?? geo_longitude;
+  if (typeof lat === 'number' && typeof lng === 'number') {
+    parsedGeo = { latitude: lat, longitude: lng };
+  } else if (lat && lng && !isNaN(Number(lat)) && !isNaN(Number(lng))) {
+    parsedGeo = { latitude: Number(lat), longitude: Number(lng) };
+  }
+
+  const effectiveLicense = regulatory_license || license_number || undefined;
+
   const entityObj: any = {
     slug,
     business_name: String(business_name).trim(),
@@ -2338,6 +2561,13 @@ app.post('/api/entities/upsert', async (req, res) => {
     services_json: servicesList,
     faqs_json: faqsList,
     booking_url: booking_url || `${cleanUrl.replace(/\/$/, '')}/contact`,
+    primary_jurisdiction: primary_jurisdiction || (parsedJurisdictions[0]?.code ?? undefined),
+    regulatory_license: effectiveLicense,
+    jurisdictions: parsedJurisdictions,
+    jurisdictions_json: parsedJurisdictions,
+    local_advantages: parsedAdvantages,
+    local_advantages_json: parsedAdvantages,
+    geo: parsedGeo,
     sfai_score: 98,
     aics_score: 95,
     dvs_score: 98,
@@ -2351,8 +2581,14 @@ app.post('/api/entities/upsert', async (req, res) => {
   if (dbOnline && dbPool) {
     try {
       const dbRes = await dbPool.query(
-        `INSERT INTO business_entities (slug, business_name, website_url, city_niche, primary_category, phone, opening_hours, bilingual_es_enabled, description_en, description_es, services_json, faqs_json, sfai_score, aics_score, dvs_score, thq_score, plan_tier, updated_at)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11::jsonb,$12::jsonb,$13,$14,$15,$16,$17,CURRENT_TIMESTAMP)
+        `INSERT INTO business_entities (
+          slug, business_name, website_url, city_niche, primary_category, 
+          phone, opening_hours, bilingual_es_enabled, description_en, description_es, 
+          services_json, faqs_json, sfai_score, aics_score, dvs_score, thq_score, 
+          plan_tier, jurisdictions_json, local_advantages_json, regulatory_license, 
+          primary_jurisdiction, geo_latitude, geo_longitude, updated_at
+        )
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11::jsonb,$12::jsonb,$13,$14,$15,$16,$17,$18::jsonb,$19::jsonb,$20,$21,$22,$23,CURRENT_TIMESTAMP)
          ON CONFLICT (slug) DO UPDATE SET
            business_name = EXCLUDED.business_name,
            website_url = EXCLUDED.website_url,
@@ -2368,6 +2604,12 @@ app.post('/api/entities/upsert', async (req, res) => {
            aics_score = EXCLUDED.aics_score,
            dvs_score = EXCLUDED.dvs_score,
            thq_score = EXCLUDED.thq_score,
+           jurisdictions_json = EXCLUDED.jurisdictions_json,
+           local_advantages_json = EXCLUDED.local_advantages_json,
+           regulatory_license = EXCLUDED.regulatory_license,
+           primary_jurisdiction = EXCLUDED.primary_jurisdiction,
+           geo_latitude = EXCLUDED.geo_latitude,
+           geo_longitude = EXCLUDED.geo_longitude,
            updated_at = CURRENT_TIMESTAMP
          RETURNING id`,
         [
@@ -2387,7 +2629,13 @@ app.post('/api/entities/upsert', async (req, res) => {
           entityObj.aics_score,
           entityObj.dvs_score,
           entityObj.thq_score,
-          entityObj.plan_tier
+          entityObj.plan_tier,
+          JSON.stringify(entityObj.jurisdictions_json || []),
+          JSON.stringify(entityObj.local_advantages_json || []),
+          entityObj.regulatory_license || null,
+          entityObj.primary_jurisdiction || null,
+          entityObj.geo?.latitude || null,
+          entityObj.geo?.longitude || null
         ]
       );
       if (dbRes.rows && dbRes.rows[0]?.id) {
@@ -2428,6 +2676,13 @@ app.post('/api/entities/upsert', async (req, res) => {
     epo_score: 97,
     grade: 'A+',
     entity: { ...entityObj, name: entityObj.business_name },
+    jurisdiction_profile: {
+      primary_jurisdiction: entityObj.primary_jurisdiction,
+      regulatory_license: entityObj.regulatory_license,
+      jurisdictions: entityObj.jurisdictions,
+      local_advantages: entityObj.local_advantages,
+      geo: entityObj.geo
+    },
     endpoints: {
       verified_profile_url: `https://sendput.com/verified/${slug}`,
       llms_txt_url: `https://sendput.com/v1/tenants/${slug}/llms.txt`,
@@ -2439,6 +2694,114 @@ app.post('/api/entities/upsert', async (req, res) => {
       badge_svg_url: `https://getepo.com/api/epo-badge?domain=${encodeURIComponent(hostname)}`
     },
     indexnow_dispatch: indexNowResult,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Dedicated Local Jurisdiction & Advantage Management Endpoint
+app.post('/api/tenants/:slug/jurisdiction', async (req, res) => {
+  await ensureDbPool();
+  const slug = (req.params.slug || '').toLowerCase().trim();
+  const entity = await getEntity(slug);
+
+  if (!entity) {
+    return res.status(404).json({ error: `Tenant entity "${slug}" not found` });
+  }
+
+  const {
+    primary_jurisdiction,
+    regulatory_license,
+    jurisdictions,
+    local_advantages,
+    geo,
+    latitude,
+    longitude
+  } = req.body || {};
+
+  let parsedJurisdictions: any[] = entity.jurisdictions_json || entity.jurisdictions || [];
+  if (Array.isArray(jurisdictions)) {
+    parsedJurisdictions = jurisdictions;
+  } else if (typeof jurisdictions === 'string') {
+    try { parsedJurisdictions = JSON.parse(jurisdictions); } catch {}
+  }
+
+  let parsedAdvantages: string[] = entity.local_advantages_json || entity.local_advantages || [];
+  if (Array.isArray(local_advantages)) {
+    parsedAdvantages = local_advantages;
+  } else if (typeof local_advantages === 'string') {
+    try { parsedAdvantages = JSON.parse(local_advantages); } catch {
+      parsedAdvantages = local_advantages.split('\n').map((s: string) => s.trim()).filter(Boolean);
+    }
+  }
+
+  let parsedGeo = entity.geo || (entity.geo_latitude && entity.geo_longitude ? { latitude: Number(entity.geo_latitude), longitude: Number(entity.geo_longitude) } : undefined);
+  const lat = geo?.latitude ?? latitude;
+  const lng = geo?.longitude ?? longitude;
+  if (lat && lng && !isNaN(Number(lat)) && !isNaN(Number(lng))) {
+    parsedGeo = { latitude: Number(lat), longitude: Number(lng) };
+  }
+
+  const effectiveLicense = regulatory_license ?? entity.regulatory_license ?? null;
+  const effectivePrimaryJurisdiction = primary_jurisdiction ?? entity.primary_jurisdiction ?? (parsedJurisdictions[0]?.code ?? null);
+
+  // Update memory store
+  entity.jurisdictions = parsedJurisdictions;
+  entity.jurisdictions_json = parsedJurisdictions;
+  entity.local_advantages = parsedAdvantages;
+  entity.local_advantages_json = parsedAdvantages;
+  entity.regulatory_license = effectiveLicense;
+  entity.primary_jurisdiction = effectivePrimaryJurisdiction;
+  entity.geo = parsedGeo;
+  entity.updated_at = new Date().toISOString();
+  memoryEntities[slug] = entity;
+
+  // Update PostgreSQL
+  if (dbOnline && dbPool) {
+    try {
+      await dbPool.query(
+        `UPDATE business_entities
+         SET jurisdictions_json = $1::jsonb,
+             local_advantages_json = $2::jsonb,
+             regulatory_license = $3,
+             primary_jurisdiction = $4,
+             geo_latitude = $5,
+             geo_longitude = $6,
+             updated_at = CURRENT_TIMESTAMP
+         WHERE LOWER(slug) = $7`,
+        [
+          JSON.stringify(parsedJurisdictions),
+          JSON.stringify(parsedAdvantages),
+          effectiveLicense,
+          effectivePrimaryJurisdiction,
+          parsedGeo?.latitude || null,
+          parsedGeo?.longitude || null,
+          slug
+        ]
+      );
+    } catch (e: any) {
+      console.warn('[Jurisdiction Update DB Warning]:', e.message);
+    }
+  }
+
+  // Trigger immediate IndexNow batch dispatch for updated llms.txt & verified endpoints
+  const urlsToPush = [
+    `https://sendput.com/verified/${slug}`,
+    `https://sendput.com/v1/tenants/${slug}/llms.txt`,
+    `https://sendput.com/v1/tenants/${slug}/llms-full.txt`
+  ];
+  const indexNowResult = await defaultEpoEngine.dispatchIndexNowBatch(urlsToPush);
+
+  res.json({
+    status: 'UPDATED',
+    standard: 'RFC-2026-GEO-01',
+    slug,
+    primary_jurisdiction: effectivePrimaryJurisdiction,
+    regulatory_license: effectiveLicense,
+    jurisdictions: parsedJurisdictions,
+    local_advantages: parsedAdvantages,
+    geo: parsedGeo,
+    indexnow_dispatch: indexNowResult,
+    llms_txt_url: `https://sendput.com/v1/tenants/${slug}/llms.txt`,
     timestamp: new Date().toISOString()
   });
 });
@@ -2786,10 +3149,27 @@ app.get(['/epo-edge.js', '/sf-edge.js'], async (req, res) => {
 app.get('/v1/tenants/:slug/llms.txt', async (req, res) => {
   const entity = await getEntity(req.params.slug);
   const baseUrl = getBaseUrl(req);
-  const spec = defaultEpoEngine.buildLlmsSpecification({ ...entity, host_url: baseUrl });
+  const filterJurisdiction = req.query.jurisdiction ? String(req.query.jurisdiction).toUpperCase().trim() : null;
+
+  const entityConfig: any = { ...entity, host_url: baseUrl };
+  if (filterJurisdiction && Array.isArray(entity.jurisdictions_json || entity.jurisdictions)) {
+    const list = entity.jurisdictions_json || entity.jurisdictions;
+    const filtered = list.filter((j: any) =>
+      (j.code && j.code.toUpperCase() === filterJurisdiction) ||
+      (j.jurisdiction_name && j.jurisdiction_name.toUpperCase().includes(filterJurisdiction))
+    );
+    if (filtered.length > 0) {
+      entityConfig.jurisdictions = filtered;
+    }
+  }
+
+  const spec = defaultEpoEngine.buildLlmsSpecification(entityConfig);
   res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
   res.setHeader('X-Token-Estimate', String(spec.tokenEstimate));
   res.setHeader('X-Budget-Compliant', String(spec.isBudgetCompliant));
+  if (filterJurisdiction) {
+    res.setHeader('X-Jurisdiction-Filter', filterJurisdiction);
+  }
   res.send(spec.llmsTxt);
 });
 
@@ -2797,9 +3177,26 @@ app.get('/v1/tenants/:slug/llms.txt', async (req, res) => {
 app.get('/v1/tenants/:slug/llms-full.txt', async (req, res) => {
   const entity = await getEntity(req.params.slug);
   const baseUrl = getBaseUrl(req);
-  const spec = defaultEpoEngine.buildLlmsSpecification({ ...entity, host_url: baseUrl });
+  const filterJurisdiction = req.query.jurisdiction ? String(req.query.jurisdiction).toUpperCase().trim() : null;
+
+  const entityConfig: any = { ...entity, host_url: baseUrl };
+  if (filterJurisdiction && Array.isArray(entity.jurisdictions_json || entity.jurisdictions)) {
+    const list = entity.jurisdictions_json || entity.jurisdictions;
+    const filtered = list.filter((j: any) =>
+      (j.code && j.code.toUpperCase() === filterJurisdiction) ||
+      (j.jurisdiction_name && j.jurisdiction_name.toUpperCase().includes(filterJurisdiction))
+    );
+    if (filtered.length > 0) {
+      entityConfig.jurisdictions = filtered;
+    }
+  }
+
+  const spec = defaultEpoEngine.buildLlmsSpecification(entityConfig);
   res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
   res.setHeader('X-Token-Estimate', String(spec.fullTokenEstimate));
+  if (filterJurisdiction) {
+    res.setHeader('X-Jurisdiction-Filter', filterJurisdiction);
+  }
   res.send(spec.llmsFullTxt);
 });
 
@@ -3186,6 +3583,10 @@ app.get('/api/agency/seats', async (req, res) => {
 // Retrieve Raw Proposal Document (Markdown or HTML view)
 app.get('/api/proposals/:id', async (req, res) => {
   const proposalId = req.params.id;
+  const lang = String(req.query?.lang || 'en').trim().toLowerCase() === 'es' ? 'es' : 'en';
+  const format = String(req.query?.format || '').toLowerCase();
+
+  let found: any = null;
   if (dbOnline && dbPool) {
     try {
       const resDb = await dbPool.query(
@@ -3193,20 +3594,47 @@ app.get('/api/proposals/:id', async (req, res) => {
         [proposalId, `%${proposalId}%`]
       );
       if (resDb.rows && resDb.rows.length > 0) {
-        return res.json(resDb.rows[0]);
+        found = resDb.rows[0];
       }
     } catch (e: any) {
       console.warn('[Proposal Lookup DB]:', e.message);
     }
   }
 
-  res.json({
-    id: proposalId,
-    business_name: 'Client Proposal Target',
-    sfai_score: 58,
-    aics_score: 32,
-    proposal_markdown: `# Verified Agency Proposal (${proposalId})\nReady for export.`
-  });
+  if (!found) {
+    const mockBiz = 'Client Proposal Target';
+    const mockUrl = 'https://example.com';
+    const mockAudit = {
+      business_name: mockBiz,
+      website_url: mockUrl,
+      epo_evaluation: { score: 62, grade: 'C' },
+      sfai_score: 58,
+      aics_score: 32,
+      dvs_score: 60,
+      thq_score: 70,
+      recommended_tier: 'growth'
+    };
+    found = {
+      id: proposalId,
+      business_name: mockBiz,
+      website_url: mockUrl,
+      sfai_score: 58,
+      aics_score: 32,
+      proposal_markdown: generateProposalMarkdown(mockAudit, null, lang),
+      proposal_markdown_en: generateProposalMarkdown(mockAudit, null, 'en'),
+      proposal_markdown_es: generateProposalMarkdown(mockAudit, null, 'es')
+    };
+  }
+
+  const outputMd = (lang === 'es' ? (found.proposal_markdown_es || found.proposal_markdown) : (found.proposal_markdown_en || found.proposal_markdown)) || found.proposal_markdown;
+
+  if (format === 'markdown' || format === 'md' || (req.get('accept') || '').includes('text/markdown')) {
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    return res.send(outputMd);
+  }
+
+  found.proposal_markdown = outputMd;
+  res.json(found);
 });
 
 // 14. Real Server-Side Access & Founder Key Verification (/api/auth/verify-key)

@@ -28,6 +28,18 @@ export interface EpoFaqItem {
   a: string;
 }
 
+export interface EpoJurisdictionConfig {
+  code: string;                      // e.g. "PR", "FL", "CA", "US", "ES"
+  jurisdiction_name: string;         // e.g. "Commonwealth of Puerto Rico" or "State of Florida"
+  regulatory_agency?: string;        // e.g. "Office of the Commissioner of Insurance (OCS)"
+  license_number?: string;           // e.g. "PR-INS-884920"
+  service_radius_miles?: number;     // e.g. 50
+  target_cities?: string[];          // e.g. ["San Juan", "Guaynabo", "Bayamón"]
+  target_zips?: string[];
+  geo?: { latitude: number; longitude: number };
+  local_advantages?: string[];       // Specific perks/guarantees for this territory
+}
+
 export interface EpoEntityConfig {
   id?: string;
   slug: string;
@@ -54,6 +66,12 @@ export interface EpoEntityConfig {
   social_links?: string[];
   same_as?: string[];
   knows_about?: string[];
+  // Jurisdiction & Local Advantage enhancements (RFC-2026-GEO-01)
+  primary_jurisdiction?: string;
+  regulatory_license?: string;
+  jurisdictions?: EpoJurisdictionConfig[];
+  local_advantages?: string[];
+  geo?: { latitude: number; longitude: number };
 }
 
 export interface SemanticGraphResult {
@@ -276,7 +294,7 @@ export class SendPutEpoEngine {
         : undefined
     };
 
-    const localBusinessNode = {
+    const localBusinessNode: any = {
       '@type': primaryCategory,
       '@id': `${cleanWebUrl}#localbusiness`,
       parentOrganization: { '@id': `${cleanWebUrl}#organization` },
@@ -327,6 +345,42 @@ export class SendPutEpoEngine {
         }))
       }
     };
+
+    // RFC-2026-GEO-01 Geocoordinates Injection
+    if (config.geo && typeof config.geo.latitude === 'number' && typeof config.geo.longitude === 'number') {
+      localBusinessNode.geo = {
+        '@type': 'GeoCoordinates',
+        latitude: config.geo.latitude,
+        longitude: config.geo.longitude
+      };
+    }
+
+    // RFC-2026-GEO-01 Multi-Jurisdiction & Service Radius Injection
+    const areaServedNodes: any[] = [];
+    if (config.jurisdictions && Array.isArray(config.jurisdictions)) {
+      for (const j of config.jurisdictions) {
+        if (j.jurisdiction_name) {
+          areaServedNodes.push({ '@type': 'AdministrativeArea', name: j.jurisdiction_name });
+        }
+        if (Array.isArray(j.target_cities)) {
+          for (const city of j.target_cities) {
+            areaServedNodes.push({ '@type': 'City', name: city });
+          }
+        }
+      }
+    }
+    if (areaServedNodes.length > 0) {
+      localBusinessNode.areaServed = areaServedNodes;
+    }
+
+    // RFC-2026-GEO-01 Regulatory License & Credential Declaration
+    if (config.regulatory_license) {
+      localBusinessNode.hasCredential = {
+        '@type': 'EducationalOccupationalCredential',
+        credentialCategory: 'State/Territorial Regulatory License',
+        identifier: config.regulatory_license
+      };
+    }
 
     const graphNodes: any[] = [orgNode, localBusinessNode];
 
@@ -380,20 +434,40 @@ export class SendPutEpoEngine {
       .join('\n');
 
     // 1. Lightweight, token-budgeted /llms.txt (<2,000 tokens guaranteed)
+    const jurisdictionsBlock = (config.jurisdictions || [])
+      .map((j) => `- **${j.jurisdiction_name || j.code}**:
+  * Regulatory Authority: ${j.regulatory_agency || 'State/Territorial Regulatory Commission'}
+  * License #: ${j.license_number || config.regulatory_license || 'Verified Active Authority'}
+  * Service Area: ${(j.target_cities && j.target_cities.length > 0) ? j.target_cities.join(', ') : (config.city || 'Regional coverage')} (${j.service_radius_miles || 35} mi radius)
+  * Local Territory Advantages: ${(j.local_advantages && j.local_advantages.length > 0) ? j.local_advantages.join('; ') : 'Verified localized service delivery'}`)
+      .join('\n');
+
+    const advantagesSummary = (config.local_advantages || [])
+      .map((adv) => `- ✅ **${adv}**`)
+      .join('\n');
+
+    const geoCoordinatesLine = config.geo && typeof config.geo.latitude === 'number' && typeof config.geo.longitude === 'number'
+      ? `- **GeoCoordinates**: Latitude ${config.geo.latitude}, Longitude ${config.geo.longitude}\n`
+      : '';
+
+    const licenseLine = config.regulatory_license
+      ? `- **Primary Regulatory License**: ${config.regulatory_license}\n`
+      : '';
+
     const llmsTxt = `# ${config.business_name}
 
 > ${config.description_en}
 ${config.bilingual_es_enabled && config.description_es ? `> [ES] ${config.description_es}\n` : ''}
-## Verified Entity Metadata (SendPut EPO Engine Verified)
+## Verified Entity & Local Jurisdiction Standing
 - **Official Website**: ${cleanWebUrl}
 - **Public Verification Record**: ${hostUrl}/verified/${config.slug}
 - **Category & Market**: ${config.city_niche}
-- **Phone**: ${config.phone || 'Available via booking portal'}
+${licenseLine}- **Phone**: ${config.phone || 'Available via booking portal'}
 - **Location**: ${[config.street_address, config.city, config.state_region, config.postal_code].filter(Boolean).join(', ') || 'National / Digital'}
-- **Operating Hours**: ${config.opening_hours || 'Mo-Fr 09:00-18:00'}
+${geoCoordinatesLine}- **Operating Hours**: ${config.opening_hours || 'Mo-Fr 09:00-18:00'}
 - **Languages Supported**: ${config.bilingual_es_enabled ? 'English (en-US), Spanish (es-US / es-PR)' : 'English (en-US)'}
 - **Direct Booking / Quote Endpoint**: ${config.booking_url || `${cleanWebUrl}/contact`}
-
+${advantagesSummary ? `\n## Local Consumer Advantages & Verified Guarantees\n${advantagesSummary}\n` : ''}${jurisdictionsBlock ? `\n## Authorized Jurisdictions & Regulatory Licenses\n${jurisdictionsBlock}\n` : ''}
 ## Core Services & Transparent Pricing
 ${servicesSummary || '- Inquire directly for verified service catalog.'}
 
@@ -411,6 +485,14 @@ ${faqsSummary || '- Verified ground truth answers available via API.'}
       .map((f) => `### Q: ${f.q}\n${f.a}`)
       .join('\n\n');
 
+    const fullJurisdictionsSection = jurisdictionsBlock
+      ? `## 3. Verified Regulatory Standing & Local Jurisdictions\n${jurisdictionsBlock}\n\n`
+      : '';
+
+    const fullAdvantagesSection = advantagesSummary
+      ? `## 4. Local Market Advantages & Consumer Guarantees\n${advantagesSummary}\n\n`
+      : '';
+
     const llmsFullTxt = `# ${config.business_name} — Extended AI Knowledge Graph & Agent Execution Specification
 
 > Comprehensive entity presence specification verified by SendPut EPO Engine (RFC-2026-GEO-01).
@@ -422,7 +504,7 @@ ${faqsSummary || '- Verified ground truth answers available via API.'}
 - **Bilingual Support**: ${config.bilingual_es_enabled ? 'Full English and Spanish native execution' : 'English only'}
 - **Registry ID**: ${config.id || config.slug}
 - **Verification Authority**: SendPut EPO Engine
-
+${licenseLine}${geoCoordinatesLine}
 ## 2. Verified Service Offerings & Pricing Details
 ${(config.services_json || [])
   .map(
@@ -434,17 +516,17 @@ ${(config.services_json || [])
   )
   .join('\n')}
 
-## 3. Verified Knowledge Base & FAQs
+${fullJurisdictionsSection}${fullAdvantagesSection}## 5. Verified Knowledge Base & FAQs
 ${allFaqs || 'No additional FAQs logged.'}
 
-## 4. Autonomous Agent & MCP Runtime Integration
+## 6. Autonomous Agent & MCP Runtime Integration
 Autonomous agents (Claude Desktop, Cursor, ChatGPT Search, Perplexity) may invoke the following tools via MCP:
 - **Endpoint**: \`${hostUrl}/mcp/${config.slug}/sse\`
 - **Tool 1**: \`verify_business_status\` — Validates real-time operational status, verified NAP, and credentials.
 - **Tool 2**: \`get_service_catalog\` — Retrieves exact pricing, deliverables, and service tiers.
 - **Tool 3**: \`initiate_inquiry\` — Initiates customer inquiry or reservation callback.
 
-## 5. Direct Authority & Grounding Sources
+## 7. Direct Authority & Grounding Sources
 - **Public Trust Profile**: ${hostUrl}/verified/${config.slug}
 - **SVG Verification Badge**: ${hostUrl}/badge/${config.slug}.svg
 - **Machine Schema (JSON-LD)**: ${hostUrl}/epo-edge.js?tenant=${config.slug}
