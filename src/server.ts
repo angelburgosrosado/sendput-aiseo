@@ -1610,6 +1610,15 @@ app.get('/api/health', async (_req, res) => {
       keyLocation: 'https://sendput.com/sendput8f92a1c4b7e34d12a9c8e5f102938475.txt',
       pushEndpoint: '/api/indexnow/push'
     },
+    securityAndRateLimiting: {
+      turnstileConfigured: Boolean(process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY),
+      turnstileSiteKey: process.env.CLOUDFLARE_TURNSTILE_SITE_KEY || '0x4AAAAAAAxXxXxXxXxXxXxX',
+      upstashRedisConfigured: Boolean(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN),
+      limits: {
+        ip: '5 requests / 10 minutes',
+        domain: '2 requests / 1 hour'
+      }
+    },
     oauthWriteBackIntegration: {
       googleBusinessProfileConfigured: Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET),
       authorizeEndpoint: '/api/oauth/google/authorize',
