@@ -573,6 +573,18 @@ app.get(['/global-local', '/global-local.html', '/local-global'], (_req, res) =>
   res.redirect('/');
 });
 
+// Direct RFC Specification Downloads for NotebookLM, AI Research & Whitepapers
+app.get(['/RFC-2026-EPO-01.md', '/downloads/RFC-2026-EPO-01.md', '/rfc.md'], (_req, res) => {
+  const primaryPath = path.join(__dirname, '..', 'public', 'RFC-2026-EPO-01.md');
+  const fallbackPath = path.join(process.cwd(), 'public', 'RFC-2026-EPO-01.md');
+  const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
+  if (fs.existsSync(targetPath)) {
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    return res.sendFile(targetPath);
+  }
+  res.status(404).send('RFC Specification file not found.');
+});
+
 // RFC-2026-GEO-01 Specification, Trust Center & v4.0 Roadmap (/spec)
 app.get(['/spec', '/spec.html', '/roadmap'], (_req, res) => {
   const primaryPath = path.join(__dirname, '..', 'public', 'spec.html');
