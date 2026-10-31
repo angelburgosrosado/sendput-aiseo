@@ -2814,13 +2814,29 @@ Our multi-engine AI scan across ChatGPT Search, Perplexity, Google Gemini, Claud
           <p class="text-slate-300">When your brand is grounded through the SendPut EPO Engine, AI agents cite your verified services and execute transactions with zero hallucination risk.</p>
           <div class="pt-2 flex items-center justify-between">
             <span class="text-slate-400 text-xs">Standard: <strong>RFC-2026-GEO-01</strong></span>
-            <a href="https://getepo.com" target="_blank" rel="noopener" class="text-cyan-400 hover:text-cyan-300 underline font-semibold">Visit GetEPO.com →</a>
+            <a href="https://getepo.com/validator" target="_blank" rel="noopener" class="text-cyan-400 hover:text-cyan-300 underline font-semibold">Visit GetEPO.com Validator →</a>
           </div>
         </div>`
       );
 
       document.getElementById('btn-close-modal').addEventListener('click', closeModal);
       document.getElementById('btn-modal-primary').addEventListener('click', closeModal);
+
+      // Deep-link support from GetEPO Validator (?name=...&url=...&niche=...&autorun=1)
+      const qName = urlParams.get('name');
+      const qUrl = urlParams.get('url') || urlParams.get('domain');
+      const qNiche = urlParams.get('niche');
+      if (qName) {
+        document.getElementById('input-biz-name').value = qName;
+        document.getElementById('eng-name').value = qName;
+        document.getElementById('eng-slug').value = qName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'custom-brand';
+      }
+      if (qUrl) {
+        document.getElementById('input-biz-url').value = qUrl;
+      }
+      if (qNiche) {
+        document.getElementById('input-biz-niche').value = qNiche;
+      }
 
       // Initial Render
       updateGraderUI();
@@ -2831,6 +2847,10 @@ Our multi-engine AI scan across ChatGPT Search, Perplexity, Google Gemini, Claud
       generateClientProposal(agencyClients[3]);
       updatePricingDisplay();
       updateArrSimulator();
+
+      if ((qName || qUrl) && urlParams.get('autorun') === '1') {
+        setTimeout(() => runLiveScanAnimation(), 250);
+      }
     });
 
     // ============================================================================

@@ -5,7 +5,7 @@
   "outputDirectory": "public",
   "redirects": [
     {
-      "source": "/((?!validator).*)",
+      "source": "/((?!validator|api/|mcp/|v1/|v3/|badge/|verified/|brand/|epo-edge\\.js|sf-edge\\.js|verified\\.js|favicon\\.ico|sendput8f92a1c4b7e34d12a9c8e5f102938475\\.txt|304d6d12-7177-4549-bff6-7ad2a4e9d26b\\.txt).*)",
       "has": [
         {
           "type": "host",

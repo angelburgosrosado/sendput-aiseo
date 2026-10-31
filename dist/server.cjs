@@ -28780,8 +28780,18 @@ var { Pool: Pool2 } = esm_default;
 var app = (0, import_express.default)();
 app.set("trust proxy", true);
 app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, x-founder-key, x-sendput-key, Accept");
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+  next();
+});
+app.use((req, res, next) => {
   const host = (req.get("host") || "").toLowerCase().split(":")[0];
-  if ((host === "getepo.com" || host === "www.getepo.com") && !req.path.startsWith("/validator")) {
+  const isDirectGetEpoPath = req.path.startsWith("/validator") || req.path.startsWith("/api/") || req.path.startsWith("/mcp/") || req.path.startsWith("/v1/") || req.path.startsWith("/v3/") || req.path.startsWith("/badge/") || req.path.startsWith("/verified/") || req.path.startsWith("/brand/") || req.path === "/epo-edge.js" || req.path === "/sf-edge.js" || req.path === "/verified.js" || req.path === "/favicon.ico" || req.path === "/sendput8f92a1c4b7e34d12a9c8e5f102938475.txt" || req.path === "/304d6d12-7177-4549-bff6-7ad2a4e9d26b.txt";
+  if ((host === "getepo.com" || host === "www.getepo.com") && !isDirectGetEpoPath) {
     const targetUrl = `https://sendput.com${req.originalUrl}`;
     return res.redirect(301, targetUrl);
   }
