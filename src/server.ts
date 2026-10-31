@@ -584,6 +584,28 @@ app.get(['/spec', '/spec.html', '/roadmap'], (_req, res) => {
   res.redirect('/');
 });
 
+// The Evolution: Beyond SEO, AEO & GEO to Active EPO (/evolution)
+app.get(['/evolution', '/evolution.html'], (_req, res) => {
+  const primaryPath = path.join(__dirname, '..', 'public', 'evolution.html');
+  const fallbackPath = path.join(process.cwd(), 'public', 'evolution.html');
+  const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
+  if (fs.existsSync(targetPath)) {
+    return res.sendFile(targetPath);
+  }
+  res.redirect('/');
+});
+
+// Dedicated Commercial Pricing & Deployment Tier Breakdown (/pricing)
+app.get(['/pricing', '/pricing.html'], (_req, res) => {
+  const primaryPath = path.join(__dirname, '..', 'public', 'pricing.html');
+  const fallbackPath = path.join(process.cwd(), 'public', 'pricing.html');
+  const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
+  if (fs.existsSync(targetPath)) {
+    return res.sendFile(targetPath);
+  }
+  res.redirect('/');
+});
+
 const PORT = Number(process.env.PORT) || 10000;
 const SCHEMA_NAME = 'vault_app_angelburgosrosado';
 
