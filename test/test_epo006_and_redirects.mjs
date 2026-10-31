@@ -50,14 +50,22 @@ async function run() {
     assert(valText.includes('GetEPO'));
     console.log('✅ PASS [EPO-008: GET /validator serves standalone validator]');
 
-    // Test 3B: Request with host: getepo.com returns 301 redirect to sendput.com
-    const redirectRes = await fetch(`${BASE_URL}/`, {
-      headers: { host: 'getepo.com' },
+    // Test 3B: Request with host: getepo.com serves GetEPO Validator directly (Option A: Standalone Benchmark Hub)
+    // and www.getepo.com 301 redirects to https://getepo.com/
+    const getEpoRootRes = await fetch(`${BASE_URL}/`, {
+      headers: { host: 'getepo.com' }
+    });
+    assert.strictEqual(getEpoRootRes.status, 200, 'getepo.com root must serve validator with HTTP 200');
+    const getEpoRootHtml = await getEpoRootRes.text();
+    assert(getEpoRootHtml.includes('GetEPO'), 'getepo.com root must serve GetEPO validator UI');
+
+    const wwwRedirectRes = await fetch(`${BASE_URL}/`, {
+      headers: { host: 'www.getepo.com' },
       redirect: 'manual'
     });
-    assert.strictEqual(redirectRes.status, 301, 'getepo.com requests must 301 redirect');
-    assert.strictEqual(redirectRes.headers.get('location'), 'https://sendput.com/', 'Must redirect to sendput.com');
-    console.log('✅ PASS [EPO-002: 301 Canonical redirect from getepo.com to sendput.com]');
+    assert.strictEqual(wwwRedirectRes.status, 301, 'www.getepo.com requests must 301 redirect');
+    assert.strictEqual(wwwRedirectRes.headers.get('location'), 'https://getepo.com/', 'Must redirect to https://getepo.com/');
+    console.log('✅ PASS [EPO-002: Standalone GetEPO.com Benchmark Hub + www.getepo.com 301 canonicalization]');
 
     console.log('\n================ ALL CHECKS PASSED ================');
   } finally {

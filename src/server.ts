@@ -46,28 +46,28 @@ app.use((req, res, next) => {
   next();
 });
 
-// Canonical 301 Permanent Redirect for getepo.com (EPO-002)
-// Exempts /validator, /api/*, /mcp/*, /v1/*, /v3/*, edge scripts, badges, and static assets
+// Helper: Detect if request is targeting the standalone GetEPO Validator domain (getepo.com)
+function isGetEpoHost(req: express.Request): boolean {
+  const rawHost = (req.get('x-forwarded-host') || req.get('host') || '').toLowerCase();
+  const host = rawHost.split(',')[0].trim().split(':')[0];
+  return host === 'getepo.com' || host === 'www.getepo.com';
+}
+
+// Canonicalize www.getepo.com -> https://getepo.com and serve validator at root / on getepo.com
 app.use((req, res, next) => {
-  const host = (req.get('host') || '').toLowerCase().split(':')[0];
-  const isDirectGetEpoPath =
-    req.path.startsWith('/validator') ||
-    req.path.startsWith('/api/') ||
-    req.path.startsWith('/mcp/') ||
-    req.path.startsWith('/v1/') ||
-    req.path.startsWith('/v3/') ||
-    req.path.startsWith('/badge/') ||
-    req.path.startsWith('/verified/') ||
-    req.path.startsWith('/brand/') ||
-    req.path === '/epo-edge.js' ||
-    req.path === '/sf-edge.js' ||
-    req.path === '/verified.js' ||
-    req.path === '/favicon.ico' ||
-    req.path === '/sendput8f92a1c4b7e34d12a9c8e5f102938475.txt' ||
-    req.path === '/304d6d12-7177-4549-bff6-7ad2a4e9d26b.txt';
-  if ((host === 'getepo.com' || host === 'www.getepo.com') && !isDirectGetEpoPath) {
-    const targetUrl = `https://sendput.com${req.originalUrl}`;
-    return res.redirect(301, targetUrl);
+  const rawHost = (req.get('x-forwarded-host') || req.get('host') || '').toLowerCase();
+  const host = rawHost.split(',')[0].trim().split(':')[0];
+  if (host === 'www.getepo.com') {
+    return res.redirect(301, `https://getepo.com${req.originalUrl}`);
+  }
+  if (host === 'getepo.com' && (req.path === '/' || req.path === '/index.html')) {
+    const primaryPath = path.join(__dirname, '..', 'public', 'validator.html');
+    const fallbackPath = path.join(process.cwd(), 'public', 'validator.html');
+    const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
+    if (fs.existsSync(targetPath)) {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      return res.sendFile(targetPath);
+    }
   }
   next();
 });
@@ -396,32 +396,135 @@ app.get(['/v3/verified.js', '/verified.js'], (req, res) => {
   res.send(script);
 });
 
-// Official Schema.org Entity Graph & LLM Specifications
-app.get(['/api/schema', '/schema.json'], (_req, res) => {
+// Official Schema.org Entity Graph & LLM Specifications (Domain-Aware for sendput.com & getepo.com)
+app.get(['/api/schema', '/schema.json'], (req, res) => {
   res.setHeader('Content-Type', 'application/ld+json; charset=utf-8');
+  if (isGetEpoHost(req)) {
+    return res.json({
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': ['SoftwareApplication', 'WebApplication'],
+          '@id': 'https://getepo.com/#validator',
+          name: 'GetEPO — Open-Source Entity Presence Optimization (EPO) Validator',
+          url: 'https://getepo.com/',
+          applicationCategory: 'DeveloperApplication',
+          operatingSystem: 'Web, Cloud',
+          softwareVersion: '3.4.0',
+          description:
+            'Open-source benchmark and 5-Layer Entity Presence Optimization (EPO) validator for SearchGPT, Perplexity, Gemini, Claude, and Microsoft Copilot under RFC-2026-GEO-01.',
+          offers: {
+            '@type': 'Offer',
+            price: '0.00',
+            priceCurrency: 'USD'
+          },
+          publisher: {
+            '@type': 'Organization',
+            '@id': 'https://sendput.com/#organization',
+            name: 'SendPut AI Technologies Inc.',
+            url: 'https://sendput.com'
+          },
+          sameAs: ['https://sendput.com', 'https://sendput.com/verified/getepo']
+        }
+      ]
+    });
+  }
   res.json(SendPutEpoEngine.getRootSendPutGraph());
 });
 
-app.get('/llms.txt', (_req, res) => {
+app.get('/robots.txt', (req, res) => {
+  const baseUrl = isGetEpoHost(req) ? 'https://getepo.com' : 'https://sendput.com';
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.send(`User-agent: *
+Allow: /
+
+# SendPut EPO Engine — Allow Verified AI Search Retrieval Bots
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: ${baseUrl}/sitemap.xml
+`);
+});
+
+app.get('/llms.txt', async (req, res) => {
+  res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+  if (isGetEpoHost(req)) {
+    return res.send(`# GetEPO.com — Open-Source Entity Presence Optimization (EPO) Validator & Benchmark
+
+> Open-source 5-Layer AI Search & Entity Presence Optimization (EPO) validator under standard RFC-2026-GEO-01. Published by SendPut AI Technologies Inc. (https://sendput.com).
+
+## Canonical Endpoints
+- **Live Interactive Validator**: https://getepo.com/
+- **Extended AI Specification**: https://getepo.com/llms-full.txt
+- **Schema.org JSON-LD Graph**: https://getepo.com/schema.json
+- **Commercial Remediation Engine**: https://sendput.com/
+- **Public Verification Authority**: https://sendput.com/verified/getepo
+- **Live MCP Server (JSON-RPC 2.0 / SSE)**: https://getepo.com/mcp/getepo/sse
+`);
+  }
   const primaryPath = path.join(__dirname, '..', 'public', 'llms.txt');
   const fallbackPath = path.join(process.cwd(), 'public', 'llms.txt');
   const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
   if (fs.existsSync(targetPath)) {
-    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
     return res.sendFile(targetPath);
   }
-  res.status(404).send('# /llms.txt Not Found');
+  const sendputEntity = await getEntity('sendput');
+  const spec = defaultEpoEngine.buildLlmsSpecification({ ...sendputEntity, host_url: 'https://sendput.com' });
+  res.send(spec.llmsTxt);
 });
 
-app.get('/llms-full.txt', (_req, res) => {
+app.get('/llms-full.txt', async (req, res) => {
+  res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+  if (isGetEpoHost(req)) {
+    return res.send(`# GetEPO.com — Full RFC-2026-GEO-01 Validator & Open-Source Benchmark Specification
+
+> Official AI Grounding & Diagnostic Benchmark for SearchGPT (OAI-SearchBot), Perplexity Sonar, Google Gemini, Claude SearchBot, and Microsoft Copilot.
+
+## 5-Layer RFC-2026-GEO-01 Diagnostic Formula
+\`EPO_Score = (0.35 * EntityAccuracy) + (0.25 * IndexLatency) + (0.25 * CitationShare) + (0.15 * AgentReadiness)\`
+
+1. **Layer 1 (AI Crawler Gatekeeper)**: Verifies \`/robots.txt\` permissions for OAI-SearchBot, GPTBot, PerplexityBot, ClaudeBot, and Google-Extended.
+2. **Layer 2 (Semantic Entity Graph)**: Validates nested \`application/ld+json\` \`@graph\` (\`Organization\`, \`LocalBusiness\`, \`SoftwareApplication\`, \`OfferCatalog\`, \`FAQPage\`).
+3. **Layer 3 (High-Velocity IndexNow Relay)**: Dispatches real-time URL verification batches to \`api.indexnow.org\`.
+4. **Layer 4 (Direct LLM Ingestion)**: Validates token-budgeted \`/llms.txt\`, \`/llms-full.txt\`, OpenAPI 3.1, and \`SKILL.md\`.
+5. **Layer 5 (Model Context Protocol)**: Verifies JSON-RPC 2.0 & SSE tool execution (\`verify_business_status\`, \`get_service_catalog\`, \`initiate_inquiry\`).
+
+## Publisher & Commercial Remediation Platform
+- **Publisher**: SendPut AI Technologies Inc. (https://sendput.com)
+- **Live Audit API**: \`POST https://getepo.com/api/audit\`
+- **Live MCP Endpoint**: \`POST https://getepo.com/mcp/getepo/sse\`
+`);
+  }
   const primaryPath = path.join(__dirname, '..', 'public', 'llms-full.txt');
   const fallbackPath = path.join(process.cwd(), 'public', 'llms-full.txt');
   const targetPath = fs.existsSync(primaryPath) ? primaryPath : fallbackPath;
   if (fs.existsSync(targetPath)) {
-    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
     return res.sendFile(targetPath);
   }
-  res.status(404).send('# /llms-full.txt Not Found');
+  const sendputEntity = await getEntity('sendput');
+  const spec = defaultEpoEngine.buildLlmsSpecification({ ...sendputEntity, host_url: 'https://sendput.com' });
+  res.send(spec.llmsFullTxt);
 });
 
 // Standalone GetEPO Validator (EPO-008)
@@ -443,6 +546,48 @@ let dbOnline = false;
 
 // Stateful fallback store for instant zero-config operation
 const memoryEntities: Record<string, any> = {
+  'getepo': {
+    id: '00000000-0000-0000-0000-000000000002',
+    slug: 'getepo',
+    business_name: 'GetEPO — Open-Source EPO Validator & Benchmark',
+    website_url: 'https://getepo.com',
+    city_niche: 'Global Open-Source Standard — RFC-2026-GEO-01 AI Search & EPO Benchmark',
+    primary_category: 'SoftwareApplication',
+    phone: '+1-888-506-9423',
+    street_address: '200 E Robinson St, Suite 1120',
+    city: 'Orlando',
+    state_region: 'FL',
+    postal_code: '32801',
+    country: 'US',
+    opening_hours: 'Mo-Su 00:00-24:00',
+    price_range: 'Free',
+    bilingual_es_enabled: true,
+    description_en:
+      'GetEPO.com is the open-source 5-Layer Entity Presence Optimization (EPO) validator and benchmark authority under standard RFC-2026-GEO-01, powered by SendPut AI Technologies Inc.',
+    description_es:
+      'GetEPO.com es el validador y estándar abierto de Optimización de Presencia de Entidad (EPO) de 5 capas bajo RFC-2026-GEO-01, impulsado por SendPut AI Technologies Inc.',
+    same_as: ['https://sendput.com', 'https://sendput.com/verified/getepo'],
+    knows_about: ['Entity Presence Optimization', 'RFC-2026-GEO-01', 'llms.txt', 'Model Context Protocol', 'IndexNow'],
+    services_json: [
+      { name: 'Open-Source 5-Layer EPO Domain Validator', price: '$0 (MIT Open Benchmark)', desc: 'Instant diagnostic across robots.txt, Schema.org @graph, IndexNow, /llms.txt & MCP' },
+      { name: 'SendPut Enterprise Remediation Engine', price: '$39–$299/mo', desc: '1-click commercial deployment via SendPut.com' }
+    ],
+    faqs_json: [
+      {
+        q: 'What is GetEPO.com?',
+        a: 'GetEPO.com is the standalone open-source benchmark and 5-Layer Entity Presence Optimization (EPO) validator under RFC-2026-GEO-01, backed by SendPut AI Technologies Inc.'
+      }
+    ],
+    booking_url: 'https://sendput.com/#pricing',
+    gbp_synced: true,
+    bing_synced: true,
+    apple_synced: true,
+    sfai_score: 99,
+    aics_score: 96,
+    dvs_score: 98,
+    thq_score: 99,
+    plan_tier: 'agency_299'
+  },
   'sendput': {
     id: '00000000-0000-0000-0000-000000000001',
     slug: 'sendput',
@@ -2388,8 +2533,16 @@ app.post('/api/seed-portfolio', async (req, res) => {
 
 const publicDir = path.resolve(process.cwd(), 'public');
 app.use(express.static(publicDir));
-app.get('*', (_req, res) => {
-  res.sendFile(path.join(publicDir, 'index.html'));
+app.get('*', (req, res) => {
+  if (isGetEpoHost(req)) {
+    const valFile = path.join(publicDir, 'validator.html');
+    if (fs.existsSync(valFile)) {
+      return res.sendFile(valFile);
+    }
+  }
+  const appFile = path.join(publicDir, 'index.html');
+  const altFile = path.join(publicDir, 'sendput-app.html');
+  res.sendFile(fs.existsSync(appFile) ? appFile : altFile);
 });
 
 ensureDbPool();

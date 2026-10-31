@@ -5,19 +5,33 @@
   "outputDirectory": "public",
   "redirects": [
     {
-      "source": "/((?!validator|api/|mcp/|v1/|v3/|badge/|verified/|brand/|epo-edge\\.js|sf-edge\\.js|verified\\.js|favicon\\.ico|sendput8f92a1c4b7e34d12a9c8e5f102938475\\.txt|304d6d12-7177-4549-bff6-7ad2a4e9d26b\\.txt).*)",
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www\\.getepo\\.com"
+        }
+      ],
+      "destination": "https://getepo.com/$1",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
       "has": [
         {
           "type": "host",
           "value": "(www\\.)?getepo\\.com"
         }
       ],
-      "destination": "https://sendput.com/$1",
-      "permanent": true
-    }
-  ],
-  "rewrites": [
+      "destination": "/validator.html"
+    },
+    { "source": "/", "destination": "/sendput-app.html" },
     { "source": "/sendput8f92a1c4b7e34d12a9c8e5f102938475.txt", "destination": "/api/index.js" },
+    { "source": "/llms.txt", "destination": "/api/index.js" },
+    { "source": "/llms-full.txt", "destination": "/api/index.js" },
+    { "source": "/robots.txt", "destination": "/api/index.js" },
     { "source": "/api/(.*)", "destination": "/api/index.js" },
     { "source": "/epo-edge.js", "destination": "/api/index.js" },
     { "source": "/sf-edge.js", "destination": "/api/index.js" },
